@@ -1,0 +1,142 @@
+@import "../../../responsive-break-point.scss";
+.desktop {
+	@include small-down {
+		display: none;
+	}
+	max-width: 1000px;
+	height: 800px;
+	transform: translateY(9%);
+	border-radius: 10px;
+	margin: auto;
+	border: 1px solid black;
+	display: flex;
+	.userlist {
+		position: relative;
+		border-right: 1px solid black;
+		width: 35%;
+		padding: 0.5rem;
+		.login-user {
+			display: flex;
+			justify-content: space-between;
+			margin-bottom: 0.5rem;
+			cursor: pointer;
+			img {
+				width: 40px;
+				height: 40px;
+				border-radius: 50%;
+			}
+			.title {
+				text-align: left;
+				margin-bottom: 0.5rem;
+			}
+			.logged-user {
+				display: flex;
+				align-items: center;
+				h5 {
+					margin-left: 0.5rem;
+				}
+			}
+		}
+		input {
+			width: 95%;
+			height: 30px;
+			border-radius: 50px;
+			border: none;
+			padding-left: 1rem;
+			background: rgb(247, 238, 238);
+			outline: none;
+			margin-bottom: 1rem;
+		}
+	}
+	.chatbox {
+		position: relative;
+		width: 65%;
+		.header {
+			width: 100%;
+			hr {
+				color: rgb(13, 130, 219);
+			}
+			.opened-user {
+				width: 200px;
+				padding: 0.5rem;
+				cursor: pointer;
+				display: flex;
+				align-items: center;
+				&:hover {
+					background-color: rgb(252, 241, 241);
+				}
+				.img {
+					margin-right: 1rem;
+					width: 40px;
+					height: 40px;
+					img {
+						width: 100%;
+						height: 100%;
+						border-radius: 50%;
+					}
+				}
+				.name {
+					text-align: left;
+					p {
+						font-size: 12px;
+					}
+				}
+			}
+		}
+		.react-emoji {
+			width: 70%;
+		}
+
+		.inputField {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			position: absolute;
+			bottom: 1rem;
+			width: 100%;
+			.image-upload{
+				position: absolute;
+				top: -2rem;
+				right: 5rem;
+				display: flex;
+				.container{
+					display: flex;
+					img{
+						width: 40px;
+						height: 40px;
+						margin-right: .5rem;
+					}
+					button{
+						font-size: 9px;
+						cursor: pointer;
+						background: none;
+						position: absolute;
+						border: none;
+					}
+				}
+			}
+			label {
+				// display: block;
+				cursor: pointer;
+				.upload-image {
+					// position: absolute;
+					// top: 5px;
+					margin-right: 1rem;
+					color: #858585;
+					font-size: 25px;
+				}
+			}
+
+			.sendBtn{
+				cursor: pointer;
+				width: 50px;
+				color: white;
+				height: 25px;
+				border-radius: 3px;
+				border: none;
+				outline: none;
+				background-color: #858585;
+			}
+		}
+	}
+}

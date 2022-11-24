@@ -1,0 +1,80 @@
+@import "../../responsive-break-point.scss";
+.profile {
+	width: 100vw;
+	height: 100vh;
+	position: relative;
+	color: white;
+	background:linear-gradient(to right, black,rgb(26, 6, 6));
+
+	.profile-box {
+		max-width: 400px;
+		@include small-down {
+			width: 300px;
+			padding: 1rem;
+			font-size: 13px;
+		}
+		position: absolute;
+		border: 1px solid rgb(243, 216, 216);
+		top: 50%;
+		left: 50%;
+		padding: 2rem;
+		border-radius: 5px;
+		transform: translate(-50%, -50%);
+		.profile-image {
+			.chooseFile {
+				position: relative;
+				margin-bottom: 1rem;
+				display: flex;
+				width: 100%;
+				justify-content: center;
+				cursor: pointer;
+			}
+			span {
+				position: absolute;
+				bottom: 0;
+				border: none;
+				cursor: pointer;
+				padding: 0.2rem;
+				background-color: rgb(197, 221, 231);
+				border-radius: 2px;
+				opacity: 0.7;
+				font-weight: bold;
+				color: rgb(8, 12, 12);
+			}
+			img {
+				width: 80px;
+				height: 80px;
+				border-radius: 50%;
+				border: 1px solid black;
+			}
+			input[type="file"] {
+				display: none;
+			}
+		}
+
+		.editoption {
+			p {
+				margin-right: 1rem;
+				text-transform: capitalize;
+			}
+			input {
+				outline: none;
+				border: none;
+				color: white;
+				background: none;
+			}
+			margin-top: 1rem;
+			border: 1px solid gray;
+			border-radius: 5px;
+			padding: 0.5rem;
+			display: flex;
+			justify-content: space-between;
+			button {
+				border: none;
+				cursor: pointer;
+				padding: 0.2rem;
+				border-radius: 1px;
+			}
+		}
+	}
+}

@@ -1,0 +1,21 @@
+@import "../../responsive-break-point.scss";
+.login {
+	.wrapper {
+        @include small-up {
+            width: 400px;
+        }
+		input {
+			@include small-down {
+				height: 35px;
+			}
+			margin-bottom: 0.5rem;
+		}
+		label {
+			padding-left: 5px;
+			color: white;
+			font-size: 12px;
+			display: block;
+			text-align: left;
+		}
+	}
+}
