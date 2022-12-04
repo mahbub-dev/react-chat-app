@@ -1,1 +1,14 @@
-﻿
+﻿@import '../../responsive-break-point.scss';
+.rightside {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 65%;
+    @include small-down{
+        width: 100%;
+        height: 100vh;
+    }
+    .react-emoji {
+        width: 75%;
+    }
+}

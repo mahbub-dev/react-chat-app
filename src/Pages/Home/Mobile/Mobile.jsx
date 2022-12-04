@@ -1,12 +1,26 @@
-import React from "react";
+import React, { useState } from "react";
 import { BiSearch } from "react-icons/bi";
-import { IoMdContacts } from "react-icons/io";
+import { CgProfile } from "react-icons/cg";
 import { MdMessage } from "react-icons/md";
 import { RiSettings3Fill } from "react-icons/ri";
-import User from "../../../Components/User/User";
+import User from "../../../Components/UserList/User/User";
+import { useGlobalContext } from "../../../context";
+import { useSocket } from "../../../socketContext";
+import { useNavigate } from "react-router-dom";
+import { Search, Actice } from "../../../Components";
 import "./Mobile.scss";
 
 const Mobile = () => {
+	const navigate = useNavigate();
+	const { userList, setCurrentChat } = useGlobalContext();
+	const { onlineUsers } = useSocket();
+	const liveUsers = [];
+	userList &&
+		userList.forEach((i) => {
+			onlineUsers?.forEach((i2) => {
+				i._id === i2.userId && liveUsers.push(i);
+			});
+		});
 	return (
 		<div className="mobile">
 			<div className="top-area">
@@ -21,99 +35,32 @@ const Mobile = () => {
 
 				{/* friendlist */}
 				<div className="chatlist">
-					<div className="friend">
-						<img
-							src="http://cdn.onlinewebfonts.com/svg/img_312847.png"
-							alt=""
-						/>
-					</div>
-					<div className="friend">
-						<img
-							src="http://cdn.onlinewebfonts.com/svg/img_312847.png"
-							alt=""
-						/>
-					</div>
-					<div className="friend">
-						<img
-							src="http://cdn.onlinewebfonts.com/svg/img_312847.png"
-							alt=""
-						/>
-					</div>
-					<div className="friend">
-						<img
-							src="http://cdn.onlinewebfonts.com/svg/img_312847.png"
-							alt=""
-						/>
-					</div>
-					<div className="friend">
-						<img
-							src="http://cdn.onlinewebfonts.com/svg/img_312847.png"
-							alt=""
-						/>
-					</div>
-					<div className="friend">
-						<img
-							src="http://cdn.onlinewebfonts.com/svg/img_312847.png"
-							alt=""
-						/>
-					</div>
-					<div className="friend">
-						<img
-							src="http://cdn.onlinewebfonts.com/svg/img_312847.png"
-							alt=""
-						/>
-					</div>
-					<div className="friend">
-						<img
-							src="http://cdn.onlinewebfonts.com/svg/img_312847.png"
-							alt=""
-						/>
-					</div>
-					<div className="friend">
-						<img
-							src="http://cdn.onlinewebfonts.com/svg/img_312847.png"
-							alt=""
-						/>
-					</div>
-					<div className="friend">
-						<img
-							src="http://cdn.onlinewebfonts.com/svg/img_312847.png"
-							alt=""
-						/>
-					</div>
-					<div className="friend">
-						<img
-							src="http://cdn.onlinewebfonts.com/svg/img_312847.png"
-							alt=""
-						/>
-					</div>
+					{liveUsers &&
+						liveUsers.map((i) => (
+							<div className="friend" key={i._id}>
+								<img src={i?.profilePicture} alt="profile" />
+								<Actice id={i._id} isOnline={true} />
+							</div>
+						))}
 				</div>
 
 				{/* search area  */}
-				<div className="search">
-					<input type="text" placeholder="Search" />
-					<BiSearch className="search-icon" />
-				</div>
+				<Search />
 			</div>
 
 			{/* recent chat list  */}
 			<div className="recent">
-				<User
-					username={"Md Mahbub Alom"}
-					img={
-						'http://cdn.onlinewebfonts.com/svg/img_312847.png" alt="user'
-					}
-					time={"2.50pm"}
-					message={"hey There"}
-				/>
-				<User
-					username={"Md Habibur Rohman"}
-					img={
-						'http://cdn.onlinewebfonts.com/svg/img_312847.png" alt="user'
-					}
-					time={"2.50pm"}
-					message={"hey There"}
-				/>
+				{userList &&
+					userList.map((i, ind, arr) => (
+						<div key={ind}>
+							<User
+								root={"message"}
+								data={i}
+								array={arr}
+								setCurrentChat={setCurrentChat}
+							/>
+						</div>
+					))}
 			</div>
 
 			{/* bottom bar  */}
@@ -123,7 +70,12 @@ const Mobile = () => {
 						<MdMessage className="ico" />
 					</div>
 					<div className="contacts">
-						<IoMdContacts className="ico" />
+						<CgProfile
+							className="ico"
+							onClick={() => {
+								navigate("/profile");
+							}}
+						/>
 					</div>
 					<div className="settings">
 						<RiSettings3Fill className="ico" />

@@ -26,7 +26,7 @@ function Signup() {
 		e.preventDefault();
 		createUser(signupData, (res) => {
 			if (res._id) {
-				navigate('/login')
+				navigate('/')
 			} else {
 				console.log(res);
 			}

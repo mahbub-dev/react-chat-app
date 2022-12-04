@@ -4,12 +4,24 @@ import ApiRequest from "./Api Request/apiRequest";
 const AppContext = createContext();
 const AppProvider = ({ children }) => {
 	const [loggedUser, setLoggedUser] = useState("");
+	const [userList, setUserList] = useState("");
+	const [convId, setConvId] = useState("");
+	const [currentChat, setCurrentChat] = useState({});
+	const [message, setMessage] = useState([]);
 
 	// handle Modals
 	const [user, setUser] = useState("");
-	const handleModals = (isOpen, user) => {
-		setUser(user);
-		const openUser = document.querySelector(".user-details");
+	const [showImage, setShowImage] = useState();
+	const OpenUserDetails = (data, handleModals) => {
+		setUser(data);
+		handleModals(true, "user-details");
+	};
+	const OpenUploadImage = (data, handleModals) => {
+		setShowImage(data);
+		handleModals(true, "imageShow");
+	};
+	const handleModals = (isOpen, className) => {
+		const openUser = document.querySelector(`.${className}`);
 		const app = document.querySelector("body");
 		const modalView = document.querySelector(".modals-view");
 		if (isOpen) {
@@ -37,10 +49,23 @@ const AppProvider = ({ children }) => {
 			value={{
 				user,
 				handleModals,
+				OpenUserDetails,
+				OpenUploadImage,
+				showImage,
 
+				convId,
+				setConvId,
 				//for login user
 				loggedUser,
 				setLoggedUser,
+
+				userList,
+				setUserList,
+
+				currentChat,
+				setCurrentChat,
+				message,
+				setMessage,
 			}}
 		>
 			{children}

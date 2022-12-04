@@ -15,11 +15,25 @@ const createUser = async (signupData, callback) => {
 
 const updateUser = async (updateUserData, cb) => {
 	try {
-		const { data } = await ApiRequest.put("/user", {updateUserData});
+		const { data } = await ApiRequest.put("/user", {
+			updateUserData,
+		});
 		cb(data);
 	} catch (er) {
 		console.log(er);
 	}
 };
 
-export { createUser, updateUser};
+const getUser = async (searchText = "", cb) => {
+	try {
+		const { data } = await ApiRequest.get(`/user/?search=${searchText}`);
+		cb(data);
+		data === "not found" && cb("");
+		// if (cb !== null) {
+		// 	cb(data);
+		// }
+	} catch (err) {
+		console.log(err);
+	}
+};
+export { createUser, updateUser, getUser };

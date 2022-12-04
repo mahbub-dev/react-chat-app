@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import AppProvider from "./context";
 import "./index.scss";
+import SocketProvider from "./socketContext";
 import App from "./App";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));

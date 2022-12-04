@@ -1,0 +1,54 @@
+.messages {
+	display: flex;
+	width: 100%;
+	color: white;
+	margin-bottom: 0.5rem;
+	align-items: center;
+	color: black;
+	border-radius: 5px;
+	p {
+		padding: 0.5rem;
+		text-align: left;
+		max-width: 550px;
+		word-wrap: break-word;
+	}
+	span {
+		color: rgba(0, 0, 0, 0.664);
+		font-size: 12px;
+		display: flex;
+		text-align: right;
+	}
+	img {
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		margin-right: 0.5rem;
+	}
+	.messageImg {
+		width: 100px;
+		height: 100px;
+		cursor: pointer;
+		border-radius: 5px;
+	}
+}
+#own {
+	justify-content: flex-end;
+
+	span {
+		justify-content: flex-end;
+	}
+	p {
+		border-radius: 10px;
+		color: white;
+		background: rgb(134, 116, 236);
+	}
+}
+#other {
+	span {
+		justify-content: flex-start;
+	}
+	p {
+		border-radius: 10px;
+		background: rgb(191, 216, 191);
+	}
+}

@@ -1,23 +1,19 @@
 import "./App.scss";
 
 // importing from modules
-import io from "socket.io-client";
-import { useState } from "react";
+
+// import { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 // importing from modals
-import { UserDetails } from "./Components/Modals/index";
+import { UserDetails, ImageShow } from "./Components/Modals/index";
 
 // importing from pages
-import { Home, Login, Signup, Profile } from "./Pages/index";
-
-// importing from components
-import { Chatbox, User } from "./Components/index";
+import { Home, Login, Signup, Profile, Chat } from "./Pages/index";
 
 //importing from context
 import { useGlobalContext } from "./context";
-
-// const socket = io.connect("http://localhost:3001");
+import SocketProvider from "./socketContext";
 function App() {
 	const token = localStorage.getItem("token");
 	const { handleModals } = useGlobalContext();
@@ -25,36 +21,55 @@ function App() {
 		<div className="App">
 			<div className="modals-view">
 				<UserDetails />
+				<ImageShow />
 			</div>
 			<BrowserRouter>
 				<Routes>
 					<Route path="/profile" element={<Profile />} />
 					<Route
-						path="/login"
-						element={token ? <Navigate to={"/"} /> : <Login />}
-					/>
-					<Route
-						path="/signup"
-						element={token ? <Navigate to={"/"} /> : <Signup />}
-					/>
-					<Route
-						path={"/"}
+						path="/"
 						element={
 							token ? (
-								<Home handleModals={handleModals} />
+								<Navigate
+									to={`/chat/${localStorage.getItem(
+										"friendId"
+									)}`}
+								/>
 							) : (
-								<Navigate to={"/login"} />
+								<Login />
 							)
 						}
 					/>
 					<Route
-						path="/chat"
+						path="/message/:userId"
 						element={
-							<Chatbox
-							// socket={socket}
-							// room={room}
-							// username={username}
-							/>
+							<SocketProvider>
+								<Chat />
+							</SocketProvider>
+						}
+					/>
+					<Route
+						path="/signup"
+						element={
+							token ? (
+								<Navigate
+									to={`/chat/${localStorage.getItem(
+										"convId"
+									)}`}
+								/>
+							) : (
+								<Signup />
+							)
+						}
+					/>
+					<Route
+						path={"/chat/:userId"}
+						element={
+							token ? (
+								<Home handleModals={handleModals} socket={""} />
+							) : (
+								<Navigate to={"/"} />
+							)
 						}
 					/>
 				</Routes>

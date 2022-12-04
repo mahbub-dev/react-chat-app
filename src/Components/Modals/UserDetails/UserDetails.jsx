@@ -6,7 +6,10 @@ const UserDetails = () => {
 	const { handleModals, user } = useGlobalContext();
 	return (
 		<div className="user-details">
-			<div className="close-modals" onClick={() => handleModals(false)}>
+			<div
+				className="close-modals"
+				onClick={() => handleModals(false, "user-details")}
+			>
 				<TiDelete className="close" />
 			</div>
 			<div className="img">

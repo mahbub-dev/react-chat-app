@@ -5,7 +5,7 @@ import { useGlobalContext } from "../../context";
 import "./login.scss";
 function Login() {
 	const { setLoggedUser } = useGlobalContext();
-	const [ err, setError ] = useState("");
+	const [err, setError] = useState("");
 	const [isShow, setIsShow] = useState(false);
 	const [style, setStyle] = useState("password");
 	const [password, setPassword] = useState("");
@@ -25,7 +25,7 @@ function Login() {
 		loginRequest({ loginId, password }, (data) => {
 			setLoggedUser(data.loginuser);
 			if (data.token) {
-				navigate("/");
+				navigate(`/chat/${data.loginuser._id}`);
 				window.location.reload();
 			} else {
 				setError(data.response.data);

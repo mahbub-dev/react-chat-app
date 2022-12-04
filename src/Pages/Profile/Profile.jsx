@@ -2,9 +2,12 @@ import "./profile.scss";
 import Item from "./Item";
 import { useGlobalContext } from "../../context";
 import { updateUser } from "../../Api Request/userRequest";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const Profile = () => {
+	const navigate = useNavigate();
 	const { loggedUser, setLoggedUser } = useGlobalContext();
+	const handlePasswordChange = () => {};
 	const handleUpdate = (e) => {
 		updateUser(loggedUser, (res) => {
 			setLoggedUser(res);
@@ -12,7 +15,6 @@ const Profile = () => {
 	};
 	function imageUpload() {
 		var file = document.querySelector("input[type=file]")["files"][0];
-		console.log(file.type);
 		var reader = new FileReader();
 		reader.readAsDataURL(file);
 		reader.onload = () => {
@@ -64,12 +66,21 @@ const Profile = () => {
 						name="phone"
 						handleUpdate={handleUpdate}
 					/>
-					<Item
-						id={"btn4"}
-						item={loggedUser?.password}
-						name="password"
-						handleUpdate={handleUpdate}
-					/>
+					<div className="editoption">
+						<button className="logout">Change password</button>
+					</div>
+					<div className="editoption">
+						<button
+							className="logout"
+							onClick={() => {
+								localStorage.clear();
+								navigate(`/`);
+								window.location.reload();
+							}}
+						>
+							Logout
+						</button>
+					</div>
 				</div>
 			</div>
 		</div>

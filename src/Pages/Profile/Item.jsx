@@ -7,20 +7,16 @@ const Item = ({ id, item, name, handleUpdate }) => {
 	const [inputStyle, setInputStyle] = useState({ disabled: true });
 
 	let type;
-	if (name === "password") {
-		type = "password";
-		item = item?.slice(2, 8);
-	} else if (name === "email") {
+	if (name === "email") {
 		type = "email";
 	} else {
 		type = "text";
 	}
 
 	const handleInput = () => {
-		const array = ["btn1", "btn2", "btn3", "btn4"];
-		// const selectedItem = document.getElementById(`${id}`);
+		const array = ["btn1", "btn2", "btn3"];
 		if (isEdit) {
-			if (item.length < 3) {
+			if (name !== "password" && item.length < 3) {
 				alert("inputed data can not be less than 3");
 			} else {
 				setInputStyle({

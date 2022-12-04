@@ -1,5 +1,6 @@
 ﻿import axios from "axios";
 const baseUrl = "http://localhost:4000";
+const cloudBaseUrl = 'https://chats-api.onrender.com/'
 const token = localStorage.getItem("token");
 
 const ApiRequest = axios.create({

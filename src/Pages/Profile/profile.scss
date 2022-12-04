@@ -4,7 +4,7 @@
 	height: 100vh;
 	position: relative;
 	color: white;
-	background:linear-gradient(to right, black,rgb(26, 6, 6));
+	background:linear-gradient(to right, rgb(139, 73, 73),rgb(26, 6, 6));
 
 	.profile-box {
 		max-width: 400px;
@@ -45,7 +45,7 @@
 				width: 80px;
 				height: 80px;
 				border-radius: 50%;
-				border: 1px solid black;
+				border: 2px solid #fff;
 			}
 			input[type="file"] {
 				display: none;
