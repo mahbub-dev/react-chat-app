@@ -24,13 +24,18 @@ function Signup() {
 	};
 	const handleSignup = (e) => {
 		e.preventDefault();
-		createUser(signupData, (res) => {
-			if (res._id) {
-				navigate('/')
-			} else {
-				console.log(res);
-			}
-		});
+		if (signupData.password === signupData.confirmPassword) {
+			createUser(signupData, (res) => {
+				if (res._id) {
+					navigate('/')
+				} else {
+					console.log(res);
+				}
+			});
+		} else {
+			alert('confirm password is not same as password')
+		}
+
 	};
 	return (
 		<div className="login">
