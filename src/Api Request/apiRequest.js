@@ -6,7 +6,8 @@ const token = localStorage.getItem("token");
 const ApiRequest = axios.create({
 	baseURL: cloudBaseUrl,
 	headers: {
-		"Access-Control-Allow-Origin": "true",
+		// "Access-Control-Allow-Origin": "true",
+		
 		"Content-Type": "application/json",
 		Authorization: `Bearer ${token}`,
 	},

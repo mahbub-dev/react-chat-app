@@ -16,6 +16,7 @@ import SocketProvider from "./socketContext";
 
 
 function App() {
+	
 	const token = localStorage.getItem("token");
 	const { handleModals } = useGlobalContext();
 	return (
