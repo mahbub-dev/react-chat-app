@@ -1,7 +1,6 @@
 import "./App.scss";
-
+// Import the functions you need from the SDKs you need
 // importing from modules
-
 // import { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
@@ -14,6 +13,8 @@ import { Home, Login, Signup, Profile, Chat } from "./Pages/index";
 //importing from context
 import { useGlobalContext } from "./context";
 import SocketProvider from "./socketContext";
+
+
 function App() {
 	const token = localStorage.getItem("token");
 	const { handleModals } = useGlobalContext();

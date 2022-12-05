@@ -1,9 +1,5 @@
 {
-<<<<<<< HEAD
-  "homepage": ".",
-=======
-	"homepage":"."
->>>>>>> dc0d3be59e8c115b4af2c07ad2ab6455449c217e
+	"homepage": ".",
 	"name": "chat-ui",
 	"version": "0.1.0",
 	"private": true,
