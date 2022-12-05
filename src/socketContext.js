@@ -7,7 +7,7 @@ const SocketContext = createContext();
 const SocketProvider = ({ children }) => {
 	const { userList, setUserList } = useGlobalContext();
 	const friendId = useLocation().pathname.split("/")[2];
-	const socketInitait = io(process.env.SOCKET_SERVER, { autoConnect: false });
+	const socketInitait = io("https://socket-server-dtrx.onrender.com", { autoConnect: false });
 	const [socket, setSocket] = useState(socketInitait);
 	const [typingStatus, setTypingStatus] = useState({
 		isTyping: false,
