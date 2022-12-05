@@ -102,7 +102,6 @@ const MessageInput = ({ currentChat, setMessage }) => {
 			socket.emit("sendTypingStatus", status);
 		}
 	}, [text]);
-	console.log(typingStatus);
 	return (
 		<>
 			{typingStatus.isTyping && typingStatus.sender === location && (

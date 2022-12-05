@@ -52,28 +52,6 @@
 				}
 			}
 		}
-		.search {
-			position: relative;
-			color: #a9b5c1;
-			max-width: 500px;
-			padding-bottom: 10px;
-			input {
-				margin-top: 20px;
-				border-radius: 15px;
-				width: 85%;
-				outline: none;
-				padding-left: 50px;
-				height: 50px;
-				border: none;
-				box-shadow: 0 1px 5px 0px rgb(238, 155, 155);
-			}
-			.search-icon {
-				position: absolute;
-				left: 10px;
-				width: 40px;
-				top: 49%;
-			}
-		}
 	}
 	// bottom bar
 	.bar {
