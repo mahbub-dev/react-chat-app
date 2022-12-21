@@ -1,10 +1,16 @@
 @import "../../../responsive-break-point.scss";
 .desktop {
+	background-image: radial-gradient(
+		circle 957px at 8.7% 50.5%,
+		rgba(246, 191, 13, 1) 0%,
+		rgba(249, 47, 47, 1) 90%
+	);
 	@include small-down {
 		display: none;
 	}
+	// width: 100%;
 	max-width: 1000px;
-	height: 800px;
+	height: 700px;
 	transform: translateY(9%);
 	border-radius: 10px;
 	margin: auto;
@@ -39,5 +45,5 @@
 		}
 	}
 
-	// right side 
+	// right side
 }

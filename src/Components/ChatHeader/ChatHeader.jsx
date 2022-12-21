@@ -1,47 +1,74 @@
-﻿import { IoIosArrowRoundBack } from "react-icons/io";
-import "./chatheader.scss";
-import { useGlobalContext } from "../../context";
+﻿import { useEffect } from "react";
+import { IoIosArrowRoundBack } from "react-icons/io";
 import { useLocation, useNavigate } from "react-router-dom";
+import ApiRequest from "../../Api Request/apiRequest";
+import { useGlobalContext } from "../../context";
 import { useSocket } from "../../socketContext";
-const ChatHeader = () => {
+import "./chatheader.scss";
+const ChatHeader = ({ currentChatUser, setCurrenChatUser }) => {
 	const navigate = useNavigate();
-	const location = useLocation().pathname.split("/")[2];
-	const { handleModals, OpenUserDetails, currentChat } = useGlobalContext();
+	const location = useLocation().pathname.split("/")[1];
+	const { handleModals, OpenUserDetails } = useGlobalContext();
 	const { onlineUsers } = useSocket();
 	let active;
 	onlineUsers?.forEach((i) =>
-		i.userId.includes(currentChat?._id) ? (active = "online") : ""
+		i.userId.includes(currentChatUser?._id)
+			? (active = "online")
+			: (active = "ofline")
 	);
+	currentChatUser = { ...currentChatUser, status: active };
+	useEffect(() => {
+		const getCurrentUser = async () => {
+			const { data } = await ApiRequest(`user/${location}`);
+			setCurrenChatUser(data);
+		};
+		getCurrentUser();
+	}, []);
 	return (
 		<div className="header">
 			<div className="wrapper">
-				{localStorage.getItem("friendId") ? (
-					<div
-						className="opened-user"
-						onClick={() =>
-							OpenUserDetails(currentChat, handleModals)
-						}
-					>
-						<div className="img">
-							{currentChat?.profilePicture && (
-								<img
-									src={currentChat?.profilePicture}
-									alt="user"
-								/>
-							)}
+				{location !== "home" ? (
+					Object.keys(currentChatUser).length > 0 ? (
+						<div
+							className="opened-user"
+							onClick={() =>
+								OpenUserDetails(currentChatUser, handleModals)
+							}
+						>
+							<div className="img">
+								{currentChatUser?.profilePicture && (
+									<img
+										src={currentChatUser?.profilePicture}
+										alt="user"
+									/>
+								)}
+							</div>
+							<div className="name">
+								<h5>{currentChatUser?.username}</h5>
+								<p>{active} </p>
+							</div>
 						</div>
-						<div className="name">
-							<h5>{currentChat?.username}</h5>
-							<p>{active} </p>
-						</div>
-					</div>
+					) : (
+						<p
+							className="not-selected"
+							style={{ paddingLeft: "1rem" }}
+						>
+							Loading...
+						</p>
+					)
 				) : (
-					<p className="not-selected" style={{paddingLeft:'1rem'}}>user not selected</p>
+					<p className="not-selected" style={{ paddingLeft: "1rem" }}>
+						user not selected
+					</p>
 				)}
 				<IoIosArrowRoundBack
 					className="back"
 					onClick={() => {
-						navigate(`/chat/${location}`);
+						document.querySelector(".mobile").style.display =
+							"block";
+						document.querySelector(".rightside").style.display =
+							"none";
+						navigate("/home");
 					}}
 				/>
 			</div>

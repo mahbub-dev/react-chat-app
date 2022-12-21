@@ -1,12 +1,13 @@
-﻿import { format } from "timeago.js";
-import "./Message.scss";
+﻿import { useLocation } from "react-router-dom";
+import { format } from "timeago.js";
 import { useGlobalContext } from "../../context";
-import { useSocket } from "../../socketContext";
+import "./Message.scss";
 
-function Message({ messages, own, profilePicture }) {
+function Message({ m, own, other, user }) {
 	// const { isTyping } = useSocket();
+	const location = useLocation().pathname.split("/")[1];
 	const { handleModals, OpenUploadImage } = useGlobalContext();
-	let time = format(messages.createdAt).split(" ");
+	let time = format(m.createdAt).split(" ");
 	if (time.length === 3) {
 		time[2] = null;
 		time[1] === "seconds" && (time[1] = "s");
@@ -20,13 +21,11 @@ function Message({ messages, own, profilePicture }) {
 		<div id={own ? "own" : "other"} className="messages">
 			<div>
 				<div style={{ display: "flex" }}>
-					{!own && <img src={profilePicture} alt="" />}
+					{!own && <img src={user?.profilePicture} alt="" />}
 					<div>
-						{messages?.message?.text !== "" && (
-							<p>{messages?.message?.text}</p>
-						)}
-						{messages?.message?.images?.length > 0 &&
-							messages.message.images.map((img, index) => (
+						{m?.message?.text !== "" && <p>{m?.message?.text}</p>}
+						{m?.message?.images?.length > 0 &&
+							m.message.images.map((img, index) => (
 								<img
 									className="messageImg"
 									onClick={() =>

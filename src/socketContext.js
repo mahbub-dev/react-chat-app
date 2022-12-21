@@ -5,9 +5,11 @@ import { useLocation } from "react-router-dom";
 import { useGlobalContext } from "./context";
 const SocketContext = createContext();
 const SocketProvider = ({ children }) => {
+	const localSocketServer = "ws://localhost:3001";
+	const cloudSocketServer = "wss://socket-server-dtrx.onrender.com";
 	const { userList, setUserList } = useGlobalContext();
 	const friendId = useLocation().pathname.split("/")[2];
-	const socketInitait = io('wss://socket-server-dtrx.onrender.com', { autoConnect:false});
+	const socketInitait = io(localSocketServer, { autoConnect: false });
 	const [socket, setSocket] = useState(socketInitait);
 	const [typingStatus, setTypingStatus] = useState({
 		isTyping: false,

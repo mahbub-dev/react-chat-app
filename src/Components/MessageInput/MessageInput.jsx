@@ -1,99 +1,130 @@
-﻿import React, { useEffect, useState } from "react";
-import "./messageinput.scss";
-import { BsFillImageFill } from "react-icons/bs";
-import { ImCross } from "react-icons/im";
-import { createMessage, getMessage } from "../../Api Request/messageRequest";
+﻿/* eslint-disable no-loop-func */
+import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import InputEmoji from "react-input-emoji";
+import { createMessage } from "../../Api Request/messageRequest";
 import { useGlobalContext } from "../../context";
 import { useSocket } from "../../socketContext";
 import TypingDots from "../TypingDots/TypingDots";
-const MessageInput = ({ currentChat, setMessage }) => {
+import Input from "./Input/Input";
+import "./messageinput.scss";
+const MessageInput = ({ currentChat, messages, setMessages }) => {
 	const { socket, typingStatus } = useSocket();
-	const { convId, message } = useGlobalContext();
-	const sms = message;
-	const [text, setText] = useState("");
+	const { setReadMessage } = useGlobalContext();
+	const [text, setText] = useState("hsalkdsfsdf");
 	const [images, setImages] = useState([]);
-	const location = useLocation().pathname.split("/")[2];
+	const location = useLocation().pathname.split("/")[1];
 	const sender = localStorage.getItem("userId");
-	const receiverId = localStorage.getItem("friendId");
-	const handleChange = (e) => {
+	const emitMessage = (message) => {
+		socket?.emit("sendMessage", {
+			sender,
+			receiverId: location,
+			message,
+			conversationId: currentChat?.convId,
+		});
+	};
+	const handleImageChange = (e) => {
 		const file = document.querySelector("input[type=file]")["files"];
 		const files = [];
+		const image = [];
+		let ready = false;
+		const check = () => {
+			if (ready) {
+				setImages(image);
+			}
+		};
+		setTimeout(check, 1000);
 		for (let i = 0; i < file.length; i++) {
 			files.push(file[i]);
 		}
-		files.forEach((i) => {
+
+		for (let i = 0; i < files.length; i++) {
+			const elem = files[i];
 			const reader = new FileReader();
-			reader.readAsDataURL(i);
-			reader.onload = () => {
+			reader.onloadend = (event) => {
 				if (
-					i.type === `image/jpg` ||
-					i.type === "image/png" ||
-					i.type === "image/jpeg"
+					elem.type === `image/jpg` ||
+					elem.type === "image/png" ||
+					elem.type === "image/jpeg"
 				) {
-					setImages((p) => [...p, reader.result]);
+					image.push(event.target.result);
+					ready = true;
 				} else {
-					console.log("you can upload only jpg,png,jpeg file");
+					alert("you can upload only jpg,png,jpeg file");
 				}
 			};
-		});
+			reader.readAsDataURL(elem);
+		}
 	};
-
+	// console.log(sms)
 	const handleOnEnter = (text) => {
 		let message = {
 			text,
 			images,
 		};
-
 		if (currentChat) {
-			if (text === "" && images.length < 1) {
+			if (text === "" && images?.length < 1) {
 				alert("কিছু একটা লেখ ভাই");
-			} else if (sms === "not found") {
+			} else if (messages === "not found") {
 				if (text.toLowerCase() !== "assalamualaikum") {
-					alert("You have to say assalamualaikum to start chat");
+					alert(
+						"You have to start chat with world greatest greetings 'Assalamualaikum' "
+					);
 				} else {
-					socket?.emit("sendMessage", {
-						sender,
-						receiverId,
-						message,
-					});
+					// send to socket server
+
+					// send to database
 					createMessage(
-						{ conversationId: convId, message },
+						{ conversationId: currentChat._id, message },
 						(res) => {
 							if (res) {
-								setMessage([res]);
+								emitMessage(message);
+								// sms[newsms].push(res);
+								setMessages([res]);
 							}
 						}
 					);
 				}
 			} else {
-				socket?.emit("sendMessage", { sender, receiverId, message });
-				createMessage({ conversationId: convId, message }, (res) => {
-					if (res) {
-						setMessage((p) => [...p, res]);
+				createMessage(
+					{ conversationId: currentChat?.convId, message },
+					(res) => {
+						if (res) {
+							emitMessage(message);
+							setMessages((p) => [...p, res]);
+						}
 					}
-				});
+				);
 			}
 		} else {
-			alert("select a user");
+			alert("Please select a user");
 		}
 		setText("");
 		setImages([]);
 	};
 	useEffect(() => {
+		const s = (data) => {
+			if (currentChat?.convId === data.conversationId) {
+				return true;
+			} else {
+				return false;
+			}
+		};
+
 		socket?.on("getMessage", (data) => {
-			if (location === data?.sender) {
-				setMessage((p) => [...p, data]);
+			let isValid = s(data);
+			if (isValid) {
+				setMessages((p) => [...p, data]);
+			} else {
+				setMessages((p) => p);
 			}
 		});
-	}, [socket]);
+	}, [socket, location, currentChat?.convId, setReadMessage, setMessages]);
 
 	useEffect(() => {
 		let status = {
 			isTyping: true,
 			sender,
-			receiverId,
+			receiverId: location,
 		};
 		if (text === "") {
 			status.isTyping = false;
@@ -101,7 +132,11 @@ const MessageInput = ({ currentChat, setMessage }) => {
 		} else {
 			socket.emit("sendTypingStatus", status);
 		}
-	}, [text]);
+	}, [text, socket, sender, location]);
+
+	useEffect(() => {
+		setText("");
+	}, [location, setText]);
 	return (
 		<>
 			{typingStatus.isTyping && typingStatus.sender === location && (
@@ -109,47 +144,22 @@ const MessageInput = ({ currentChat, setMessage }) => {
 					<TypingDots />
 				</div>
 			)}
-			<InputEmoji
+
+			{/* text input  */}
+			<Input
 				value={text}
-				onChange={setText}
-				cleanOnEnter
-				onEnter={handleOnEnter}
-				placeholder="Type a message"
+				setText={setText}
+				handleOnEnter={handleOnEnter}
 			/>
-			<div
-				className="image-upload"
-				style={{ display: `${!images && "none"}` }}
-			>
-				{images.map((item, index, arr) => (
-					<div className="container" key={index}>
-						<img src={item} alt="img" />
-						<button
-							onClick={() => {
-								setImages(
-									arr.filter((item2) => item2 !== item)
-								);
-							}}
-						>
-							<ImCross />
-						</button>
-					</div>
-				))}
-			</div>
-			<div>
-				<label htmlFor="uploadImage">
-					<input
-						id="uploadImage"
-						onChange={handleChange}
-						type="file"
-						multiple
-						style={{ display: "none" }}
-					/>
-					<BsFillImageFill className="upload-image" />
-				</label>
-			</div>
-			<button className="sendBtn" onClick={() => handleOnEnter(text)}>
-				Send
-			</button>
+
+			{/* image input  */}
+			<input
+				id="uploadImage"
+				onChange={handleImageChange}
+				type="file"
+				multiple
+				style={{ display: "none" }}
+			/>
 		</>
 	);
 };

@@ -1,0 +1,9 @@
+﻿@import "../../../Utils/mixin.scss";
+@include updateModalsCss;
+.change-email {
+	display: none;
+	.codeBox {
+		display: flex;
+		flex-direction: column;
+	}
+}

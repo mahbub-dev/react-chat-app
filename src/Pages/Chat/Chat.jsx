@@ -1,52 +1,37 @@
-﻿import { useState, useEffect } from "react";
-import { MessageInput, ChatView, ChatHeader } from "../../Components";
-import "./Chat.scss";
-import { useGlobalContext } from "../../context";
-import { getMessage } from "../../Api Request/messageRequest";
-import { getUser } from "../../Api Request/userRequest";
+﻿import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { createConversation } from "../../Api Request/conversationRequest";
+import { ChatHeader, ChatView, MessageInput } from "../../Components";
+import "./Chat.scss";
 
-function Chat() {
-	const {
-		currentChat,
-		setMessage,
-		convId,
-		setConvId,
-		setUserList,
-		setCurrentChat,
-	} = useGlobalContext();
-	const location = useLocation().pathname.split("/")[2];
+function Chat({ currentChat, message, setMessage, device }) {
+	const location = useLocation().pathname.split("/")[1];
+	const [currentChatUser, setCurrentChatUser] = useState({});
 	useEffect(() => {
-		getUser("", (data) => {
-			let current = data?.find((i) => i._id === location);
-			setUserList(data);
-			setCurrentChat(current);
-		});
-	}, []);
-	useEffect(() => {
-		getMessage(convId, (res) => {
-			setMessage(res);
-		});
-	}, [convId, setMessage]);
-	useEffect(() => {
-		createConversation(location, (res) => {
-			setConvId(res._id);
-		});
-	}, [location, setConvId]);
-
+		setCurrentChatUser(currentChat?.convUser);
+	}, [currentChat]);
+	console.log(currentChat)
+	// get message from server
 	return (
-		<div className="rightside">
-			<ChatHeader />
-
+		<div
+			className="rightside"
+			style={location !== "home" ? { display: "flex" } : {}}
+		>
+			<ChatHeader
+				currentChatUser={currentChatUser}
+				setCurrenChatUser={setCurrentChatUser}
+			/>
 			{/* message view area  */}
-			<ChatView />
-
+			<ChatView
+				messages={message}
+				device={device}
+				currentChat={currentChat}
+			/>
 			{/* message input  */}
 			<div className="inputField">
 				<MessageInput
 					currentChat={currentChat}
-					setMessage={setMessage}
+					messages={message}
+					setMessages={setMessage}
 				/>
 			</div>
 		</div>

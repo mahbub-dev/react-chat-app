@@ -1,7 +1,7 @@
 ﻿import React from "react";
-import "./LoggedUser.scss";
-import { useGlobalContext } from "../../context";
 import { useNavigate } from "react-router-dom";
+import { useGlobalContext } from "../../context";
+import "./LoggedUser.scss";
 const LoggedUser = () => {
 	const navigate = useNavigate();
 	const { loggedUser } = useGlobalContext();
@@ -9,7 +9,11 @@ const LoggedUser = () => {
 		<div className="login-user">
 			<h2 className="title">Chats</h2>
 			<div className="logged-user" onClick={() => navigate("/profile")}>
-				<img src={loggedUser?.profilePicture} alt="" />
+				{loggedUser?.profilePicture ? (
+					<img src={loggedUser?.profilePicture} alt="" />
+				) : (
+					"Loading..."
+				)}
 				<h5>{loggedUser?.username}</h5>
 			</div>
 		</div>

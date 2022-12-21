@@ -2,77 +2,55 @@ import "./App.scss";
 // Import the functions you need from the SDKs you need
 // importing from modules
 // import { useState, useEffect } from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
 // importing from modals
-import { UserDetails, ImageShow } from "./Components/Modals/index";
+import { ImageShow, UserDetails } from "./Components/Modals/index";
 
 // importing from pages
-import { Home, Login, Signup, Profile, Chat } from "./Pages/index";
+import ResetPass from "./Components/Modals/ResetPass/ResetPass";
+import { Home, Login, Profile, Signup } from "./Pages/index";
+import ChangeEmail from "./Pages/Profile/ChangeEmail/ChangeEmail";
+import ChangPassword from "./Pages/Profile/ChangePass/ChangePass";
+import Confirm from "./Pages/Signup/Confirm";
 
 //importing from context
-import { useGlobalContext } from "./context";
-import SocketProvider from "./socketContext";
-
 
 function App() {
-	
-	const token = localStorage.getItem("token");
-	const { handleModals } = useGlobalContext();
+	const user = localStorage.getItem("userId");
+
 	return (
 		<div className="App">
 			<div className="modals-view">
 				<UserDetails />
 				<ImageShow />
+				<ChangeEmail />
+				<ChangPassword />
+				<ResetPass />
 			</div>
+
 			<BrowserRouter>
 				<Routes>
-					<Route path="/profile" element={<Profile />} />
+					<Route
+						path={"/:userId"}
+						element={user ? <Home /> : <Navigate to={"/"} />}
+					/>
+					<Route
+						path="/profile"
+						element={user ? <Profile /> : <Navigate to={`/`} />}
+					/>
 					<Route
 						path="/"
-						element={
-							token ? (
-								<Navigate
-									to={`/chat/${localStorage.getItem(
-										"friendId"
-									)}`}
-								/>
-							) : (
-								<Login />
-							)
-						}
+						element={user ? <Navigate to={`/home`} /> : <Login />}
 					/>
-					<Route
-						path="/message/:userId"
-						element={
-							<SocketProvider>
-								<Chat />
-							</SocketProvider>
-						}
-					/>
+
 					<Route
 						path="/signup"
-						element={
-							token ? (
-								<Navigate
-									to={`/chat/${localStorage.getItem(
-										"convId"
-									)}`}
-								/>
-							) : (
-								<Signup />
-							)
-						}
+						element={user ? <Navigate to={`/home`} /> : <Signup />}
 					/>
 					<Route
-						path={"/chat/:userId"}
-						element={
-							token ? (
-								<Home handleModals={handleModals} socket={""} />
-							) : (
-								<Navigate to={"/"} />
-							)
-						}
+						path="/signup/confirm"
+						element={user ? <Navigate to={"/home"} /> : <Confirm />}
 					/>
 				</Routes>
 			</BrowserRouter>

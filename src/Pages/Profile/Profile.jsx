@@ -1,13 +1,12 @@
-import "./profile.scss";
-import Item from "./Item";
-import { useGlobalContext } from "../../context";
+import { useNavigate } from "react-router-dom";
 import { updateUser } from "../../Api Request/userRequest";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useGlobalContext } from "../../context";
+import Item from "./Item";
+import "./profile.scss";
 
 const Profile = () => {
 	const navigate = useNavigate();
-	const { loggedUser, setLoggedUser } = useGlobalContext();
-	const handlePasswordChange = () => {};
+	const { loggedUser, setLoggedUser, handleModals } = useGlobalContext();
 	const handleUpdate = (e) => {
 		updateUser(loggedUser, (res) => {
 			setLoggedUser(res);
@@ -50,24 +49,32 @@ const Profile = () => {
 				<div className="option-container">
 					<Item
 						id={"btn1"}
+						buttonElem={"Edit"}
 						item={loggedUser?.username}
 						name={"username"}
 						handleUpdate={handleUpdate}
 					/>
 					<Item
 						id={"btn2"}
+						buttonElem={"Edit"}
 						item={loggedUser?.email}
 						name="email"
-						handleUpdate={handleUpdate}
+						handleUpdate={() => handleModals(true, "change-email")}
 					/>
 					<Item
 						id={"btn3"}
+						buttonElem={"Edit"}
 						item={loggedUser?.phone}
 						name="phone"
 						handleUpdate={handleUpdate}
 					/>
 					<div className="editoption">
-						<button className="logout">Change password</button>
+						<button
+							className=""
+							onClick={() => handleModals(true, "changePass")}
+						>
+							Change password
+						</button>
 					</div>
 					<div className="editoption">
 						<button

@@ -1,12 +1,19 @@
 @import "../../responsive-break-point.scss";
+@import "../../Utils/mixin.scss";
 .profile {
 	width: 100vw;
 	height: 100vh;
 	position: relative;
-	color: white;
-	background:linear-gradient(to right, rgb(139, 73, 73),rgb(26, 6, 6));
+	color: black;
+	background: #fff;
 
 	.profile-box {
+		box-shadow: 0 5px 30px 0px #ebcece;
+		background-image: radial-gradient(
+			circle 957px at 8.7% 50.5%,
+			rgba(246, 191, 13, 1) 0%,
+			rgba(249, 47, 47, 1) 90%
+		);
 		max-width: 400px;
 		@include small-down {
 			width: 300px;
@@ -45,7 +52,7 @@
 				width: 80px;
 				height: 80px;
 				border-radius: 50%;
-				border: 2px solid #fff;
+				border: 1px solid rgb(247, 200, 200);
 			}
 			input[type="file"] {
 				display: none;
@@ -54,14 +61,22 @@
 
 		.editoption {
 			p {
+				font-size: 14px;
 				margin-right: 1rem;
 				text-transform: capitalize;
+				display: flex;
+				align-items: center;
 			}
 			input {
 				outline: none;
 				border: none;
-				color: white;
 				background: none;
+			}
+			button {
+				@include button;
+				width: fit-content;
+				min-width: 50px;
+				position: initial;
 			}
 			margin-top: 1rem;
 			border: 1px solid gray;

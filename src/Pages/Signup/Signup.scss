@@ -1,19 +1,20 @@
 @import "../../responsive-break-point.scss";
 .login {
-	.wrapper {
-        @include small-up {
-            width: 400px;
-        }
+	.login-wrapper {
+		@include small-up {
+			width: 400px;
+		}
 		input {
 			@include small-down {
 				height: 35px;
+				margin-bottom: 0.5rem;
 			}
-			margin-bottom: 0.5rem;
+			margin-bottom: 1rem;
 		}
 		label {
 			padding-left: 5px;
-			color: white;
-			font-size: 12px;
+			color: #808080;
+			font-size: 16px;
 			display: block;
 			text-align: left;
 		}

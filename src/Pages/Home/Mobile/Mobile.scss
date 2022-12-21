@@ -1,12 +1,22 @@
 ﻿@import "../../../responsive-break-point.scss";
+.mobile-container {
+	@include small-up {
+		height: 100vh;
+		display: none;
+	}
+	background-image: radial-gradient(
+		circle 957px at 8.7% 50.5%,
+		rgba(246, 191, 13, 1) 0%,
+		rgba(249, 47, 47, 1) 90%
+	);
+}
 .mobile {
 	overflow-x: hidden;
 	position: relative;
 	margin: auto;
 	max-width: 500px;
-	@include small-up {
-		display: none;
-	}
+	height: 100%;
+
 	.top-area {
 		background-color: #e7eaed;
 		padding: 1rem;
@@ -16,7 +26,6 @@
 			height: 40px;
 			display: flex;
 			margin: auto;
-			padding-bottom: 30px;
 			justify-content: space-between;
 			align-items: center;
 
@@ -43,7 +52,7 @@
 			// }
 
 			.friend {
-				position:relative;
+				position: relative;
 				margin-right: 1rem;
 				img {
 					width: 45px;

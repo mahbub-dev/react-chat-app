@@ -1,14 +1,19 @@
 import React, { useState } from "react";
-import { createUser } from "../../Api Request/userRequest";
 import { useNavigate } from "react-router-dom";
-import { useGlobalContext } from "../../context";
-import "./Signup.scss";
+import { createUser } from "../../Api Request/userRequest";
 import "../Login/login.scss";
+import "./Signup.scss";
 function Signup() {
 	const [err, setError] = useState("");
 	const [isShow, setIsShow] = useState(false);
 	const [style, setStyle] = useState("password");
-	const [signupData, setSignupData] = useState({});
+	const [signupData, setSignupData] = useState({
+		username: "",
+		email: "",
+		phone: "",
+		confirmPassword: "",
+		password: "",
+	});
 	const navigate = useNavigate();
 	const handleShow = () => {
 		if (isShow) {
@@ -27,34 +32,33 @@ function Signup() {
 		if (signupData.password === signupData.confirmPassword) {
 			createUser(signupData, (res) => {
 				if (res._id) {
-					navigate('/')
+					navigate("/signup/confirm");
 				} else {
 					console.log(res);
 				}
 			});
 		} else {
-			alert('confirm password is not same as password')
+			alert("confirm password is not same as password");
 		}
-
 	};
 	return (
 		<div className="login">
-			<div className="wrapper">
+			<div className="login-wrapper">
 				<h1>Chat App</h1>
 				<form onSubmit={handleSignup}>
 					<label htmlFor="name">Name</label>
 					<input
 						name="username"
+						required
 						type="text"
-						placeholder="Name"
-						value={signupData.name}
+						value={signupData.username}
 						onChange={handleChange}
 					/>
 					<label htmlFor="email">Email</label>
 					<input
 						name="email"
+						required
 						type="email"
-						placeholder="Email"
 						value={signupData.email}
 						onChange={handleChange}
 					/>
@@ -62,7 +66,6 @@ function Signup() {
 					<input
 						name="phone"
 						type="text"
-						placeholder="Phone"
 						value={signupData.phone}
 						onChange={handleChange}
 					/>
@@ -71,9 +74,9 @@ function Signup() {
 					<span className="password_input">
 						<input
 							name="password"
+							required
 							type={style}
 							value={signupData.password}
-							placeholder="Password"
 							onChange={handleChange}
 						/>
 						<span className="showhide" onClick={handleShow}>
@@ -84,9 +87,9 @@ function Signup() {
 					<label htmlFor="confirmPassword">Confirm Password</label>
 					<input
 						type={"password"}
+						required
 						name="confirmPassword"
 						value={signupData.confirmPassword}
-						placeholder="Confirm Passoword"
 						onChange={handleChange}
 					/>
 					<span className="errShow">{err ? err : null}</span>

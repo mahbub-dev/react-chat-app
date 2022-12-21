@@ -1,76 +1,73 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import { Actice } from "../..";
-import { createConversation } from "../../../Api Request/conversationRequest";
+import React, { useEffect, useState } from "react";
+import ApiRequest from "../../../Api Request/apiRequest";
 import { useGlobalContext } from "../../../context";
-import { UserOption } from "../../Modals/index";
 import { useSocket } from "../../../socketContext";
+import Active from "../../Active/Active";
+import UserOption from "../../Modals/UserOption/UserOption";
+import UserLoader from "../../UserLoader/UserLoader";
 import "./user.scss";
 
-function User({ root, data, array, setCurrentChat }) {
+function User({ convItem, handleCoversation, handleDelConversation }) {
+	const [user, setUser] = useState({});
+	const { readMessage } = useGlobalContext();
 	const { onlineUsers } = useSocket();
-	const navigate = useNavigate();
-	const { handleModals, setConvId } = useGlobalContext();
-	let idArray = [];
-	array?.forEach((i) => {
-		idArray.push(i._id);
-	});
-	const openOption = (idArray) => {
-		const filteredId = idArray.filter((item) => item !== data?._id);
-		const userOptionDiv = document.getElementById(
-			`user-option${data?._id}`
+	useEffect(() => {
+		const userId = convItem?.member?.find(
+			(i) => i !== localStorage.getItem("userId")
 		);
-		if (userOptionDiv.style.display === "none") {
-			userOptionDiv.style.display = "flex";
-			filteredId.forEach((i) => {
-				let commonDiv = document.getElementById(`user-option${i}`);
-				commonDiv.style.display = "none";
-			});
-		} else {
-			userOptionDiv.style.display = "none";
-		}
-	};
+		const getFiriendUser = async () => {
+			const res = await ApiRequest.get(`/user/${userId}`);
+			setUser(res.data);
+		};
+		getFiriendUser();
+	}, [convItem]);
 	let isOnline;
-	onlineUsers.forEach((i) => {
-		isOnline = i.userId.includes(data?._id);
-	});
-	const handleCoversation = () => {
-		createConversation(data?._id, (res) => {
-			setCurrentChat(data);
-			setConvId(res._id);
-			localStorage.setItem("friendId", data?._id);
-			if (root) {
-				navigate(`/${root}/${data?._id}`);
-			} else {
-				navigate(`/chat/${data?._id}`);
-				
-			}
+	onlineUsers &&
+		onlineUsers.forEach((i) => {
+			isOnline = i.userId.includes(user?._id);
 		});
-	};
+
 	return (
-		<div
-			className="user"
-			id={`user${data?._id}`}
-			onClick={handleCoversation}
-		>
-			<div className="img">
-				<img src={data?.profilePicture} alt="img" />
-				<Actice isOnline={isOnline} id={data?._id} />
-			</div>
-			<div className="name">
-				<h5>{data?.username}</h5>
-				<p className="last-sms">{data?.message}</p>
-			</div>
-			<div className="time">
-				<p>{data?.time}</p>
-			</div>
-			<div className="option" onClick={(e) => openOption(idArray)}>
-				<div className="dot"></div>
-				<div className="dot"></div>
-				<div className="dot"></div>
-			</div>
-			<UserOption user={data} handleModals={handleModals} />
-		</div>
+		<>
+			{Object.keys(user).length > 0 ? (
+				<>
+					<div
+						className="user"
+						onClick={() => handleCoversation("mobile", convItem ,user)}
+					>
+						<div className="img">
+							<img src={user?.profilePicture} alt="img" />
+							<Active isOnline={isOnline} id={user?._id} />
+						</div>
+						<div className="name">
+							<h5>{user?.username}</h5>
+							<p
+								className="last-sms"
+								style={{
+									fontWeight: readMessage?.isSeen
+										? "initial"
+										: "bold",
+								}}
+							>
+								{readMessage.id === user?._id &&
+									readMessage?.lastMessage}
+							</p>
+						</div>
+						<div className="time">
+							<p>{user?.time}</p>
+						</div>
+					</div>
+					<UserOption
+						// conversation={conversation}
+						user={user}
+						convItem={convItem}
+						handleDelConversation={handleDelConversation}
+					/>
+				</>
+			) : (
+				<UserLoader />
+			)}
+		</>
 	);
 }
 

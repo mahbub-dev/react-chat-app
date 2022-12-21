@@ -1,57 +1,35 @@
-﻿.typing-container{
-    position: absolute;
-    top: -15px;
-    left: 9%;
+﻿.typing-container {
+	position: absolute;
+	top: -15px;
+	left: 9%;
 }
 .inputField {
-    height: 5%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    bottom: 1rem;
-    width: 100%;
-    .image-upload {
-        position: absolute;
-        top: -2rem;
-        right: 5rem;
-        display: flex;
-        .container {
-            display: flex;
-            img {
-                width: 40px;
-                height: 40px;
-                margin-right: 0.5rem;
-            }
-            button {
-                font-size: 9px;
-                cursor: pointer;
-                background: none;
-                position: absolute;
-                border: none;
-            }
-        }
-    }
-    label {
-        // display: block;
-        cursor: pointer;
-        .upload-image {
-            // position: absolute;
-            // top: 5px;
-            margin-right: 1rem;
-            color: #858585;
-            font-size: 25px;
-        }
-    }
-
-    .sendBtn {
-        cursor: pointer;
-        width: 50px;
-        color: white;
-        height: 25px;
-        border-radius: 3px;
-        border: none;
-        outline: none;
-        background-color: #858585;
-    }
+	height: 5%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: absolute;
+	bottom: 1rem;
+	width: 100%;
+	.image-upload {
+		position: absolute;
+		top: -2rem;
+		right: 5rem;
+		display: flex;
+		.container {
+			display: flex;
+			img {
+				width: 40px;
+				height: 40px;
+				margin-right: 0.5rem;
+			}
+			button {
+				font-size: 9px;
+				cursor: pointer;
+				background: none;
+				position: absolute;
+				border: none;
+			}
+		}
+	}
 }

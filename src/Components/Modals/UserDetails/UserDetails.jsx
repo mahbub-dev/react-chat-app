@@ -1,7 +1,7 @@
 ﻿import React from "react";
-import "./userdetails.scss";
 import { TiDelete } from "react-icons/ti";
 import { useGlobalContext } from "../../../context";
+import "./userdetails.scss";
 const UserDetails = () => {
 	const { handleModals, user } = useGlobalContext();
 	return (
@@ -24,9 +24,9 @@ const UserDetails = () => {
 			</div>
 			<h4>{user?.username}</h4>
 			<div className="other">
-				<p>Email:{user?.email ? user.email : ""}</p>
-				<p>Phone:{user?.phone ? user.phone : ""}</p>
-				<p>status:{user?.status ? user.status : ""}</p>
+				<p>Email: {user?.email ? user.email : ""}</p>
+				<p>Phone: {user?.phone ? user.phone : ""}</p>
+				<p>status: {user?.status ? user.status : "ofline"}</p>
 			</div>
 		</div>
 	);

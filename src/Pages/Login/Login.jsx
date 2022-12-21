@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { loginRequest } from "../../Api Request/authRequest";
 import { useNavigate } from "react-router-dom";
+import { loginRequest } from "../../Api Request/authRequest";
 import { useGlobalContext } from "../../context";
 import "./login.scss";
 function Login() {
-	const { setLoggedUser } = useGlobalContext();
+	const { setLoggedUser, handleModals } = useGlobalContext();
 	const [err, setError] = useState("");
 	const [isShow, setIsShow] = useState(false);
 	const [style, setStyle] = useState("password");
@@ -23,21 +23,27 @@ function Login() {
 	const handleLogin = (e) => {
 		e.preventDefault();
 		loginRequest({ loginId, password }, (data) => {
-			setLoggedUser(data.loginuser);
-			if (data.token) {
-				navigate(`/chat/${data.loginuser._id}`);
-				window.location.reload();
+			if (data?.msg === "not verified") {
+				navigate("/signup/confirm");
+				localStorage.setItem("signupEmail", data?.email);
 			} else {
-				setError(data.response.data);
+				setLoggedUser(data.loginuser);
+				if (data.token) {
+					navigate(`/home`);
+					window.location.reload();
+				} else {
+					setError(data.response.data);
+				}
 			}
 		});
 	};
 	return (
 		<div className="login">
-			<div className="wrapper">
+			<div className="login-wrapper">
 				<h1>Chat App</h1>
 				<form onSubmit={handleLogin}>
 					<input
+						id="email"
 						type="text"
 						placeholder="Email or phone"
 						value={loginId}
@@ -58,6 +64,9 @@ function Login() {
 					<span className="errShow">{err ? err : null}</span>
 					<button type="submit">Login</button>
 				</form>
+				<p onClick={() => handleModals(true, "resetPass")}>
+					Forget password
+				</p>
 				<a href="/signup">Create a new Account</a>
 			</div>
 		</div>

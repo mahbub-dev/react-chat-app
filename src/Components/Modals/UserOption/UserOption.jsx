@@ -1,12 +1,22 @@
 import React from "react";
+import { SlOptions } from "react-icons/sl";
+import { useGlobalContext } from "../../../context";
 import "./useroption.scss";
 
-const UserOption = ({ user, handleModals }) => {
+const UserOption = ({ user, convItem, handleDelConversation }) => {
+	const { OpenUserDetails } = useGlobalContext();
 	return (
-		<div id={`user-option${user?._id}`} className="user-option">
-			<p onClick={() => handleModals(true, user)}>View profile</p>
-			<p>Block</p>
-			<p>Unblock</p>
+		<div className="user-option-wrapper">
+			<SlOptions className="option" />
+			<div className="userOption">
+				<button onClick={() => OpenUserDetails(user)}>
+					View profile
+				</button>
+				<button onClick={() => handleDelConversation(convItem._id)}>
+					Delete
+				</button>
+				<button>Block</button>
+			</div>
 		</div>
 	);
 };
