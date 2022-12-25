@@ -1,15 +1,12 @@
-﻿import { io } from "socket.io-client";
-import { useState, createContext, useContext, useEffect } from "react";
-import { updateUser } from "./Api Request/userRequest";
+﻿import { createContext, useContext, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { useGlobalContext } from "./context";
+import { io } from "socket.io-client";
 const SocketContext = createContext();
 const SocketProvider = ({ children }) => {
 	const localSocketServer = "ws://localhost:3001";
 	const cloudSocketServer = "wss://socket-server-dtrx.onrender.com";
-	const { userList, setUserList } = useGlobalContext();
 	const friendId = useLocation().pathname.split("/")[2];
-	const socketInitait = io(localSocketServer, { autoConnect: false });
+	const socketInitait = io(cloudSocketServer, { autoConnect: false });
 	const [socket, setSocket] = useState(socketInitait);
 	const [typingStatus, setTypingStatus] = useState({
 		isTyping: false,
@@ -38,8 +35,6 @@ const SocketProvider = ({ children }) => {
 		<SocketContext.Provider
 			value={{
 				onlineUsers,
-				// setMessage,
-				// message,
 				socket,
 				typingStatus,
 			}}

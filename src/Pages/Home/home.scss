@@ -1,5 +1,30 @@
 @import "../../responsive-break-point.scss";
 .home {
+	width: 100vw;
+	height: 100vh;
+	background-color: #4158d0;
+	background-image: linear-gradient(
+		43deg,
+		#4158d0 0%,
+		#c850c0 46%,
+		#ffcc70 100%
+	);
+
+	overflow: hidden;
+	box-shadow: 0 0 20px grey;
+	width: 100%;
+	// height: 100%;
+	margin: auto;
+	display: flex;
+	.leftside {
+		position: relative;
+		border-right: 2px solid burlywood;
+		width: 35%;
+		@include small-down {
+			padding: 0.2rem;
+		}
+		padding: 0.5rem;
+	}
 }
 
 // responsive

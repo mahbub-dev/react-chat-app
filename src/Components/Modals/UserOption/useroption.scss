@@ -5,17 +5,22 @@
 	display: flex;
 	align-items: center;
 	padding: 0.3rem;
-	box-shadow: 0 0 10px 0px #fd9738;
+	background-color: black;
 	top: 30%;
+	@include small-down {
+		right: 0;
+		padding: 0.1rem;
+		top: 20%;
+	}
 	right: 10px;
 	&:hover .userOption {
 		display: flex;
 	}
 
 	.option {
-		height: 20px;
+		height: 15px;
 		cursor: pointer;
-		width: 20px;
+		width: 15px;
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -29,7 +34,7 @@
 		right: 0px;
 	}
 	right: -10px;
-	top: 30px;
+	top: 25px;
 	z-index: 1;
 	flex-direction: column;
 	padding: 0.5rem;

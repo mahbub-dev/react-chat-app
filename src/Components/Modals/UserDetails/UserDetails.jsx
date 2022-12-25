@@ -26,7 +26,7 @@ const UserDetails = () => {
 			<div className="other">
 				<p>Email: {user?.email ? user.email : ""}</p>
 				<p>Phone: {user?.phone ? user.phone : ""}</p>
-				<p>status: {user?.status ? user.status : "ofline"}</p>
+				{/* <p>status: {user?.status ? user.status : "ofline"}</p> */}
 			</div>
 		</div>
 	);

@@ -1,0 +1,37 @@
+﻿@import "../../../responsive-break-point.scss";
+.search {
+	position: relative;
+	color: #a9b5c1;
+	margin-top: 0.5rem;
+	padding-bottom: 10px;
+	@include small-down {
+		padding-bottom: 0;
+		margin-top: 0rem;
+	}
+	input {
+		@include small-up {
+			border-radius: 15px;
+			border: none;
+			background: rgb(247, 238, 238);
+			outline: none;
+			padding: 0 3rem;
+			margin-top: 0px;
+		}
+		box-sizing: border-box;
+		padding: 0 1.5rem;
+		border-radius: 5px;
+		width: 100%;
+		outline: none;
+		height: 30px;
+		border: none;
+	}
+	.search-icon {
+		position: absolute;
+		left: 5px;
+		top: 24%;
+		@include small-up {
+			top: 19%;
+			left: 20px;
+		}
+	}
+}

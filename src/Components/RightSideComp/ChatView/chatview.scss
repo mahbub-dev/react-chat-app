@@ -1,0 +1,9 @@
+﻿@import "../../../responsive-break-point.scss";
+.chatView {
+	overflow: auto;
+	height: 80%;
+	padding: 1rem;
+	@include small-down {
+		padding: 0.1rem;
+	}
+}

@@ -1,0 +1,20 @@
+﻿@import "../../../../Utils//mixin.scss";
+@import "../../../../responsive-break-point.scss";
+.addFrdBtn {
+	display: flex;
+	align-items: center;
+	background: none;
+	border: none;
+	outline: none;
+	cursor: pointer;
+	img {
+		@include small-up {
+			width: 30px;
+			height: 30px;
+		}
+		width: 20px;
+		height: 20px;
+		position: absolute;
+		right: 0;
+	}
+}

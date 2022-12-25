@@ -1,0 +1,27 @@
+﻿.settings {
+	width: 100%;
+
+	color: black;
+	display: flex;
+	flex-direction: column;
+	button {
+		color: white;
+		background: none;
+		cursor: pointer;
+		text-align: left;
+		display: flex;
+		align-items: center;
+		justify-content: start;
+		border: none;
+		outline: none;
+		padding: 0.1rem;
+		margin-bottom: 0.5rem;
+		span {
+			margin-left: 1rem;
+		}
+		img {
+			width: 2rem;
+			height: 2rem;
+		}
+	}
+}

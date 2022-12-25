@@ -1,0 +1,54 @@
+﻿@import "../../../responsive-break-point.scss";
+.userlist {
+	@include small-down {
+		overflow: auto;
+		height: 100%;
+		min-height: 420px;
+	}
+}
+.item {
+	position: relative;
+	border-radius: 10px;
+}
+.buttons {
+	display: flex;
+	border-radius: 5px;
+	width: 100%;
+	margin: 0.5rem auto;
+
+	button {
+		@include small-down {
+			padding: 0.1rem;
+			img {
+				width: 20px;
+				height: 20px;
+			}
+		}
+		border: none;
+		outline: none;
+		padding: 0.5rem;
+		width: 50%;
+		cursor: pointer;
+		color: black;
+		img {
+			@include small-down {
+				width: 20px;
+				height: 20px;
+			}
+			width: 30px;
+			height: 30px;
+		}
+		&:hover {
+			background: black;
+		}
+	}
+	.btn0 {
+		border-radius: 5px 0px 0px 5px;
+	}
+	.btn1 {
+		background-color: black;
+	}
+	.btn2 {
+		border-radius: 0px 5px 5px 0px;
+	}
+}

@@ -48,21 +48,22 @@ const Confirm = () => {
 							type="text"
 							className="confirmInput"
 							placeholder="Enter code"
-							onChange={(e) => setCode(e.target.value)}
+							onChange={(e) => {
+								setCode(e.target.value);
+								setError(false);
+							}}
 							onKeyPress={(e) => {
-								e.key = "Enter" && handleConfirm();
+								e.key === "Enter" && handleConfirm();
 							}}
 							value={code}
 						/>
+						{err && <p>Code doesn't match</p>}
 						<button
 							onClick={handleConfirm}
 							disabled={code.length < 4 ? true : false}
 						>
 							Confirm
 						</button>
-						<p style={{ display: err ? "initial" : "none" }}>
-							Code doesn't match
-						</p>
 					</div>
 
 					<div

@@ -1,18 +1,31 @@
 ﻿/* eslint-disable react-hooks/exhaustive-deps */
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import ApiRequest from "./Api Request/apiRequest";
 
 const AppContext = createContext();
 const AppProvider = ({ children }) => {
 	const [loggedUser, setLoggedUser] = useState("");
 	const [userList, setUserList] = useState("");
-
-	const [readMessage, setReadMessage] = useState({});
-
+	const [searchValue, setSearchValue] = useState("");
+	const [unreadMessage, setUnreadMessage] = useState([]);
+	const [userComps, setUserComps] = useState("");
+	const [newMessagCount, setNewMessageCount] = useState(0);
+	const soundRef = useRef(true);
 	// handle Modals
 	const [user, setUser] = useState("");
 	const [showImage, setShowImage] = useState();
 	const [email, setEmail] = useState("");
+	useEffect(() => {
+		let newSmsCount = [];
+		unreadMessage?.forEach((i) => {
+			newSmsCount.push(i.sender);
+		});
+		const newMessage = newSmsCount?.filter(
+			(item, index, arr) => arr.indexOf(item) === index
+		);
+		setNewMessageCount(newMessage.length);
+	}, [unreadMessage]);
+
 	const OpenUserDetails = (data) => {
 		setUser(data);
 		handleModals(true, "user-details");
@@ -70,9 +83,16 @@ const AppProvider = ({ children }) => {
 
 		userList,
 		setUserList,
+		searchValue,
+		setSearchValue,
 
-		readMessage,
-		setReadMessage,
+		unreadMessage,
+		setUnreadMessage,
+		userComps,
+		setUserComps,
+		newMessagCount,
+		setNewMessageCount,
+		soundRef
 	};
 	return (
 		<AppContext.Provider value={memoValue}>{children}</AppContext.Provider>

@@ -1,0 +1,71 @@
+﻿@import "../../../../responsive-break-point.scss";
+.textInput {
+	width: 100%;
+	display: flex;
+	padding: 0.5rem;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+	.inputWrapper {
+		@include small-down {
+			width: 70%;
+		}
+		width: 90%;
+		input {
+			width: 100%;
+			box-sizing: border-box;
+			@include small-down {
+				width: 85%;
+			}
+			height: 35px;
+			border-radius: 20px;
+			outline: none;
+			border: none;
+			padding: 0.5rem 1rem;
+		}
+	}
+	.icons {
+		@include small-down {
+			width: 30%;
+		}
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		.icon {
+			cursor: pointer;
+			font-size: 25px;
+			margin: 0 0.2rem;
+		}
+
+		.sendBtn {
+			height: 25px;
+			color: white;
+			border-radius: 3px;
+			border: none;
+			outline: none;
+			background: none;
+		}
+		label {
+			height: 25px;
+		}
+	}
+}
+.customEmoji {
+	max-width: 200px;
+	right: 13%;
+	z-index: 1;
+	box-shadow: 0 0 10px 0 rgb(194, 209, 194);
+	bottom: 100%;
+
+	position: absolute;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: start;
+	padding: 0.5rem;
+
+	border-radius: 5px;
+	.item {
+		cursor: pointer;
+	}
+}

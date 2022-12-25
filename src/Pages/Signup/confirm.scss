@@ -19,6 +19,7 @@
 		justify-content: center;
 		p {
 			margin-bottom: 1rem;
+			color: black;
 		}
 		.confirmInput {
 			height: 30px;
@@ -35,6 +36,7 @@
 			outline: none;
 			border: none;
 			background: red;
+			cursor: pointer;
 			color: white;
 			border-radius: 5px;
 		}
