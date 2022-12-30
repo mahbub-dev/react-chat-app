@@ -42,7 +42,7 @@ const Profile = () => {
 				<ChangPassword />
 				<div className="profile-image">
 					<label htmlFor="profilePic" className="chooseFile">
-						<img src={loggedUser.profilePicture} alt="" />
+						<img src={loggedUser?.profilePicture} alt="" />
 						<span>edit</span>
 					</label>
 					<input
