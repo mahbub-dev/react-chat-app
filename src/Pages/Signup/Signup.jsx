@@ -43,7 +43,7 @@ function Signup() {
 	};
 	return (
 		<div className="login">
-			<div className="login-wrapper">
+			<div className="login-wrapper signup-wrapper">
 				<h1>Chat App</h1>
 				<form onSubmit={handleSignup}>
 					<label htmlFor="name">Name</label>

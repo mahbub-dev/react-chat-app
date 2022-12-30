@@ -1,8 +1,11 @@
-﻿import { useLocation } from "react-router-dom";
+﻿import { BiLeftArrow } from "react-icons/bi";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useGlobalContext } from "../../../context";
 import { useSocket } from "../../../socketContext";
+import { responSive } from "../../../Utils/functions";
 import "./chatheader.scss";
-const ChatHeader = ({ currentChatUser }) => {
+const ChatHeader = ({ currentChatUser, isOnline }) => {
+	const navigate = useNavigate();
 	const location = useLocation().pathname.split("/")[1];
 	const { handleModals, OpenUserDetails } = useGlobalContext();
 	const { onlineUsers } = useSocket();
@@ -35,7 +38,7 @@ const ChatHeader = ({ currentChatUser }) => {
 							</div>
 							<div className="name">
 								<h5>{currentChatUser?.username}</h5>
-								{/* <p>{active} </p> */}
+								{isOnline && <p>online</p>}
 							</div>
 						</div>
 					) : (
@@ -52,7 +55,13 @@ const ChatHeader = ({ currentChatUser }) => {
 					</p>
 				)}
 			</div>
-			<hr />
+			<BiLeftArrow
+				className="back"
+				onClick={() => {
+					responSive("left");
+					navigate("/home");
+				}}
+			/>
 		</div>
 	);
 };

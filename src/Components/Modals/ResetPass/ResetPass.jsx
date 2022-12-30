@@ -1,8 +1,8 @@
 ﻿import React, { useState } from "react";
 import { TiDelete } from "react-icons/ti";
 import ApiRequest from "../../../Api Request/apiRequest";
+import { PasswordInput } from "../../../Components/Modals/Profile/ChangePass/ChangePass";
 import { useGlobalContext } from "../../../context";
-import { PasswordInput } from "../../../Pages/Profile/ChangePass/ChangePass";
 import "./resetPass.scss";
 
 const ResetPass = () => {

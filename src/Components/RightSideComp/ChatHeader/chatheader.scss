@@ -8,7 +8,8 @@
 }
 .header {
 	width: 100%;
-	height: 10%;
+	min-height: 6%;
+	border-bottom: 1px solid rgb(236, 226, 212);
 	.wrapper {
 		display: flex;
 		justify-content: space-between;
@@ -24,9 +25,6 @@
 			}
 		}
 	}
-	hr {
-		color: rgb(13, 130, 219);
-	}
 	.opened-user {
 		width: 200px;
 		padding: 0.5rem;
@@ -34,7 +32,7 @@
 		display: flex;
 		align-items: center;
 		&:hover {
-			background-color: rgba(49, 11, 11, 0.836);
+			background-color:#e0e3e9;
 		}
 		.img {
 			margin-right: 1rem;
@@ -58,4 +56,14 @@
 			}
 		}
 	}
+}
+.back {
+	@include small-down {
+		position: absolute;
+		top: 13px;
+		font-size: 25px;
+		right: 10px;
+		display: block;
+	}
+	display: none;
 }

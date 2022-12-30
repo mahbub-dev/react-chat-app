@@ -1,6 +1,7 @@
 ﻿/* eslint-disable react-hooks/exhaustive-deps */
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import ApiRequest from "./Api Request/apiRequest";
+import { handleModals } from "./Utils/functions";
 
 const AppContext = createContext();
 const AppProvider = ({ children }) => {
@@ -10,7 +11,10 @@ const AppProvider = ({ children }) => {
 	const [unreadMessage, setUnreadMessage] = useState([]);
 	const [userComps, setUserComps] = useState("");
 	const [newMessagCount, setNewMessageCount] = useState(0);
-	const soundRef = useRef(true);
+	const soundRef = useRef("yes");
+	useEffect(() => {
+		soundRef.current = localStorage.getItem("sound");
+	}, []);
 	// handle Modals
 	const [user, setUser] = useState("");
 	const [showImage, setShowImage] = useState();
@@ -39,19 +43,6 @@ const AppProvider = ({ children }) => {
 		setEmail(data);
 		handleModals(true, "change-email");
 	};
-	const handleModals = (isOpen = false, className) => {
-		const openUser = document.querySelector(`.${className}`);
-		const app = document.querySelector("body");
-		const modalView = document.querySelector(".modals-view");
-		if (isOpen) {
-			openUser.style.display = "block";
-			app.style.overflowY = "hidden";
-			modalView.style.display = "block";
-		} else {
-			openUser.style.display = "none";
-			modalView.style.display = "none";
-		}
-	};
 
 	// send mail for verifiaction
 
@@ -70,7 +61,7 @@ const AppProvider = ({ children }) => {
 
 	const memoValue = {
 		user,
-		handleModals,
+
 		OpenUserDetails,
 		OpenUploadImage,
 		OpenEmailUpdateForm,
@@ -92,7 +83,7 @@ const AppProvider = ({ children }) => {
 		setUserComps,
 		newMessagCount,
 		setNewMessageCount,
-		soundRef
+		soundRef,
 	};
 	return (
 		<AppContext.Provider value={memoValue}>{children}</AppContext.Provider>

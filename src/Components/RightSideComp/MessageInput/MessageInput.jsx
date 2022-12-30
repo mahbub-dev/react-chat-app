@@ -1,13 +1,16 @@
-﻿/* eslint-disable no-loop-func */
+﻿/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-loop-func */
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { updateConversation } from "../../../Api Request/conversationRequest";
 import { createMessage } from "../../../Api Request/messageRequest";
 import { useGlobalContext } from "../../../context";
 import { useSocket } from "../../../socketContext";
-import playSound from "../../../Utils/playSound";
+import { handleImageChange, playSound } from "../../../Utils/functions";
 import TypingDots from "../TypingDots/TypingDots";
 import Input from "./Input/Input";
 import "./messageinput.scss";
+
 const MessageInput = ({ currentChat, messages, setMessages }) => {
 	const { socket, typingStatus } = useSocket();
 	const { setUnreadMessage, soundRef } = useGlobalContext();
@@ -19,6 +22,9 @@ const MessageInput = ({ currentChat, messages, setMessages }) => {
 	useEffect(() => {
 		locationRef.current = location;
 	}, [location]);
+
+	// send unseen
+
 	const emitMessage = (message) => {
 		socket?.emit("sendMessage", {
 			sender,
@@ -26,39 +32,6 @@ const MessageInput = ({ currentChat, messages, setMessages }) => {
 			message,
 			conversationId: currentChat?.convId,
 		});
-	};
-	const handleImageChange = (e) => {
-		const file = document.querySelector("input[type=file]")["files"];
-		const files = [];
-		const image = [];
-		let ready = false;
-		const check = () => {
-			if (ready) {
-				setImages(image);
-			}
-		};
-		setTimeout(check, 1000);
-		for (let i = 0; i < file.length; i++) {
-			files.push(file[i]);
-		}
-
-		for (let i = 0; i < files.length; i++) {
-			const elem = files[i];
-			const reader = new FileReader();
-			reader.onloadend = (event) => {
-				if (
-					elem.type === `image/jpg` ||
-					elem.type === "image/png" ||
-					elem.type === "image/jpeg"
-				) {
-					image.push(event.target.result);
-					ready = true;
-				} else {
-					alert("you can upload only jpg,png,jpeg file");
-				}
-			};
-			reader.readAsDataURL(elem);
-		}
 	};
 	// console.log(sms)
 	const handleOnEnter = (text) => {
@@ -78,14 +51,22 @@ const MessageInput = ({ currentChat, messages, setMessages }) => {
 					emitMessage(message);
 					createMessage(
 						{ conversationId: currentChat.convId, message },
-						(res) => res && setMessages([res])
+						(res) => {
+							if (res) {
+								setMessages([res]);
+							}
+						}
 					);
 				}
 			} else {
 				emitMessage(message);
 				createMessage(
 					{ conversationId: currentChat?.convId, message },
-					(res) => res && setMessages((p) => [...p, res])
+					(res) => {
+						if (res) {
+							setMessages((p) => [...p, res]);
+						}
+					}
 				);
 			}
 		} else {
@@ -96,12 +77,26 @@ const MessageInput = ({ currentChat, messages, setMessages }) => {
 	};
 	useEffect(() => {
 		socket?.on("getMessage", (data) => {
+			updateConversation({
+				convId: data?.conversationId,
+				lastSms: {
+					sender: data?.sender,
+					sms: data?.message?.text,
+					timestamps: data?.createdAt,
+				},
+			});
 			if (locationRef.current === data.sender) {
 				setMessages((p) => [...p, data]);
+				updateConversation({ convId: data?.conversationId });
 			} else {
 				setUnreadMessage((p) => [...p, data]);
-
-				soundRef.current && playSound();
+				socket.emit("isSeen", {
+					totalUnseen: 1,
+					conversationId: data.conversationId,
+					sender: localStorage.getItem("userId"),
+					receiverId: data.sender,
+				});
+				soundRef.current === "yes" && playSound();
 			}
 		});
 	}, [socket, location]);
@@ -136,11 +131,21 @@ const MessageInput = ({ currentChat, messages, setMessages }) => {
 				setText={setText}
 				handleOnEnter={handleOnEnter}
 			/>
-
+			{images.length > 0 && (
+				<div className="images">
+					{images.map((i, index) => (
+						<img src={i} alt={"img"} key={index} />
+					))}
+				</div>
+			)}
 			{/* image input  */}
 			<input
 				id="uploadImage"
-				onChange={handleImageChange}
+				onChange={() =>
+					handleImageChange((result) => {
+						setImages(result);
+					})
+				}
 				type="file"
 				multiple
 				style={{ display: "none" }}

@@ -9,17 +9,40 @@ const Input = ({ setText, value, handleOnEnter }) => {
 	const handldeTextChange = (e) => {
 		setText(e.target.value);
 	};
-	const emojiDisplay = () => {
-		if (imojiStyle.display === "none") {
-			setImojiStyle({ display: "flex" });
-		} else {
-			setImojiStyle({ display: "none" });
-		}
-	};
-
-	// console.log(emoji);
 	return (
 		<div className="textInput">
+			<div className="icons">
+				<button
+					style={{
+						display: "flex",
+						background: "none",
+						border: "none",
+						outline: "none",
+					}}
+					className="emoji"
+				>
+					<BsEmojiSmile className=" icon" />
+				</button>
+
+				<div className="customEmoji" style={imojiStyle}>
+					{emojiCode.map((i, ind) => (
+						<div
+							key={ind}
+							className={`item item${ind}`}
+							onClick={() =>
+								setText((p) => [...p, i.props?.children])
+							}
+						>
+							{i}
+						</div>
+					))}
+				</div>
+
+				<label htmlFor="uploadImage">
+					<BsFillImageFill className="upload-image icon" />
+				</label>
+			</div>
+
 			<div className="inputWrapper">
 				<input
 					type="text"
@@ -35,15 +58,6 @@ const Input = ({ setText, value, handleOnEnter }) => {
 			</div>
 			{/* emoji  */}
 			<div className="icons">
-				<div style={{ display: "flex" }}>
-					<BsEmojiSmile
-						className="emoji icon"
-						onClick={emojiDisplay}
-					/>
-				</div>
-				<label htmlFor="uploadImage">
-					<BsFillImageFill className="upload-image icon" />
-				</label>
 				<button
 					className="sendBtn"
 					onClick={() => {
@@ -53,20 +67,6 @@ const Input = ({ setText, value, handleOnEnter }) => {
 				>
 					<MdSend className="sendIcon icon" />
 				</button>
-			</div>
-
-			<div className="customEmoji" style={imojiStyle}>
-				{emojiCode.map((i, ind) => (
-					<div
-						key={ind}
-						className={`item item${ind}`}
-						onClick={() =>
-							setText((p) => [...p, i.props?.children])
-						}
-					>
-						{i}
-					</div>
-				))}
 			</div>
 		</div>
 	);

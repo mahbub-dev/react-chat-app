@@ -5,7 +5,10 @@
 	display: flex;
 	flex-direction: column;
 	button {
-		color: white;
+		&:hover{
+			background-color: #e0e3e9;
+		}
+		font-size: 16px;
 		background: none;
 		cursor: pointer;
 		text-align: left;
@@ -14,14 +17,13 @@
 		justify-content: start;
 		border: none;
 		outline: none;
-		padding: 0.1rem;
-		margin-bottom: 0.5rem;
+		padding: 0.5rem;
 		span {
 			margin-left: 1rem;
 		}
 		img {
-			width: 2rem;
-			height: 2rem;
+			width: 1.5rem;
+			height: 1.5rem;
 		}
 	}
 }

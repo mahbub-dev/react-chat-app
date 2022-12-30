@@ -4,28 +4,34 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import ApiRequest from "../../Api Request/apiRequest";
-import { deleteConversation } from "../../Api Request/conversationRequest";
+import {
+	deleteConversation,
+	updateConversation
+} from "../../Api Request/conversationRequest";
 import { getMessage } from "../../Api Request/messageRequest";
 import { getUser } from "../../Api Request/userRequest";
-import { LoggedUser, UserList } from "../../Components";
+import { UserList } from "../../Components";
 import Buttons from "../../Components/LeftSideComp/UserList/Buttons";
 import { useGlobalContext } from "../../context";
-import SocketProvider from "../../socketContext";
+import { useSocket } from "../../socketContext";
+import { responSive } from "../../Utils/functions";
 import Chat from "../Chat/Chat";
 import "./home.scss";
 function Home() {
+	const { socket } = useSocket();
 	const userId = localStorage.getItem("userId");
 	const location = useLocation().pathname.split("/")[1];
 	const navigate = useNavigate();
-	const { unreadMessage, setUnreadMessage, searchValue } = useGlobalContext();
-	const filteUnreadMessage = unreadMessage?.filter(
-		(item, index, arr) => arr.indexOf(item) === index
-	);
+	const { searchValue } = useGlobalContext();
 	const [conversation, setConversation] = useState([]);
 	const [allUser, setAllUser] = useState([]);
 	const [message, setMessage] = useState([]);
 	const [currentChat, setCurrentChat] = useState({});
 	const [userComp, setUserComp] = useState("");
+	const [windowWidth, setWindowWidth] = useState(500);
+	window.addEventListener("resize", (e) => {
+		setWindowWidth(e.target.innerWidth);
+	});
 
 	useEffect(() => {
 		const getConversation = async () => {
@@ -46,16 +52,23 @@ function Home() {
 	// get currentChatUser on reload
 	useEffect(() => {
 		const getCurrentUser = async () => {
-			const { data } = await ApiRequest(`user/${location}`);
-			localStorage.getItem("convId") &&
-				location &&
-				setCurrentChat({
-					convId: localStorage.getItem("convId"),
-					convUser: data,
-				});
+			const { data } = await ApiRequest.get(`user/${location}`);
+			conversation?.forEach((c) => {
+				const id = c?.member?.find(
+					(item) => item !== localStorage.getItem("userId")
+				);
+				if (data._id === id) {
+					data.lastSms = c.lastSms;
+					data.totalUnseen = c.totalUnseen;
+					localStorage.getItem("convId") &&
+						location &&
+						setCurrentChat({ convUser: data, convId: c._id });
+				}
+			});
 		};
 		location !== "home" && getCurrentUser();
-	}, []);
+		setWindowWidth(window.innerWidth);
+	}, [conversation]);
 
 	// remove convId when page location is home
 	useEffect(() => {
@@ -74,8 +87,9 @@ function Home() {
 			setAllUser(res.filter((i) => i._id !== userId));
 		});
 	}, [searchValue]);
+
 	const handleDelConversation = (id) => {
-		const isConfirm = confirm("are you sure?");
+		const isConfirm = confirm("Are you sure?");
 		if (isConfirm) {
 			if (id === currentChat.convId) {
 				setMessage([]);
@@ -85,55 +99,61 @@ function Home() {
 	};
 
 	const handleConversation = (convItem) => {
-		const seenMessage = filteUnreadMessage?.filter(
-			(i) => i.sender !== convItem?.user?._id
-		);
-		setUnreadMessage(seenMessage);
 		setCurrentChat({
 			convId: convItem?.convId,
 			convUser: convItem?.user,
+			isOnline: convItem?.isOnline,
 		});
 		getMessage(convItem.convId, (res) => {
 			res?.data ? setMessage(res.data) : setMessage([]);
 		});
-		localStorage.setItem("convId", convItem._id);
+		localStorage.setItem("convId", convItem.convId);
+		if (
+			convItem?.user?.lastSms?.sender !== localStorage.getItem("userId")
+		) {
+			socket.emit("isSeen", {
+				totalUnseen: 0,
+				sender: localStorage.getItem("userId"),
+				receiverId: convItem?.user?.lastSms?.sender,
+			});
+			updateConversation({ convId: convItem.convId });
+		} else {
+		}
+
 		navigate(`/${convItem?.user?._id}`);
+		windowWidth <= 500 && responSive("right");
 	};
 	return (
 		<div className="home" id="home">
-			<SocketProvider>
-				<div className="leftside">
-					<h1 style={{ textAlign: "left", fontSize: "25px" }}>
-						Chats
-					</h1>
-
-					<Buttons
-						conversation={conversation}
-						allUser={allUser}
-						setConversation={setConversation}
-						setUserComp={setUserComp}
-					/>
-
-					<div style={{ height: "81%", overflow: "auto" }}>
-						<UserList
-							allUser={allUser}
-							userComp={userComp}
-							handleConversation={handleConversation}
-							conversation={conversation}
-							currentChat={currentChat}
-							handleDelConversation={handleDelConversation}
-						/>
-					</div>
-					<LoggedUser />
-				</div>
-				{/* ************** right side ************/}
-				<Chat
-					currentChat={currentChat}
-					setMessage={setMessage}
-					message={message}
-					device={"desktop"}
+			<div className="leftside">
+				<h1 style={{ textAlign: "left", fontSize: "25px" }}>Chats</h1>
+				<Buttons
+					conversation={conversation}
+					allUser={allUser}
+					setConversation={setConversation}
+					setUserComp={setUserComp}
 				/>
-			</SocketProvider>
+
+				<div style={{ height: "81%", overflow: "auto" }}>
+					<UserList
+						message={message}
+						allUser={allUser}
+						userComp={userComp}
+						handleConversation={handleConversation}
+						conversation={conversation}
+						currentChat={currentChat}
+						handleDelConversation={handleDelConversation}
+					/>
+				</div>
+			</div>
+			{/* ************** right side ************/}
+			<Chat
+				currentChat={currentChat}
+				setMessage={setMessage}
+				message={message}
+				device={"desktop"}
+				conversation={conversation}
+			/>
 		</div>
 	);
 }

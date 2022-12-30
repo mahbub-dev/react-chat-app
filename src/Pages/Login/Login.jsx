@@ -30,6 +30,7 @@ function Login() {
 				setLoggedUser(data.loginuser);
 				if (data.token) {
 					navigate(`/home`);
+					localStorage.setItem("sound", "yes");
 					window.location.reload();
 				} else {
 					setError(data.response.data);

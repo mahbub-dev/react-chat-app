@@ -19,5 +19,15 @@ const getMessage = async (coversationId, cb) => {
 		cb(err);
 	}
 };
-export { createMessage, getMessage };
 
+const updateSeenStatus = async (data, cb) => {
+	try {
+		const res = await ApiRequest.put("message/status", { data });
+		cb(res);
+	} catch (err) {
+		cb(err);
+		console.log(err);
+	}
+};
+
+export { createMessage, getMessage, updateSeenStatus };

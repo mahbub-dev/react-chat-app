@@ -1,9 +1,11 @@
 ﻿import React, { useEffect, useState } from "react";
-import { BsCheckCircleFill } from "react-icons/bs";
+import { AiFillCheckCircle } from "react-icons/ai";
+import { MdOutlineError } from "react-icons/md";
 import { TiDelete } from "react-icons/ti";
-import ApiRequest from "../../../Api Request/apiRequest";
-import { updateUser } from "../../../Api Request/userRequest";
-import { useGlobalContext } from "../../../context";
+import ApiRequest from "../../../../Api Request/apiRequest";
+import { updateUser } from "../../../../Api Request/userRequest";
+import { useGlobalContext } from "../../../../context";
+import { handleProfilesModal } from "../index";
 import "./changeEmail.scss";
 
 function ChangeEmail() {
@@ -71,7 +73,7 @@ function ChangeEmail() {
 			<div className="modalsWrapper">
 				<TiDelete
 					className="close"
-					onClick={() => handleModals(false, "change-email")}
+					onClick={() => handleProfilesModal(false, "change-email")}
 				/>
 				{finalRes === "success" ? (
 					<p>Your email has been changed</p>
@@ -83,8 +85,10 @@ function ChangeEmail() {
 								display: randomCode ? "none" : "flex",
 							}}
 						>
-							{isValidEmail && (
-								<BsCheckCircleFill className="checkMark" />
+							{isValidEmail ? (
+								<AiFillCheckCircle className="checkMark" />
+							) : (
+								<MdOutlineError className="checkMark" style={{color:'red'}} />
 							)}
 							<input
 								type="email"

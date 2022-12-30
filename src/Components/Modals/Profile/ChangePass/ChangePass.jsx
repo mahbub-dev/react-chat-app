@@ -1,9 +1,9 @@
 ﻿import React, { useState } from "react";
 import { TiDelete } from "react-icons/ti";
-import { updateUser } from "../../../Api Request/userRequest";
-import { useGlobalContext } from "../../../context";
-import showPass from "../../../Image/eye (1).png";
-import notShowPass from "../../../Image/eye-crossed.png";
+import { updateUser } from "../../../../Api Request/userRequest";
+import showPass from "../../../../Image/eye (1).png";
+import notShowPass from "../../../../Image/eye-crossed.png";
+import { handleProfilesModal } from "../index";
 import "./changePass.scss";
 
 export const PasswordInput = ({ placeholder, name, value, handleChange }) => {
@@ -30,7 +30,6 @@ export const PasswordInput = ({ placeholder, name, value, handleChange }) => {
 };
 
 function ChangPassword() {
-	const { handleModals } = useGlobalContext();
 	const [password, setPassword] = useState({
 		oldPass: "",
 		newPass: "",
@@ -52,7 +51,7 @@ function ChangPassword() {
 			<div className="modalsWrapper">
 				<TiDelete
 					className="close"
-					onClick={() => handleModals(false, "changePass")}
+					onClick={() => handleProfilesModal(false, "changePass")}
 				/>
 
 				{res === true ? (

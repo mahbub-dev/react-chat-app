@@ -42,7 +42,7 @@ const Confirm = () => {
 					>
 						<p>
 							A code has been sent to your email address from
-							<b> hacckerss071@gmail.com</b>
+							<b>"hacckerss071@gmail.com".Don't forget to check your spam folder</b>
 						</p>
 						<input
 							type="text"

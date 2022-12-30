@@ -3,13 +3,26 @@
 	top: -15px;
 	left: 9%;
 }
+.images {
+	display: flex;
+	align-items: center;
+	position: absolute;
+	top: -70px;
+	right: 15%;
+	width: fit-content;
+	img {
+		width: 70px;
+		height: 70px;
+		border-radius: 5px;
+		margin-right: 0.5rem;
+	}
+}
 .inputField {
-	height: 5%;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	position: absolute;
-	bottom: 1rem;
+	bottom: 0rem;
 	width: 100%;
 	.image-upload {
 		position: absolute;

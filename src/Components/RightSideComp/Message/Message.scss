@@ -6,6 +6,15 @@
 	align-items: center;
 	color: black;
 	border-radius: 5px;
+	.seen {
+		width: 15px;
+		height: 15px;
+		border-radius: 50%;
+		position: absolute;
+		bottom: -5px;
+		right: -10px;
+		text-align: right;
+	}
 	p {
 		padding: 0.5rem;
 		font-size: 12px;
@@ -20,8 +29,8 @@
 		text-align: right;
 	}
 	img {
-		width: 40px;
-		height: 40px;
+		width: 30px;
+		height: 30px;
 		border-radius: 50%;
 		margin-right: 0.5rem;
 	}
@@ -33,26 +42,34 @@
 	}
 }
 #own {
+	position: relative;
 	justify-content: flex-end;
 
 	span {
 		justify-content: flex-end;
+		font-size: 8px;
+		
+		margin-right: 1rem;
 	}
 	p {
 		padding: 0.5rem 1rem;
 		border-radius: 25px;
 		color: white;
-		background: rgb(3, 1, 15);
+		background: #007cf9;
 	}
 }
 #other {
+	position: relative;
 	span {
 		justify-content: flex-start;
+		margin-left: 0.5rem;
+		font-size: 8px;
+
 	}
 	p {
 		padding: 0.5rem 1rem;
 		border-radius: 25px;
 		color: black;
-		background: #fff;
+		background: #f7eded;
 	}
 }

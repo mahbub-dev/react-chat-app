@@ -1,5 +1,5 @@
 ﻿import React, { useState } from "react";
-import { useGlobalContext } from "../../context";
+import { useGlobalContext } from "../../../context";
 import "./Profile";
 const Item = ({ id, item, name, handleUpdate, buttonElem }) => {
 	const { setLoggedUser } = useGlobalContext();

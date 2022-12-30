@@ -1,15 +1,9 @@
 @import "../../responsive-break-point.scss";
+@import "../../Utils//mixin.scss";
+
 .home {
 	width: 100vw;
 	height: 100vh;
-	background-color: #4158d0;
-	background-image: linear-gradient(
-		43deg,
-		#4158d0 0%,
-		#c850c0 46%,
-		#ffcc70 100%
-	);
-
 	overflow: hidden;
 	box-shadow: 0 0 20px grey;
 	width: 100%;
@@ -18,13 +12,15 @@
 	display: flex;
 	.leftside {
 		position: relative;
-		border-right: 2px solid burlywood;
-		width: 35%;
+		border-right: 1px solid rgb(236, 226, 212);
+		width: 20%;
+		min-width: 300px;
 		@include small-down {
 			padding: 0.2rem;
 		}
 		padding: 0.5rem;
 	}
+	@include mobileResponsive;
 }
 
 // responsive

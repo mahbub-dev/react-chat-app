@@ -1,9 +1,10 @@
 ﻿import React from "react";
-import "./imageshow.scss";
 import { TiDelete } from "react-icons/ti";
 import { useGlobalContext } from "../../../context";
+import { handleModals } from "../../../Utils/functions";
+import "./imageshow.scss";
 const ImageShow = () => {
-	const { showImage, handleModals } = useGlobalContext();
+	const { showImage} = useGlobalContext();
 	return (
 		<div className="imageShow">
 			<TiDelete

@@ -19,10 +19,6 @@
 	button {
 		@include small-down {
 			padding: 0.1rem;
-			img {
-				width: 20px;
-				height: 20px;
-			}
 		}
 		border: none;
 		outline: none;
@@ -31,10 +27,6 @@
 		cursor: pointer;
 		color: black;
 		img {
-			@include small-down {
-				width: 20px;
-				height: 20px;
-			}
 			width: 30px;
 			height: 30px;
 		}

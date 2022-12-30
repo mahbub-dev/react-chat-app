@@ -2,23 +2,23 @@
 import { ChatHeader, ChatView, MessageInput } from "../../Components";
 import "./Chat.scss";
 
-function Chat({ currentChat, message, setMessage, device }) {
+function Chat({ currentChat, message, setMessage, device,conversation }) {
 	const [currentChatUser, setCurrentChatUser] = useState({});
+	const [isOnline, setIsOnline] = useState("");
 	useEffect(() => {
 		setCurrentChatUser(currentChat?.convUser);
+		setIsOnline(currentChat?.isOnline);
 	}, [currentChat]);
 
 	// get message from server
 	return (
 		<div className="rightside">
-			<ChatHeader
-				currentChatUser={currentChatUser}
-				setCurrenChatUser={setCurrentChatUser}
-			/>
+			<ChatHeader currentChatUser={currentChatUser} isOnline={isOnline} />
 			{/* message view area  */}
 			<ChatView
 				messages={message}
 				device={device}
+				conversation={conversation}
 				currentChat={currentChat}
 			/>
 			{/* message input  */}

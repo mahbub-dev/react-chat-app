@@ -28,5 +28,19 @@ const deleteConversation = async (convId, cb) => {
 	}
 };
 
-export { createConversation, getCoversation, deleteConversation };
+const updateConversation = async (data, cb) => {
+	try {
+		await ApiRequest.put("/conversation/update", { data });
+	} catch (err) {
+		cb(err);
+		console.log(err);
+	}
+};
+
+export {
+	createConversation,
+	getCoversation,
+	deleteConversation,
+	updateConversation,
+};
 

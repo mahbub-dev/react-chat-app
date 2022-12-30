@@ -1,12 +1,13 @@
-import { useNavigate } from "react-router-dom";
-import { updateUser } from "../../Api Request/userRequest";
-import { useGlobalContext } from "../../context";
+import { TiDelete } from "react-icons/ti";
+import { updateUser } from "../../../Api Request/userRequest";
+import { useGlobalContext } from "../../../context";
+import { ChangeEmail, ChangPassword, handleProfilesModal } from "./index";
 import Item from "./Item";
+import { handleModals } from "../../../Utils/functions";
 import "./profile.scss";
 
 const Profile = () => {
-	const navigate = useNavigate();
-	const { loggedUser, setLoggedUser, handleModals } = useGlobalContext();
+	const { loggedUser, setLoggedUser } = useGlobalContext();
 	const handleUpdate = (e) => {
 		updateUser(loggedUser, (res) => {
 			setLoggedUser(res);
@@ -32,7 +33,13 @@ const Profile = () => {
 	}
 	return (
 		<div className="profile">
+			<TiDelete
+				className="proCross"
+				onClick={() => handleModals(false, "profile")}
+			/>
 			<div className="profile-box">
+				<ChangeEmail />
+				<ChangPassword />
 				<div className="profile-image">
 					<label htmlFor="profilePic" className="chooseFile">
 						<img src={loggedUser.profilePicture} alt="" />
@@ -59,7 +66,9 @@ const Profile = () => {
 						buttonElem={"Edit"}
 						item={loggedUser?.email}
 						name="email"
-						handleUpdate={() => handleModals(true, "change-email")}
+						handleUpdate={() =>
+							handleProfilesModal(true, "change-email")
+						}
 					/>
 					<Item
 						id={"btn3"}
@@ -71,21 +80,11 @@ const Profile = () => {
 					<div className="editoption">
 						<button
 							className=""
-							onClick={() => handleModals(true, "changePass")}
+							onClick={() =>
+								handleProfilesModal(true, "changePass")
+							}
 						>
 							Change password
-						</button>
-					</div>
-					<div className="editoption">
-						<button
-							className="logout"
-							onClick={() => {
-								localStorage.clear();
-								navigate(`/`);
-								window.location.reload();
-							}}
-						>
-							Logout
 						</button>
 					</div>
 				</div>

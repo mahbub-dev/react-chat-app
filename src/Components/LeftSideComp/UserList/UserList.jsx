@@ -8,6 +8,7 @@ const UserList = ({
 	handleDelConversation,
 	currentChat,
 	allUser,
+	message,
 	conversation,
 }) => {
 	return (
@@ -18,6 +19,7 @@ const UserList = ({
 					currentChat={currentChat}
 					conversation={conversation}
 					allUser={allUser}
+					message={message}
 					handleDelConversation={handleDelConversation}
 				/>
 			) : (

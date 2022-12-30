@@ -1,9 +1,10 @@
 ﻿import React from "react";
 import { TiDelete } from "react-icons/ti";
 import { useGlobalContext } from "../../../context";
+import { handleModals } from "../../../Utils/functions";
 import "./userdetails.scss";
 const UserDetails = () => {
-	const { handleModals, user } = useGlobalContext();
+	const {user } = useGlobalContext();
 	return (
 		<div className="user-details">
 			<div

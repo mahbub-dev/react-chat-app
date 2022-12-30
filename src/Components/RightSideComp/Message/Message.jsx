@@ -1,11 +1,8 @@
-﻿import { useLocation } from "react-router-dom";
-import { format } from "timeago.js";
+﻿import { format } from "timeago.js";
 import { useGlobalContext } from "../../../context";
 import "./Message.scss";
 
-function Message({ m, own, other, user }) {
-	// const { isTyping } = useSocket();
-	const location = useLocation().pathname.split("/")[1];
+function Message({ i, unSeenIndex, m, own, user }) {
 	const { handleModals, OpenUploadImage } = useGlobalContext();
 	let time = format(m.createdAt).split(" ");
 	if (time.length === 3) {
@@ -38,6 +35,14 @@ function Message({ m, own, other, user }) {
 							))}
 
 						<span>{time}</span>
+
+						{i === unSeenIndex && (
+							<img
+								src={user?.profilePicture}
+								alt="seen"
+								className="seen"
+							/>
+						)}
 					</div>
 				</div>
 			</div>

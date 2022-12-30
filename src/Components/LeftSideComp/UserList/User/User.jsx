@@ -1,33 +1,29 @@
 import React from "react";
-import { useGlobalContext } from "../../../../context";
 import { useSocket } from "../../../../socketContext";
 import { UserLoader } from "../../../index";
 import UserOption from "../../../Modals/UserOption/UserOption";
 import "./user.scss";
 
 function User({ convItem, handleConversation, handleDelConversation }) {
-	const { unreadMessage } = useGlobalContext();
-	const toReadSms = unreadMessage?.filter(
-		(item, index, arr) => arr.indexOf(item) === index
-	);
-
 	const { onlineUsers } = useSocket();
-	// console.log(searchValue);
-
-	const mySms = toReadSms?.filter((i) => i?.sender === convItem?.user?._id);
-	// console.log(user)
 	let isOnline;
 	onlineUsers &&
 		onlineUsers.forEach((i) => {
 			i.userId === convItem?.user?._id && (isOnline = i?.userId);
 		});
+	convItem.isOnline = isOnline;
+	let isSeen =
+		convItem?.user?.lastSms?.sender !== localStorage.getItem("userId");
+
 	return (
 		<>
 			{Object.keys(convItem).length > 0 ? (
 				<>
 					<div
 						className="user"
-						onClick={() => handleConversation(convItem)}
+						onClick={() => {
+							handleConversation(convItem);
+						}}
 					>
 						<div className="img">
 							<img
@@ -45,8 +41,10 @@ function User({ convItem, handleConversation, handleDelConversation }) {
 						<div className="name">
 							<h5
 								style={{
-									color:
-										mySms?.length > 0 ? "black" : "white",
+									fontWeight:
+										isSeen && convItem.user.totalUnseen > 0
+											? "bold"
+											: "500",
 								}}
 							>
 								{convItem?.user?.username}
@@ -54,12 +52,14 @@ function User({ convItem, handleConversation, handleDelConversation }) {
 							<p
 								style={{
 									fontWeight:
-										mySms?.length > 0 ? "bold" : "initial",
+										isSeen && convItem.user.totalUnseen > 0
+											? "bold"
+											: "initial",
 								}}
 							>
-								{/* {readMessage.id === user?._id &&
-									readMessage?.lastMessage} */}
-								{mySms && mySms.length > 0 && mySms.length}
+								{convItem?.user?.lastSms?.sms
+									? convItem?.user?.lastSms?.sms
+									: "image"}
 							</p>
 						</div>
 						<div className="time">
