@@ -29,7 +29,6 @@ const ChatView = ({ device, messages, currentChat, conversation }) => {
 			}
 		});
 	}, [socket]);
-
 	useEffect(() => {
 		let count = conversation?.find((i) => i._id === currentChat?.convId);
 		setPrevUnseen(count?.totalUnseen);
@@ -42,9 +41,9 @@ const ChatView = ({ device, messages, currentChat, conversation }) => {
 			if (count) {
 				setTotalUnseen(total.length + count?.totalUnseen);
 			}
+			console.log(total.length);
 		}
-	}, [conversation, currentChat, socket]);
-	console.log(prevUseen);
+	}, [conversation, currentChat, socket, updateUnseen]);
 	// useEffect(() => {
 	// 	if (currentChat?.convUser?.isOnlne === undefined) {
 	// 		setTotalUnseen(prevUseen + 1);
@@ -54,7 +53,7 @@ const ChatView = ({ device, messages, currentChat, conversation }) => {
 	let prevDuplicatMessage = messages?.filter(
 		(item, index, arr) => arr.indexOf(item) === index
 	);
-	console.log(totalUnseen);
+
 	let unseenSmsIndex = 0;
 	prevDuplicatMessage.length &&
 		(unseenSmsIndex = prevDuplicatMessage.length - totalUnseen);

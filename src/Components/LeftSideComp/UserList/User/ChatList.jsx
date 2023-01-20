@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useGlobalContext } from "../../../../context";
 import { useSocket } from "../../../../socketContext";
+import Loading from "../../../Loading/Loading";
 import User from "./User";
 
 const ChatList = ({
@@ -14,7 +15,6 @@ const ChatList = ({
 }) => {
 	const [chatUser, setChatUser] = useState([]);
 	const { unreadMessage } = useGlobalContext();
-	const { socket } = useSocket();
 	const removeDuplicat = unreadMessage.filter(
 		(i, ind, arr) => arr.indexOf(i) === ind
 	);
@@ -124,7 +124,7 @@ const ChatList = ({
 						);
 					})
 			) : (
-				<p>List is empty</p>
+				<Loading />
 			)}
 		</>
 	);

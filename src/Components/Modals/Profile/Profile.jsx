@@ -1,9 +1,9 @@
 import { TiDelete } from "react-icons/ti";
 import { updateUser } from "../../../Api Request/userRequest";
 import { useGlobalContext } from "../../../context";
+import { handleModals } from "../../../Utils/functions";
 import { ChangeEmail, ChangPassword, handleProfilesModal } from "./index";
 import Item from "./Item";
-import { handleModals } from "../../../Utils/functions";
 import "./profile.scss";
 
 const Profile = () => {
@@ -42,7 +42,7 @@ const Profile = () => {
 				<ChangPassword />
 				<div className="profile-image">
 					<label htmlFor="profilePic" className="chooseFile">
-						<img src={loggedUser.profilePicture} alt="" />
+						<img src={loggedUser?.profilePicture} alt="" />
 						<span>edit</span>
 					</label>
 					<input

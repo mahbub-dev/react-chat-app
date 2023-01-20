@@ -10,7 +10,7 @@ import { ChangeEmail, ChangPassword } from "./Components/Modals/Profile/index";
 
 // importing from pages
 import ResetPass from "./Components/Modals/ResetPass/ResetPass";
-import { Home, Login } from "./Pages/index";
+import { Home, Login, Signup } from "./Pages/index";
 import Confirm from "./Pages/Signup/Confirm";
 import SocketProvider from "./socketContext";
 //importing from context
@@ -56,6 +56,7 @@ function App() {
 						path="/signup/confirm"
 						element={user ? <Navigate to={"/home"} /> : <Confirm />}
 					/>
+					<Route path="/signup" element={<Signup />} />
 				</Routes>
 			</BrowserRouter>
 		</div>

@@ -60,7 +60,7 @@ const Settings = ({ setTheme }) => {
 			<button
 				onClick={() => {
 					localStorage.clear();
-					navigate("/");
+					window.location.reload();
 				}}
 			>
 				<img src={logoutIcon} alt="logout" />

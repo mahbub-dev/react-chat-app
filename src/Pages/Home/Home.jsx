@@ -40,6 +40,7 @@ function Home() {
 				if (res.data) {
 					setConversation(res.data);
 				} else {
+					
 					setConversation(["empty"]);
 				}
 			} catch (err) {
@@ -133,7 +134,6 @@ function Home() {
 					setConversation={setConversation}
 					setUserComp={setUserComp}
 				/>
-
 				<div style={{ height: "81%", overflow: "auto" }}>
 					<UserList
 						message={message}
