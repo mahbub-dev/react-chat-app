@@ -85,21 +85,29 @@ const MessageInput = ({ currentChat, messages, setMessages }) => {
 					timestamps: data?.createdAt,
 				},
 			});
+
+			const sendSeenStatus = (status) => {
+				socket.emit("isSeen", {
+					conversationId: data.conversationId,
+					sender: localStorage.getItem("userId"),
+					isOpended: status,
+					receiverId: data.sender,
+				});
+			};
+
 			if (locationRef.current === data.sender) {
 				setMessages((p) => [...p, data]);
 				updateConversation({ convId: data?.conversationId });
+				sendSeenStatus(true);
 			} else {
 				setUnreadMessage((p) => [...p, data]);
-				socket.emit("isSeen", {
-					totalUnseen: 1,
-					conversationId: data.conversationId,
-					sender: localStorage.getItem("userId"),
-					receiverId: data.sender,
-				});
+				sendSeenStatus(false);
 				soundRef.current === "yes" && playSound();
 			}
 		});
 	}, [socket, location]);
+
+	// send typing status
 	useEffect(() => {
 		let status = {
 			isTyping: true,

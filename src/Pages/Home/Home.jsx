@@ -6,7 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import ApiRequest from "../../Api Request/apiRequest";
 import {
 	deleteConversation,
-	updateConversation
+	updateConversation,
 } from "../../Api Request/conversationRequest";
 import { getMessage } from "../../Api Request/messageRequest";
 import { getUser } from "../../Api Request/userRequest";
@@ -40,7 +40,6 @@ function Home() {
 				if (res.data) {
 					setConversation(res.data);
 				} else {
-					
 					setConversation(["empty"]);
 				}
 			} catch (err) {
@@ -99,30 +98,42 @@ function Home() {
 		}
 	};
 
+	// handle conversation
 	const handleConversation = (convItem) => {
+		localStorage.setItem("convId", convItem.convId);
 		setCurrentChat({
 			convId: convItem?.convId,
 			convUser: convItem?.user,
 			isOnline: convItem?.isOnline,
 		});
-		getMessage(convItem.convId, (res) => {
+		// get messages from server
+		getMessages(convItem.convId);
+		// set seen status
+		setSeenStatus(convItem);
+
+		navigate(`/${convItem?.user?._id}`);
+		windowWidth <= 500 && responSive("right");
+	};
+
+	const getMessages = (convId) => {
+		getMessage(convId, (res) => {
 			res?.data ? setMessage(res.data) : setMessage([]);
 		});
-		localStorage.setItem("convId", convItem.convId);
+	};
+
+	// set seen status
+	const setSeenStatus = (convItem) => {
 		if (
 			convItem?.user?.lastSms?.sender !== localStorage.getItem("userId")
 		) {
 			socket.emit("isSeen", {
-				totalUnseen: 0,
+				isOpended: false,
+				conversationId: convItem.convId,
 				sender: localStorage.getItem("userId"),
 				receiverId: convItem?.user?.lastSms?.sender,
 			});
 			updateConversation({ convId: convItem.convId });
-		} else {
 		}
-
-		navigate(`/${convItem?.user?._id}`);
-		windowWidth <= 500 && responSive("right");
 	};
 	return (
 		<div className="home" id="home">

@@ -3,39 +3,33 @@
 // create user request
 const createUser = async (signupData, callback) => {
 	try {
-		const { data } = await ApiRequest.post("/user/register", {
-			signupData,
-		});
-		data.email && localStorage.setItem("signupEmail", data.email);
-		callback(data);
+		const res = await ApiRequest.post("/user/register", signupData);
+		localStorage.setItem("signupEmail", res?.email);
+		callback(res);
 	} catch (err) {
 		console.log(err);
-		callback(err);
+		callback(err?.response);
 	}
 };
 
 const updateUser = async (updateUserData, cb) => {
 	try {
-		const { data } = await ApiRequest.put("/user", {
+		const res = await ApiRequest.put("/user", {
 			updateUserData,
 		});
-		cb(data);
+		cb(res);
 	} catch (er) {
-		console.log(er);
+		cb(er?.response);
 	}
 };
 
 const getUser = async (searchText = "", cb) => {
 	try {
-		const { data } = await ApiRequest.get(`/user/?${searchText}`);
-		cb(data);
-		data === "not found" && cb("");
-		// if (cb !== null) {
-		// 	cb(data);
-		// }
+		const res = await ApiRequest.get(`/user/?${searchText}`);
+		cb(res);
 	} catch (err) {
 		console.log(err);
+		cb(err?.response);
 	}
 };
 export { createUser, updateUser, getUser };
-

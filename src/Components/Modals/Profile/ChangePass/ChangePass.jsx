@@ -1,4 +1,5 @@
-﻿import React, { useState } from "react";
+﻿
+import React, { useState } from "react";
 import { TiDelete } from "react-icons/ti";
 import { updateUser } from "../../../../Api Request/userRequest";
 import showPass from "../../../../Image/eye (1).png";
@@ -42,8 +43,9 @@ function ChangPassword() {
 	};
 	const handleUpdate = () => {
 		updateUser(password, (res) => {
-			console.log(res);
-			typeof res === "object" ? setRes(true) : setRes(res);
+			if (res.status === 200) {
+				setRes(true);
+			} else setRes(res.data);
 		});
 	};
 	return (

@@ -5,32 +5,44 @@
 // reqest for login
 const loginRequest = async ({ loginId, password }, callback) => {
 	try {
-		const { data } = await ApiRequest.post("/auth/login", {
+		const response = await ApiRequest.post("/auth/login", {
 			loginData: {
 				loginId,
 				password,
 			},
 		});
-		data?.token && localStorage.setItem("token", data?.token);
-		data?.token && localStorage.setItem("userId", data?.loginuser?._id);
-		console.log(data);
-		callback(data);
+		response?.data?.token &&
+			localStorage.setItem("token", response?.data?.token);
+		response?.data?.token &&
+			localStorage.setItem("userId", response?.data?._id);
+		callback(response);
 	} catch (err) {
-		// console.log(err);
-		callback(err);
+		callback(err?.response);
 	}
 };
 
-const confirmEmail = async (code, cb) => {
-	const email = localStorage.getItem("signupEmail");
+const ConfirmEmail = async (code, cb) => {
 	try {
-		const res = await ApiRequest.get(
-			`/auth/signup/confirm/${code}/?email=${email}&client=true`
+		const res = await ApiRequest.post(
+			`auth/confirm/?email=${localStorage.getItem(
+				"confirmEmail"
+			)}&code=${code}`
 		);
 		cb(res);
 	} catch (err) {
-		cb(err);
+		cb(err?.response);
 	}
 };
-export { loginRequest, confirmEmail };
 
+const SendConfirmCode = async (inputVal, cb) => {
+	try {
+		const res = await ApiRequest.post(`auth/sendCode/${inputVal}`);
+		cb(res);
+		localStorage.setItem("confirmEmail", inputVal);
+	} catch (error) {
+		cb(error?.response);
+		console.log(error?.response?.data);
+		console.log(error);
+	}
+};
+export { loginRequest, ConfirmEmail, SendConfirmCode };

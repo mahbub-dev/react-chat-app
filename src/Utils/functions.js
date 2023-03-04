@@ -5,7 +5,7 @@ import tone from "./Iphone 7 Message Tone.mp3";
 document.addEventListener("mousedown", (event) => {
 	const btn = document.querySelector(".emoji");
 	const emojiDiv = document.querySelector(".customEmoji");
-	if (btn.contains(event.target)) {
+	if (btn?.contains(event.target)) {
 		if (emojiDiv.style.display === "none") {
 			emojiDiv.style.display = "flex";
 		} else {

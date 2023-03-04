@@ -18,24 +18,26 @@ function ChangeEmail() {
 	const [code, setCode] = useState("");
 	const [randomCode, setRandomCode] = useState("");
 	const handleCheckPass = async () => {
-		const res = await ApiRequest.post(
-			`auth/emailverification/?email=${inputVal}&checkPass='true'`,
-			{ password }
-		);
-		res?.data?.token
-			? setRandomCode(res?.data?.token)
-			: setCheckPass("WrongPass");
+		try {
+			const res = await ApiRequest.post(
+				`auth/emailchange/?email=${inputVal}&checkPass='true'`,
+				{ password }
+			);
+			setRandomCode(res?.data);
+		} catch (error) {
+			setCheckPass("WrongPass");
+		}
 	};
 
 	const handleConfirm = async () => {
 		if (code === randomCode) {
 			updateUser({ email: inputVal }, (res) => {
-				if (res) {
+				if (res.status === 200) {
 					setFinalRes("success");
 					setRandomCode("");
 					setPassword("");
 					setInputVal("");
-					setLoggedUser(res);
+					setLoggedUser(res.data);
 					setTimeout(() => {
 						handleModals(false, "change-email");
 						setFinalRes("");
@@ -49,12 +51,14 @@ function ChangeEmail() {
 
 	useEffect(() => {
 		const hangleEmailEdit = async () => {
-			const res = await ApiRequest.post(
-				`auth/emailverification/?email=${inputVal}`
-			);
-			if (inputVal.length > 3 && inputVal.includes("@")) {
-				setIsValidEmail(res?.data);
-			} else {
+			try {
+				if (inputVal.length > 3 && inputVal.includes("@")) {
+					await ApiRequest.get(`auth/${inputVal}`);
+					setIsValidEmail(true);
+				} else {
+					setIsValidEmail(false);
+				}
+			} catch (error) {
 				setIsValidEmail(false);
 			}
 		};
@@ -86,9 +90,16 @@ function ChangeEmail() {
 							}}
 						>
 							{isValidEmail ? (
-								<AiFillCheckCircle className="checkMark" />
+								<AiFillCheckCircle
+									className="checkMark"
+									title="email is valid"
+								/>
 							) : (
-								<MdOutlineError className="checkMark" style={{color:'red'}} />
+								<MdOutlineError
+									className="checkMark"
+									style={{ color: "red" }}
+									title="email is not valid"
+								/>
 							)}
 							<input
 								type="email"

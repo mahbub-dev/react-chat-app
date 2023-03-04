@@ -9,10 +9,9 @@ import { ImageShow, Profile, UserDetails } from "./Components/Modals/index";
 import { ChangeEmail, ChangPassword } from "./Components/Modals/Profile/index";
 
 // importing from pages
-import ResetPass from "./Components/Modals/ResetPass/ResetPass";
-import { Home, Login, Signup } from "./Pages/index";
-import Confirm from "./Pages/Signup/Confirm";
+import { Home, Auth } from "./Pages/index";
 import SocketProvider from "./socketContext";
+import Reset from "./Pages/Auth/Reset/Reset";
 //importing from context
 
 function App() {
@@ -27,7 +26,6 @@ function App() {
 					<ChangeEmail />
 					<ChangPassword />
 				</Profile>
-				<ResetPass />
 			</div>
 
 			<BrowserRouter>
@@ -50,13 +48,12 @@ function App() {
 					/>
 					<Route
 						path="/"
-						element={user ? <Navigate to={`/home`} /> : <Login />}
+						element={user ? <Navigate to={`/home`} /> : <Auth />}
 					/>
 					<Route
-						path="/signup/confirm"
-						element={user ? <Navigate to={"/home"} /> : <Confirm />}
+						path="/auth/reset"
+						element={user ? <Navigate to={"/home"} /> : <Reset />}
 					/>
-					<Route path="/signup" element={<Signup />} />
 				</Routes>
 			</BrowserRouter>
 		</div>

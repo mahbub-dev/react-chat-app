@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginRequest } from "../../Api Request/authRequest";
-import { useGlobalContext } from "../../context";
+import { loginRequest } from "../../../Api Request/authRequest";
+import { useGlobalContext } from "../../../context";
 import "./login.scss";
-function Login() {
-	const { setLoggedUser, handleModals } = useGlobalContext();
+function Login({ setStyle: setNewStyle }) {
+	const { setLoggedUser } = useGlobalContext();
 	const [err, setError] = useState("");
 	const [isShow, setIsShow] = useState(false);
 	const [style, setStyle] = useState("password");
@@ -22,20 +22,17 @@ function Login() {
 	};
 	const handleLogin = (e) => {
 		e.preventDefault();
-		loginRequest({ loginId, password }, (data) => {
-			if (data?.msg === "not verified") {
-				navigate("/signup/confirm");
-				localStorage.setItem("signupEmail", data?.email);
+		loginRequest({ loginId, password }, (res) => {
+			if (res?.status === 200) {
+				setLoggedUser(res?.data);
+				navigate(`/home`);
+				localStorage.setItem("sound", "yes");
+				window.location.reload();
+			} else if (res?.status === 403) {
+				setNewStyle("-33.5");
+				localStorage.setItem("confirmEmail", loginId);
 			} else {
-				setLoggedUser(data.loginuser);
-				if (data.token) {
-					navigate(`/home`);
-					localStorage.setItem("sound", "yes");
-					window.location.reload();
-				} else {
-					console.log(true);
-					setError(data.response.data);
-				}
+				setError(res.data);
 			}
 		});
 	};
@@ -66,10 +63,17 @@ function Login() {
 					<span className="errShow">{err ? err : null}</span>
 					<button type="submit">Login</button>
 				</form>
-				<p onClick={() => handleModals(true, "resetPass")}>
-					Forget password
+				<p>
+					<a href="/auth/reset">Forget password</a>
 				</p>
-				<a href="/signup">Create a new Account</a>
+				<p
+					onClick={() => {
+						setNewStyle("-67");
+						localStorage.setItem("auth", "signup");
+					}}
+				>
+					Create a new Account
+				</p>
 			</div>
 		</div>
 	);

@@ -36,7 +36,7 @@ function Message({ i, unSeenIndex, m, own, user }) {
 
 						<span>{time}</span>
 
-						{i === unSeenIndex && (
+						{i === 2 && (
 							<img
 								src={user?.profilePicture}
 								alt="seen"

@@ -1,5 +1,6 @@
 ﻿/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
+import { BsCheckLg } from "react-icons/bs";
 import { useLocation } from "react-router-dom";
 import { useSocket } from "../../../socketContext";
 import Message from "../Message/Message";
@@ -16,8 +17,11 @@ const ChatView = ({ device, messages, currentChat, conversation }) => {
 		const divEl = document.querySelector(`#${device}ChatView`);
 		divEl.scrollBy(0, divEl.scrollHeight);
 	}, [messages, device]);
+
+	const updateSeenStatus = () => {};
 	useEffect(() => {
 		socket.on("getSeen", (res) => {
+			console.log(res);
 			if (res.totalUnseen === 0) {
 				setResetUnseen(true);
 				setPrevUnseen(0);
@@ -29,21 +33,23 @@ const ChatView = ({ device, messages, currentChat, conversation }) => {
 			}
 		});
 	}, [socket]);
-	useEffect(() => {
-		let count = conversation?.find((i) => i._id === currentChat?.convId);
-		setPrevUnseen(count?.totalUnseen);
-		let total = updateUnseen?.filter(
-			(i, ind, arr) => arr.indexOf(i) === ind
-		);
-		if (resetUnseen) {
-			setTotalUnseen(total.length);
-		} else {
-			if (count) {
-				setTotalUnseen(total.length + count?.totalUnseen);
-			}
-			console.log(total.length);
-		}
-	}, [conversation, currentChat, socket, updateUnseen]);
+
+	// useEffect(() => {
+	// 	let count = conversation?.find((i) => i._id === currentChat?.convId);
+
+	// 	setPrevUnseen(count?.totalUnseen);
+	// 	let total = updateUnseen?.filter(
+	// 		(i, ind, arr) => arr.indexOf(i) === ind
+	// 	);
+	// 	if (resetUnseen) {
+	// 		setTotalUnseen(total.length);
+	// 	} else {
+	// 		if (count) {
+	// 			setTotalUnseen(total.length + count?.totalUnseen);
+	// 		}
+	// 		console.log(total.length);
+	// 	}
+	// }, [conversation, currentChat, socket, updateUnseen]);
 	// useEffect(() => {
 	// 	if (currentChat?.convUser?.isOnlne === undefined) {
 	// 		setTotalUnseen(prevUseen + 1);

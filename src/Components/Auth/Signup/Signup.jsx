@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { createUser } from "../../Api Request/userRequest";
+import { createUser } from "../../../Api Request/userRequest";
 import "../Login/login.scss";
 import "./Signup.scss";
-function Signup() {
+function Signup({ setStyle: setNewStyle }) {
 	const [err, setError] = useState("");
 	const [isShow, setIsShow] = useState(false);
 	const [style, setStyle] = useState("password");
@@ -31,9 +31,11 @@ function Signup() {
 		e.preventDefault();
 		if (signupData.password === signupData.confirmPassword) {
 			createUser(signupData, (res) => {
-				if (res._id) {
-					navigate("/signup/confirm");
+				if (res.status === 201) {
+					setNewStyle("-33.5");
+					localStorage.setItem("confirmEmail", signupData.email);
 				} else {
+					setError(res?.data);
 					console.log(res);
 				}
 			});
@@ -42,7 +44,7 @@ function Signup() {
 		}
 	};
 	return (
-		<div className="login">
+		<div className="signup login">
 			<div className="login-wrapper signup-wrapper">
 				<h1>Chat App</h1>
 				<form onSubmit={handleSignup}>
@@ -95,7 +97,14 @@ function Signup() {
 					<span className="errShow">{err ? err : null}</span>
 					<button type="submit">Singup</button>
 				</form>
-				<a href="/login">I already have an Account</a>
+				<p
+					onClick={() => {
+						setNewStyle("0");
+						localStorage.setItem("auth", "login");
+					}}
+				>
+					I already have an Account
+				</p>
 			</div>
 		</div>
 	);

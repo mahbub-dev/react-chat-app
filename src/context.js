@@ -51,7 +51,7 @@ const AppProvider = ({ children }) => {
 			const userId = localStorage.getItem("userId");
 			if (userId) {
 				const { data } = await ApiRequest.get(
-					`user/?loggedUser='true'`
+					`user/${localStorage.getItem('userId')}`
 				);
 				setLoggedUser(data);
 			}

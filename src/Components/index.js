@@ -10,5 +10,3 @@ export { default as ChatView } from "./RightSideComp/ChatView/ChatView";
 export { default as Message } from "./RightSideComp/Message/Message.jsx";
 export { default as MessageInput } from "./RightSideComp/MessageInput/MessageInput.jsx";
 export { default as TypingDots } from "./RightSideComp/TypingDots/TypingDots.jsx";
-
-
