@@ -1,0 +1,25 @@
+.groups{
+    .group-btns{
+        margin: 1rem 0;
+        background-color: rgb(248, 227, 227);
+        padding: 1rem 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        button{
+            background-color: white;
+            border: none;
+            outline: none;
+            padding: .5rem;
+            cursor: pointer;
+            transition: transform ease-in-out 0.1s;
+            &:active{
+                transform: scale(1.1);
+            }
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgb(243, 194, 194);
+
+        }
+    }
+}

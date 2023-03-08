@@ -6,11 +6,10 @@
 const loginRequest = async ({ loginId, password }, callback) => {
 	try {
 		const response = await ApiRequest.post("/auth/login", {
-			loginData: {
-				loginId,
-				password,
-			},
+			loginId,
+			password,
 		});
+		console.log(loginId)
 		response?.data?.token &&
 			localStorage.setItem("token", response?.data?.token);
 		response?.data?.token &&

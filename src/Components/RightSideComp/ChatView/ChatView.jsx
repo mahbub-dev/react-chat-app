@@ -18,7 +18,7 @@ const ChatView = ({ device, messages, currentChat, conversation }) => {
 		divEl.scrollBy(0, divEl.scrollHeight);
 	}, [messages, device]);
 
-	const updateSeenStatus = () => {};
+	const updateSeenStatus = () => { };
 	useEffect(() => {
 		socket.on("getSeen", (res) => {
 			console.log(res);
@@ -69,11 +69,11 @@ const ChatView = ({ device, messages, currentChat, conversation }) => {
 			id={device === "mobile" ? "mobileChatView" : "desktopChatView"}
 			className="chatView"
 		>
-			{location === "home" ? (
+			{location !== "home" ? (
 				<p>Please select a user</p>
 			) : messages.length ? (
 				messages?.length > 0 ? (
-					prevDuplicatMessage?.map((m, i) => {
+					messages?.map((m, i) => {
 						return (
 							<div key={i}>
 								<Message
@@ -87,7 +87,7 @@ const ChatView = ({ device, messages, currentChat, conversation }) => {
 									user={currentChat?.convUser}
 									own={
 										m.sender ===
-										localStorage.getItem("userId")
+											localStorage.getItem("userId")
 											? true
 											: false
 									}

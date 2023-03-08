@@ -15,13 +15,14 @@ function Message({ i, unSeenIndex, m, own, user }) {
 		time = "Just now";
 	}
 	return (
-		<div id={own ? "own" : "other"} className="messages">
+		<div id={m.sender._id === localStorage.getItem('userId') ? "own" : "other"} className="messages">
 			<div>
 				<div style={{ display: "flex" }}>
-					{!own && <img src={user?.profilePicture} alt="" />}
+					<img title={m?.sender?.username} src={m?.sender?.profilePicture} alt="" />
+
 					<div>
-						{m?.message?.text !== "" && <p>{m?.message?.text}</p>}
-						{m?.message?.images?.length > 0 &&
+						{m?.text !== "" && <p>{m.text}</p>}
+						{m?.images?.length > 0 &&
 							m.message.images.map((img, index) => (
 								<img
 									className="messageImg"

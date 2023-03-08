@@ -25,11 +25,20 @@ const updateUser = async (updateUserData, cb) => {
 
 const getUser = async (searchText = "", cb) => {
 	try {
-		const res = await ApiRequest.get(`/user/?${searchText}`);
+		const res = await ApiRequest.get(`/user/?search=${searchText}`);
 		cb(res);
 	} catch (err) {
 		console.log(err);
 		cb(err?.response);
 	}
 };
-export { createUser, updateUser, getUser };
+const getUserById = async (id, cb) => {
+	try {
+		const res = await ApiRequest.get(`/user/${id}`);
+		cb(res);
+	} catch (err) {
+		console.log(err);
+		cb(err?.response);
+	}
+};
+export { createUser, updateUser, getUser,getUserById };

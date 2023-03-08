@@ -1,0 +1,21 @@
+.user:hover .add-to-chat-btn{
+    box-shadow: 0 0 20px rgb(243, 218, 218);
+    background-color: white;
+}
+.add-to-chat-btn{
+    background: none;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    padding: .5rem;
+    border-radius: 5px;
+    &:hover{
+        box-shadow: 0 0 20px rgb(243, 218, 218);
+        background-color: rgb(224, 182, 182);
+    }
+    transition: transform ease-in .2s;
+    &:active{
+        transform: scale(1.1);
+    }
+    margin-left: auto;
+}
