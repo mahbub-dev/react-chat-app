@@ -12,6 +12,7 @@ import {handleModals} from "./Utils/functions";
 const AppContext = createContext();
 const AppProvider = ({children}) => {
     const [loggedUser, setLoggedUser] = useState("");
+    const [conversation, setConversation] = useState([]);
     const [userList, setUserList] = useState("");
     const [searchValue, setSearchValue] = useState("");
     const [unreadMessage, setUnreadMessage] = useState([]);
@@ -76,6 +77,9 @@ const AppProvider = ({children}) => {
         // for login user
         loggedUser,
         setLoggedUser,
+
+        conversation,
+        setConversation,
 
         userList,
         setUserList,

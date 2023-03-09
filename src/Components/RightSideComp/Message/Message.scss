@@ -1,3 +1,4 @@
+@import '../../../responsive-break-point.scss';
 .messages {
 	display: flex;
 	width: 100%;
@@ -17,7 +18,8 @@
 	}
 	p {
 		padding: 0.5rem;
-		font-size: 12px;
+		margin-right: 10px;
+		font-size: .9375rem;
 		text-align: left;
 		max-width: 220px;
 		word-wrap: break-word;
@@ -40,16 +42,78 @@
 		cursor: pointer;
 		border-radius: 5px;
 	}
+	.tooltip{
+		background-color: black;
+		padding: .5rem;
+		border-radius: 5px;
+		color: white;
+		display: none;
+		font-size: 12px;
+		// @include medium-down{
+		// 	position: absolute;
+		// }
+	}
+	&:hover> .message-option{
+		display: flex;
+		}
+	.message-option{
+		display: none;
+		align-items: center;
+		justify-content: center;
+		// gap: .5rem;
+		background: none;
+		img{
+			width: 20px;
+			height: 20px;
+			margin-right: 0rem;
+		}
+		}
+	}
+	.message-option> button{
+		border: none;
+		background: none;
+		padding: .2rem;
+		cursor: pointer;
+		border-radius: 50%;
+		&:hover {
+			background: #f2f4f8;
+		}
 }
+.more-btns{
+	display: none;
+	position: absolute;
+	z-index: 1;
+	background: white;
+	top: -80px;
+	flex-direction: column;
+	padding: .5rem 0rem;
+	border-radius: 5px;
+	box-shadow: 0 0 20px rgb(201, 183, 183);
+	button{
+		padding: .5rem 3rem .5rem 1em ;
+		background: none;
+		border: none;
+		outline: none;
+		&:hover{
+			background: #f2f4f8;
+		}
+	}
+}
+
+
 #own {
 	position: relative;
 	justify-content: flex-end;
-
+	.message-option{
+		flex-direction: row-reverse;
+	}
 	span {
 		justify-content: flex-end;
-		font-size: 8px;
-		
+		font-size: 12px;
 		margin-right: 1rem;
+	}
+	.profileImg{
+		display: none;
 	}
 	p {
 		padding: 0.5rem 1rem;
@@ -58,12 +122,15 @@
 		background: #007cf9;
 	}
 }
+
 #other {
 	position: relative;
+	flex-direction: row-reverse;
+	justify-content: start;
 	span {
 		justify-content: flex-start;
 		margin-left: 0.5rem;
-		font-size: 8px;
+		font-size: 12px;
 
 	}
 	p {
@@ -72,4 +139,11 @@
 		color: black;
 		background: #f7eded;
 	}
+	.remove{display: none;}
+	.more-btns{
+		top: -45px;
+	}
+}
+.convDate{
+	width: 100%;
 }

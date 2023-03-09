@@ -15,33 +15,19 @@ import { useSocket } from "../../socketContext";
 import buttonData from "./navbuttonData";
 import Chat from "../Chat/Chat";
 import "./home.scss";
+import { useGlobalContext } from "../../context";
 function Home() {
 	const { socket } = useSocket();
-	// const { loggedUser } = useGlobalContext();
+	const {
+		setConversation } = useGlobalContext();
 	const btnRef = useRef()
 	const userId = localStorage.getItem("userId");
-	const [conversation, setConversation] = useState([]);
 	const [currentConv, setCurrentConv] = useState('')
-	const [message, setMessage] = useState([]);
 	const [windowWidth, setWindowWidth] = useState(500);
 	window.addEventListener("resize", (e) => {
 		setWindowWidth(e.target.innerWidth);
 	});
-	useEffect(() => {
-		const getConversation = async () => {
-			try {
-				const res = await ApiRequest.get(`/conversation/${userId}`);
-				if (res.data) {
-					setConversation(res.data);
-				} else {
-					setConversation(["empty"]);
-				}
-			} catch (err) {
-				console.log(err);
-			}
-		};
-		getConversation();
-	}, [userId]);
+
 
 	// get currentChatUser on reload
 	// remove convId when page location is home
@@ -80,7 +66,7 @@ function Home() {
 			const res = await ApiRequest.get(
 				`/conversation/message/${convId}`
 			);
-			setMessage(res.data)
+			setConversation(res.data)
 		} catch (error) {
 			console.log(error.response?.data);
 		}
@@ -144,7 +130,6 @@ function Home() {
 	useEffect(() => {
 		const currentRender = localStorage.getItem('currentComp')
 		handleButtonClick(currentRender)
-
 	}, [currentConv])
 	return (
 		<div className="home" id="home">
@@ -175,8 +160,6 @@ function Home() {
 
 			{/* ************** right side ************/}
 			<Chat
-				setMessage={setMessage}
-				message={message}
 				device={"desktop"}
 			/>
 		</div>

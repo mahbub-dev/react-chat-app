@@ -2,6 +2,7 @@
 /* eslint-disable no-loop-func */
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
+import ApiRequest from "../../../Api Request/apiRequest";
 import { updateConversation } from "../../../Api Request/conversationRequest";
 import { createMessage } from "../../../Api Request/messageRequest";
 import { useGlobalContext } from "../../../context";
@@ -11,8 +12,9 @@ import TypingDots from "../TypingDots/TypingDots";
 import Input from "./Input/Input";
 import "./messageinput.scss";
 
-const MessageInput = ({ currentChat, messages, setMessages }) => {
+const MessageInput = ({ currentChat, messages: conv, setMessages }) => {
 	const { socket, typingStatus } = useSocket();
+	const { message: messages, _id, } = conv
 	const { setUnreadMessage, soundRef } = useGlobalContext();
 	const [text, setText] = useState("hsalkdsfsdf");
 	const [images, setImages] = useState([]);
@@ -24,7 +26,6 @@ const MessageInput = ({ currentChat, messages, setMessages }) => {
 	}, [location]);
 
 	// send unseen
-
 	const emitMessage = (message) => {
 		socket?.emit("sendMessage", {
 			sender,
@@ -33,48 +34,48 @@ const MessageInput = ({ currentChat, messages, setMessages }) => {
 			conversationId: currentChat?.convId,
 		});
 	};
+	// function for sending message 
+	const handleMessageSent = async (convId, message) => {
+		try {
+			emitMessage(message);
+			const res = await ApiRequest.post(`conversation/message/`, {
+				convId,
+				message,
+			});
+			// console.log(res.data);
+			messages.push(res.data)
+			console.log(messages)
+			setMessages(p => ({ ...p, message:messages }))
+		} catch (error) {
+			console.log(error.response.data)
+		}
+	}
 	// console.log(sms)
 	const handleOnEnter = (text) => {
-		let message = {
+		let inputedMessage = {
 			text,
 			images,
 		};
-		if (currentChat) {
+		if (_id) {
 			if (text === "" && images?.length < 1) {
-				alert("কিছু একটা লেখ ভাই");
-			} else if (messages.length === 0) {
-				if (text.toLowerCase() !== "assalamualaikum") {
-					alert(
-						"You have to start chat with world greatest greetings 'Assalamualaikum' "
-					);
-				} else {
-					emitMessage(message);
-					createMessage(
-						{ conversationId: currentChat.convId, message },
-						(res) => {
-							if (res) {
-								setMessages([res]);
-							}
-						}
-					);
-				}
-			} else {
-				emitMessage(message);
-				createMessage(
-					{ conversationId: currentChat?.convId, message },
-					(res) => {
-						if (res) {
-							setMessages((p) => [...p, res]);
-						}
-					}
-				);
+				alert("Please write something before send");
+				return
 			}
+			if (messages.length === 0) {
+				if (!text.toLowerCase().startsWith("assalamualaikum") || !text.toLowerCase().endsWith("assalamualaikum")) {
+					alert(" Pleas start chat with 'Assalamualaikum' ");
+					return
+				}
+			}
+			handleMessageSent(_id, inputedMessage)
 		} else {
 			alert("Please select a user");
 		}
 		setText("");
 		setImages([]);
 	};
+
+
 	useEffect(() => {
 		socket?.on("getMessage", (data) => {
 			updateConversation({

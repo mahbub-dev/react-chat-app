@@ -8,9 +8,7 @@ import Loading from "../../Loading/Loading";
 import Search from "../Search/Search";
 import User from "./User/User";
 
-const ChatList = ({
-	handleConversation,
-}) => {
+const ChatList = ({ handleConversation }) => {
 	const [chats, setChats] = useState([]);
 	const [responseStatus, setResponseStatus] = useState(200);
 	const [detectCurrentChat, setDetectCurrentChat] = useState(localStorage.getItem('convId'));
@@ -19,7 +17,7 @@ const ChatList = ({
 	const removeDuplicat = unreadMessage.filter(
 		(i, ind, arr) => arr.indexOf(i) === ind
 	);
-	
+
 	useEffect(() => {
 		const getConv = async () => {
 			try {

@@ -1,34 +1,34 @@
 ﻿import { useEffect, useState } from "react";
 import { ChatHeader, ChatView, MessageInput } from "../../Components";
+import { useGlobalContext } from "../../context";
 import "./Chat.scss";
 
-function Chat({ currentChat, message, setMessage, device, conversation }) {
+function Chat({ device }) {
 	const [currentChatUser, setCurrentChatUser] = useState({});
 	const [chat, setChat] = useState([])
 	const [isOnline, setIsOnline] = useState("");
-	useEffect(() => {
-		setCurrentChatUser(currentChat?.convUser);
-		setIsOnline(currentChat?.isOnline);
-	}, [currentChat]);
+	const { conversation, setConversation } = useGlobalContext()
+	// useEffect(() => {
+	// 	setCurrentChatUser(currentChat?.convUser);
+	// 	setIsOnline(currentChat?.isOnline);
+	// }, [currentChat]);
 	// get message from server
 	return (
 		<div className="rightside">
-			<ChatHeader currentChatUser={message} />
+			<ChatHeader currentChatUser={conversation} />
 			{/* message view area  */}
 			<ChatView
-				messages={message.message || []}
+				messages={conversation.message || []}
+				currentChat={conversation?.participants || []}
 				device={device}
-				conversation={conversation}
-				currentChat={currentChat}
 			/>
 			{/* message input  */}
-			{/* <div className="inputField">
+			<div className="inputField">
 				<MessageInput
-					currentChat={currentChat}
-					messages={message}
-					setMessages={setMessage}
+					messages={conversation}
+					setMessages={setConversation}
 				/>
-			</div> */}
+			</div>
 		</div>
 	);
 }

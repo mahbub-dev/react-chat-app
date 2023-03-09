@@ -5,8 +5,8 @@ import tone from "./Iphone 7 Message Tone.mp3";
 document.addEventListener("mousedown", (event) => {
     const btn = document.querySelector(".emoji");
     const emojiDiv = document.querySelector(".customEmoji");
-	
-    if (btn?.contains(event.target)) {
+
+    if (btn ?. contains(event.target)) {
         if (emojiDiv.style.display === "none") {
             emojiDiv.style.display = "flex";
         } else {
@@ -14,7 +14,7 @@ document.addEventListener("mousedown", (event) => {
         }
     } else {
         if (emojiDiv) {
-            if (emojiDiv.contains(event?.target)) {
+            if (emojiDiv.contains(event ?. target)) {
                 emojiDiv.style.display = "flex";
             } else {
                 emojiDiv.style.display = "none";
@@ -99,8 +99,24 @@ const handleImageChange = (cb) => {
         cb(image);
     }, 1000);
 };
+
+// get date month and year
+const getSendDate = (data) => {
+    const date = new Date(data)
+    const newDate = new Date()
+    if (date.toDateString() === newDate.toDateString()) {
+        return true
+    } else {
+        return(`${
+            date.toDateString()
+        } at ${
+            date.toLocaleTimeString()
+        }`)
+    }
+}
 export {
     responSive,
+    getSendDate,
     handleModals,
     playSound,
     handleImageChange,
