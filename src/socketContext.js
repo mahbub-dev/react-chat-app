@@ -31,14 +31,24 @@ const SocketProvider = ({ children }) => {
 			});
 		});
 	}, [socket, friendId]);
+
+	
+	const sendDataToSocketServer = (data) => {
+		socket?.emit("sendMessage", {
+			message: data,
+			receiverId: localStorage.getItem("receiverId"),
+			senderId: localStorage.getItem("userId"),
+			convType: localStorage.getItem("convType"),
+		});
+	};
 	return (
 		<SocketContext.Provider
 			value={{
 				onlineUsers,
 				socket,
 				typingStatus,
-			}}
-		>
+				sendDataToSocketServer,
+			}}>
 			{children}
 		</SocketContext.Provider>
 	);

@@ -24,6 +24,37 @@
 	position: absolute;
 	bottom: 0rem;
 	width: 100%;
+	.reply-info {
+		display: none;
+		position: absolute;
+		top: -77%;
+		width: 100%;
+		text-align: left;
+		border-top: 1px solid #ced0d4;
+		background: white;
+		.reply_to {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			button {
+				margin-right: 4%;
+				background:none;
+				border: none;
+				outline: none;
+				cursor: pointer;
+				.unselect-reply{
+					font-size: 15px;
+					padding: .2rem;
+
+				}
+			}
+		}
+
+		p {
+			font-size: 14px;
+			margin-left: 2%;
+		}
+	}
 	.image-upload {
 		position: absolute;
 		top: -2rem;

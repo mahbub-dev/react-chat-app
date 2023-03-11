@@ -1,0 +1,27 @@
+.option-container{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    margin-top: auto;
+}
+.reacts {
+    background: white;
+    padding: .5rem;
+    position: absolute;
+    border-radius: 10px;
+    box-shadow: 0 0 30px gray;
+    display: none;
+    top: -48px;
+    left: -85px;
+    gap: .5rem;
+    button {
+        background: none;
+        border-radius: 50%;
+        border: none;
+        cursor: pointer;
+        outline: none;
+        img{
+            margin: 0;
+        }
+    }
+}

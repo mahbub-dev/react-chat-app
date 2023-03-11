@@ -1,4 +1,4 @@
-@import '../../../responsive-break-point.scss';
+@import "../../../responsive-break-point.scss";
 .messages {
 	display: flex;
 	width: 100%;
@@ -7,6 +7,11 @@
 	align-items: center;
 	color: black;
 	border-radius: 5px;
+	.sms-wrapper {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-end;
+	}
 	.seen {
 		width: 15px;
 		height: 15px;
@@ -19,8 +24,9 @@
 	p {
 		padding: 0.5rem;
 		margin-right: 10px;
-		font-size: .9375rem;
+		font-size: 0.9375rem;
 		text-align: left;
+		width: fit-content;
 		max-width: 220px;
 		word-wrap: break-word;
 	}
@@ -42,69 +48,88 @@
 		cursor: pointer;
 		border-radius: 5px;
 	}
-	.tooltip{
+	.tooltip {
 		background-color: black;
-		padding: .5rem;
+		padding: 0.5rem;
 		border-radius: 5px;
 		color: white;
 		display: none;
 		font-size: 12px;
+		margin-top: auto;
 		// @include medium-down{
-		// 	position: absolute;
+		// position: absolute;
 		// }
 	}
-	&:hover> .message-option{
-		display: flex;
+	.repliedRef {
+		.repliedSms {
+            width: fit-content;
+			background: #f6f9fa;
+			color: #65676b;
+			padding: 1rem;
+			font-weight: bold;
+			margin-bottom: -10px;
+			border-radius: 20px;
 		}
-	.message-option{
+	}
+	.showReact {
+		margin-top: -7px;
+		margin-left: auto;
+		img {
+			width: 20px;
+			height: 20px;
+		}
+	}
+	&:hover > .option-container .message-option {
+		display: flex;
+	}
+	.message-option {
 		display: none;
 		align-items: center;
 		justify-content: center;
 		// gap: .5rem;
 		background: none;
-		img{
+		img {
 			width: 20px;
 			height: 20px;
-			margin-right: 0rem;
-		}
+			margin-right: 0;
 		}
 	}
-	.message-option> button{
-		border: none;
-		background: none;
-		padding: .2rem;
-		cursor: pointer;
-		border-radius: 50%;
-		&:hover {
-			background: #f2f4f8;
-		}
 }
-.more-btns{
+.message-option > button {
+	border: none;
+	background: none;
+	padding: 0.2rem;
+	cursor: pointer;
+	border-radius: 50%;
+	&:hover {
+		background: #f2f4f8;
+	}
+}
+.more-btns {
 	display: none;
 	position: absolute;
 	z-index: 1;
 	background: white;
 	top: -80px;
 	flex-direction: column;
-	padding: .5rem 0rem;
+	padding: 0.5rem 0;
 	border-radius: 5px;
 	box-shadow: 0 0 20px rgb(201, 183, 183);
-	button{
-		padding: .5rem 3rem .5rem 1em ;
+	button {
+		padding: 0.5rem 3rem 0.5rem 1em;
 		background: none;
 		border: none;
 		outline: none;
-		&:hover{
+		&:hover {
 			background: #f2f4f8;
 		}
 	}
 }
 
-
 #own {
 	position: relative;
 	justify-content: flex-end;
-	.message-option{
+	.message-option {
 		flex-direction: row-reverse;
 	}
 	span {
@@ -112,7 +137,7 @@
 		font-size: 12px;
 		margin-right: 1rem;
 	}
-	.profileImg{
+	.profileImg {
 		display: none;
 	}
 	p {
@@ -131,7 +156,6 @@
 		justify-content: flex-start;
 		margin-left: 0.5rem;
 		font-size: 12px;
-
 	}
 	p {
 		padding: 0.5rem 1rem;
@@ -139,11 +163,16 @@
 		color: black;
 		background: #f7eded;
 	}
-	.remove{display: none;}
-	.more-btns{
+	.remove {
+		display: none;
+	}
+	.more-btns {
 		top: -45px;
 	}
+	.sms-wrapper {
+		align-items: flex-start;
+	}
 }
-.convDate{
+.convDate {
 	width: 100%;
 }

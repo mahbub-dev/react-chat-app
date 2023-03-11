@@ -7,47 +7,43 @@ import { updateConversation } from "../../../Api Request/conversationRequest";
 import { createMessage } from "../../../Api Request/messageRequest";
 import { useGlobalContext } from "../../../context";
 import { useSocket } from "../../../socketContext";
+import { ImCross } from 'react-icons/im'
 import { handleImageChange, playSound } from "../../../Utils/functions";
 import TypingDots from "../TypingDots/TypingDots";
 import Input from "./Input/Input";
 import "./messageinput.scss";
 
-const MessageInput = ({ currentChat, messages: conv, setMessages }) => {
-	const { socket, typingStatus } = useSocket();
+const MessageInput = ({ messages: conv, setMessages }) => {
+	const { socket, typingStatus, sendDataToSocketServer } = useSocket();
 	const { message: messages, _id, } = conv
-	const { setUnreadMessage, soundRef } = useGlobalContext();
-	const [text, setText] = useState("hsalkdsfsdf");
+	const { setUnreadMessage, soundRef, replyRefSms, chatList, setChatList } = useGlobalContext();
+	const closeReply = useRef()
+	const [text, setText] = useState("");
 	const [images, setImages] = useState([]);
 	const location = useLocation().pathname.split("/")[1];
 	const sender = localStorage.getItem("userId");
-	const locationRef = useRef(location);
-	useEffect(() => {
-		locationRef.current = location;
-	}, [location]);
-
-	// send unseen
-	const emitMessage = (message) => {
-		socket?.emit("sendMessage", {
-			sender,
-			receiverId: location,
-			message,
-			conversationId: currentChat?.convId,
-		});
-	};
 	// function for sending message 
 	const handleMessageSent = async (convId, message) => {
 		try {
-			emitMessage(message);
-			const res = await ApiRequest.post(`conversation/message/`, {
+			let { data } = await ApiRequest.post(`conversation/message/`, {
 				convId,
 				message,
 			});
 			// console.log(res.data);
-			messages.push(res.data)
-			console.log(messages)
-			setMessages(p => ({ ...p, message:messages }))
+			if (data?.replyRef) {
+				data.replyRef = replyRefSms
+				closeReply.current.style.display = 'none'
+			}
+			messages.push(data)
+			sendDataToSocketServer(messages)
+			const updateConv = [...chatList]
+			let addLastestMessage = updateConv?.find(i => i._id === localStorage.getItem('receiverId'));
+			console.log(addLastestMessage)
+			addLastestMessage.lastSms = data
+			setChatList(p => updateConv)
+			setMessages(p => ({ ...p, message: messages }))
 		} catch (error) {
-			console.log(error.response.data)
+			console.log(error)
 		}
 	}
 	// console.log(sms)
@@ -56,6 +52,11 @@ const MessageInput = ({ currentChat, messages: conv, setMessages }) => {
 			text,
 			images,
 		};
+		// if there reply ref 
+		if (replyRefSms?._id) {
+			inputedMessage.replyRef = replyRefSms._id
+		}
+
 		if (_id) {
 			if (text === "" && images?.length < 1) {
 				alert("Please write something before send");
@@ -75,38 +76,6 @@ const MessageInput = ({ currentChat, messages: conv, setMessages }) => {
 		setImages([]);
 	};
 
-
-	useEffect(() => {
-		socket?.on("getMessage", (data) => {
-			updateConversation({
-				convId: data?.conversationId,
-				lastSms: {
-					sender: data?.sender,
-					sms: data?.message?.text,
-					timestamps: data?.createdAt,
-				},
-			});
-
-			const sendSeenStatus = (status) => {
-				socket.emit("isSeen", {
-					conversationId: data.conversationId,
-					sender: localStorage.getItem("userId"),
-					isOpended: status,
-					receiverId: data.sender,
-				});
-			};
-
-			if (locationRef.current === data.sender) {
-				setMessages((p) => [...p, data]);
-				updateConversation({ convId: data?.conversationId });
-				sendSeenStatus(true);
-			} else {
-				setUnreadMessage((p) => [...p, data]);
-				sendSeenStatus(false);
-				soundRef.current === "yes" && playSound();
-			}
-		});
-	}, [socket, location]);
 
 	// send typing status
 	useEffect(() => {
@@ -128,6 +97,19 @@ const MessageInput = ({ currentChat, messages: conv, setMessages }) => {
 	}, [location, setText]);
 	return (
 		<>
+			{/* reply ref */}
+			<div className="reply-info" ref={closeReply}>
+				<p className="reply_to"><span> replying to: <b>{replyRefSms?.sender?.username}</b></span>
+					<button onClick={(e) => {
+						closeReply.current.style.display = 'none'
+					}}>
+						<ImCross className="unselect-reply" />
+					</button>
+				</p>
+				<p>{replyRefSms?.text}</p>
+			</div>
+
+			{/* typing status  */}
 			{typingStatus.isTyping && typingStatus.sender === location && (
 				<div className="typing-container">
 					<TypingDots />

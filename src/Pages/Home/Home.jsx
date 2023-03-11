@@ -42,10 +42,12 @@ function Home() {
 	// };
 
 	// handle conversation
-	const handleConversation = (convId, convType,) => {
+	const handleConversation = (convId, receiverId, convType,) => {
 		// console.log(convId, convType)
 		getMessage(convId)
 		localStorage.setItem("convId", convId);
+		localStorage.setItem('receiverId', receiverId)
+		localStorage.setItem('convType', convType)
 		setCurrentConv(convId)
 		// setCurrentChat({
 		// 	convId: convItem?.convId,

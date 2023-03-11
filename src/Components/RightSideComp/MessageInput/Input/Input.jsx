@@ -44,7 +44,9 @@ const Input = ({ setText, value, handleOnEnter }) => {
 			</div>
 
 			<div className="inputWrapper">
+				
 				<input
+					id="messageTextInputField"
 					type="text"
 					onKeyPress={(e) => {
 						if (e.key === "Enter") {

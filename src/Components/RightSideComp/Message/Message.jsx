@@ -1,15 +1,12 @@
 ﻿import { useEffect, useState } from "react";
-import { format } from "timeago.js";
 import { useGlobalContext } from "../../../context";
-import { getSendDate } from "../../../Utils/functions";
 import SmsOption from "./SmsOption";
 import "./Message.scss";
 
-function Message({ i, message, array }) {
+function Message({ i, message, handleReply }) {
 	// console.log(messages)
 	const { handleModals, OpenUploadImage } = useGlobalContext();
 	const [showTime, setShowTime] = useState('none')
-	const [showDate, setShowDate] = useState('')
 	// let time = format(message?.createdAt).split(" ");
 	// if (time.length === 3) {
 	// 	time[2] = null;
@@ -20,21 +17,38 @@ function Message({ i, message, array }) {
 	// } else {
 	// 	time = "Just now";
 	// }
-	const sendAt = getSendDate(message.createdAt)
-	// console.log(sendAt)
-
+	let replySender = ''
+	if (message.sender._id === localStorage.getItem('userId') || message?.replyRef?.sender._id === localStorage.getItem('userId')) {
+		replySender = 'You'
+	}
 	return (
 		<>
 			<div id={message?.sender._id === localStorage.getItem('userId') ? "own" : "other"} className="messages">
 				<div className="tooltip" style={{ display: showTime }}>
 					{new Date(message.createdAt).toLocaleTimeString()}
 				</div>
-				<SmsOption message={message} />
-				<div>
+				<SmsOption message={message} handleReply={handleReply} />
+				<div className="sms-wrapper" >
+					{message?.replyRef &&
+						<div className="repliedRef">
+							<span>
+								{message.sender._id === localStorage.getItem('userId') ? 'You' : message.sender.username.split(' ')[1]} replied
+								to {message?.replyRef?.sender._id === localStorage.getItem('userId') ? 'you' : message.replyRef.sender.username.split(' ')[1]}
+							</span>
+							<span className="repliedSms">
+								{message?.replyRef?.text}
+							</span>
+						</div>}
 					<div style={{ display: "flex" }}>
 						<img className="profileImg" title={message?.sender?.username} src={message?.sender?.profilePicture} alt="" />
-						<div>
-							{message?.text !== "" && <p onMouseEnter={(e) => { setShowTime('block') }} onMouseLeave={(e) => { setShowTime('none') }}>{message?.text}</p>}
+						<div className="sms-wrapper">
+
+							{message?.text !== "" &&
+								<p onMouseEnter={(e) => { setShowTime('block') }} onMouseLeave={(e) => { setShowTime('none') }}>
+									{message?.text}
+								</p>}
+							{message.react && <span className="showReact"><img src={message.react} alt="react" /></span>}
+
 							{message?.images?.length > 0 &&
 								message?.message.images.map((img, index) => (
 									<img

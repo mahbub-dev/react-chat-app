@@ -5,26 +5,19 @@ import { optionHide } from '../../../../Utils/functions'
 import "./user.scss";
 import { useGlobalContext } from "../../../../context";
 
-function User({  item, itemArray }) {
+function User({ item, itemArray }) {
 	const { OpenUserDetails } = useGlobalContext();
 	const [openOption, setOpenOption] = useState(false);
+	const {socket,onlineUsers} = useSocket()
 	const clickRef = useRef();
-	// const item = {};
-	// item.user = item;
-	// const { onlineUsers } = useSocket();
 	let isOnline = false;
-	// onlineUsers &&
-	// 	onlineUsers.forEach((i) => {
-	// 		i.userId === item?.user?._id && (isOnline = i?.userId);
-	// 	});
-	// item.isOnline = isOnline;
-	// 	item?.user?.lastSms?.sender !== localStorage.getItem("userId");
-	let isSeen = false;
+		onlineUsers.forEach((i) => {
+			i.userId === item?._id && (isOnline = i?.userId);
+		});
 
+	let isSeen = false;
 	useEffect(() => {
-		// Add a click event listener to the document object
 		document.addEventListener("click", handleClickOutside);
-		// Remove the event listener when the component is unmounted
 		return () => {
 			document.removeEventListener("click", handleClickOutside);
 		};
@@ -51,7 +44,7 @@ function User({  item, itemArray }) {
 		}
 	}
 
-	const handleDelConversation = (convId)=>{
+	const handleDelConversation = (convId) => {
 
 	}
 	return (
@@ -73,10 +66,12 @@ function User({  item, itemArray }) {
 						<p>{item?.time}16h</p>
 					</div>
 				</div>
+
 				{/* user option  */}
 				<button className="option-btn  opBtn" style={{ display: openOption ? 'flex' : '' }} onClick={handleOptionClick}>
 					<SlOptions className="opBtn" />
 				</button>
+
 
 				<div ref={clickRef} id={item._id} className="userOption">
 					<button onClick={() => OpenUserDetails(item)}>View profile</button>
