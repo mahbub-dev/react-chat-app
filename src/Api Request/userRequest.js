@@ -14,9 +14,7 @@ const createUser = async (signupData, callback) => {
 
 const updateUser = async (updateUserData, cb) => {
 	try {
-		const res = await ApiRequest.put("/user", {
-			updateUserData,
-		});
+		const res = await ApiRequest.put("/user", updateUserData);
 		cb(res);
 	} catch (er) {
 		cb(er?.response);
@@ -41,4 +39,4 @@ const getUserById = async (id, cb) => {
 		cb(err?.response);
 	}
 };
-export { createUser, updateUser, getUser,getUserById };
+export { createUser, updateUser, getUser, getUserById };

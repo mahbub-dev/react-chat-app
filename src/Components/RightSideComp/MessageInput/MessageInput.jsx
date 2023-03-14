@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import ApiRequest from "../../../Api Request/apiRequest";
-import { updateConversation } from "../../../Api Request/conversationRequest";
+import { updateConversation, updateSeenStatus } from "../../../Api Request/conversationRequest";
 import { createMessage } from "../../../Api Request/messageRequest";
 import { useGlobalContext } from "../../../context";
 import { useSocket } from "../../../socketContext";
@@ -38,7 +38,6 @@ const MessageInput = ({ messages: conv, setMessages }) => {
 			sendDataToSocketServer(messages)
 			const updateConv = [...chatList]
 			let addLastestMessage = updateConv?.find(i => i._id === localStorage.getItem('receiverId'));
-			console.log(addLastestMessage)
 			addLastestMessage.lastSms = data
 			setChatList(p => updateConv)
 			setMessages(p => ({ ...p, message: messages }))
@@ -51,6 +50,7 @@ const MessageInput = ({ messages: conv, setMessages }) => {
 		let inputedMessage = {
 			text,
 			images,
+			seenBy: localStorage.getItem('userId')
 		};
 		// if there reply ref 
 		if (replyRefSms?._id) {

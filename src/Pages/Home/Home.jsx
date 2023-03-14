@@ -2,64 +2,47 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-loop-func */
 import React, { useEffect, useRef, useState } from "react";
-import { useAsyncError, useLocation, useNavigate } from "react-router-dom";
 import ApiRequest from "../../Api Request/apiRequest";
-import {
-	deleteConversation,
-	updateConversation,
-} from "../../Api Request/conversationRequest";
-import { ChatList, Peoples, Groups } from "../../Components";
-// import { useGlobalContext } from "../../context";
-import { useSocket } from "../../socketContext";
+import { getLastSeenMessag } from '../../Utils/functions'
+import { updateSeenStatus } from "../../Api Request/conversationRequest";
+import { ChatList, Peoples, Groups, Profile } from "../../Components";
+import { useSocket, } from "../../socketContext";
 // import { responSive } from "../../Utils/functions";
 import buttonData from "./navbuttonData";
 import Chat from "../Chat/Chat";
 import "./home.scss";
 import { useGlobalContext } from "../../context";
 function Home() {
-	const { socket } = useSocket();
+
+	const { sendSeenStatusToSocketServer } = useSocket();
 	const {
-		setConversation } = useGlobalContext();
+		setConversation, setChatList, setLastSeen, loggedUser } = useGlobalContext();
 	const btnRef = useRef()
 	const userId = localStorage.getItem("userId");
 	const [currentConv, setCurrentConv] = useState('')
-	const [windowWidth, setWindowWidth] = useState(500);
+	// const [windowWidth, setWindowWidth] = useState(500);
 	window.addEventListener("resize", (e) => {
-		setWindowWidth(e.target.innerWidth);
+		// setWindowWidth(e.target.innerWidth);
 	});
 
-
-	// get currentChatUser on reload
-	// remove convId when page location is home
-	// const handleDelConversation = (id) => {
-	// 	const isConfirm = confirm("Are you sure?");
-	// 	if (isConfirm) {
-	// 		if (id === currentChat.convId) {
-	// 			setMessage([]);
-	// 		}
-	// 		deleteConversation(id, (res) => { });
-	// 	}
-	// };
-
-	// handle conversation
-	const handleConversation = (convId, receiverId, convType,) => {
-		// console.log(convId, convType)
+	const handleConversation = (item) => {
+		let { convId, _id: receiverId, convType, lastSms } = item
 		getMessage(convId)
 		localStorage.setItem("convId", convId);
 		localStorage.setItem('receiverId', receiverId)
 		localStorage.setItem('convType', convType)
 		setCurrentConv(convId)
-		// setCurrentChat({
-		// 	convId: convItem?.convId,
-		// 	convUser: convItem?.user,
-		// 	isOnline: convItem?.isOnline,
-		// });
-		// // get messages from server
-
-		// getMessages(convItem.convId);
-		// // set seen status
-		// setSeenStatus(convItem);
-		// navigate(`/${convItem?.user?._id}`);
+		updateSeenStatus(convId, (res) => {
+			!lastSms?.seenBy?.includes(userId) && lastSms?.seenBy?.push(userId)
+			setChatList(p => {
+				p[p.indexOf(item)] = item
+				return p
+			})
+			if (res?.status === 200) {
+				sendSeenStatusToSocketServer(res.data.message)
+				setLastSeen(res.data.message[res.data.message.length - 1])
+			}
+		})
 		// windowWidth <= 500 && responSive("right");
 	};
 
@@ -69,6 +52,7 @@ function Home() {
 				`/conversation/message/${convId}`
 			);
 			setConversation(res.data)
+			setLastSeen(getLastSeenMessag(res.data.message))
 		} catch (error) {
 			console.log(error.response?.data);
 		}
@@ -77,31 +61,20 @@ function Home() {
 	useEffect(() => {
 		getMessage(localStorage.getItem('convId'))
 	}, []);
+
 	//detect current chat after reload
 	useEffect(() => {
 		setCurrentConv(localStorage.getItem('convId'))
 	}, [])
+
 	// set seen status
-	const setSeenStatus = (convItem) => {
-		if (
-			convItem?.user?.lastSms?.sender !== localStorage.getItem("userId")
-		) {
-			socket.emit("isSeen", {
-				isOpended: false,
-				conversationId: convItem.convId,
-				sender: localStorage.getItem("userId"),
-				receiverId: convItem?.user?.lastSms?.sender,
-			});
-			updateConversation({ convId: convItem.convId });
-		}
-	};
 	const [renderConponent, setRenderComponent] = useState(
 		<ChatList handleConversation={handleConversation} />
 	);
 	const [title, setTitle] = useState('Chats')
 	const handleButtonClick = (identifier) => {
-		setTitle(identifier)
 		localStorage.setItem('currentComp', identifier)
+		setTitle(identifier)
 		switch (identifier) {
 			case 'Chats':
 				setRenderComponent(<ChatList handleConversation={handleConversation} />)
@@ -119,20 +92,23 @@ function Home() {
 				setRenderComponent('Settings')
 				break;
 			case 'Profile':
-				setRenderComponent('Profile')
+				setRenderComponent(<Profile />)
 				break;
-			case 'Expand':
-				setRenderComponent('Expand')
+			case 'Logout':
+				localStorage.clear()
+				window.location.reload()
 				break;
 			default:
 				break;
 		}
 	}
-
 	useEffect(() => {
 		const currentRender = localStorage.getItem('currentComp')
-		handleButtonClick(currentRender)
-	}, [currentConv])
+		if (currentRender === null) {
+			handleButtonClick('Chats')
+		} else handleButtonClick(currentRender)
+	}, [])
+
 	return (
 		<div className="home" id="home">
 			<div className="navButtons" ref={btnRef}>
@@ -145,7 +121,7 @@ function Home() {
 							style={{ background: title === i.title && ' rgb(243, 239, 239)' }}
 						>
 							<img
-								src={i.icon}
+								src={i?.icon ? i?.icon : loggedUser.profilePicture}
 								alt={i.title}
 							/>
 						</button>
@@ -154,7 +130,7 @@ function Home() {
 			</div>
 
 			<div className="leftside">
-				<h1 style={{ textAlign: "left", fontSize: "25px" }}>{title}</h1>
+				<h1 style={{ textAlign: "left", fontSize: "25px" }}>{title ? title : 'Chats'}</h1>
 				<div style={{ height: "81%", overflow: "auto" }}>
 					{renderConponent}
 				</div>

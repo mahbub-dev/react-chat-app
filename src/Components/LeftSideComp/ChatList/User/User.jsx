@@ -4,18 +4,20 @@ import { SlOptions } from "react-icons/sl";
 import { optionHide } from '../../../../Utils/functions'
 import "./user.scss";
 import { useGlobalContext } from "../../../../context";
+import { format } from 'timeago.js'
+import ApiRequest from "../../../../Api Request/apiRequest";
 
 function User({ item, itemArray }) {
 	const { OpenUserDetails } = useGlobalContext();
 	const [openOption, setOpenOption] = useState(false);
-	const {socket,onlineUsers} = useSocket()
+	const { onlineUsers } = useSocket()
+	const timeFormat = format(item?.lastSms?.createdAt).split(' ')
 	const clickRef = useRef();
 	let isOnline = false;
-		onlineUsers.forEach((i) => {
-			i.userId === item?._id && (isOnline = i?.userId);
-		});
+	onlineUsers.forEach((i) => {
+		i.userId === item?._id && (isOnline = i?.userId);
+	});
 
-	let isSeen = false;
 	useEffect(() => {
 		document.addEventListener("click", handleClickOutside);
 		return () => {
@@ -44,8 +46,15 @@ function User({ item, itemArray }) {
 		}
 	}
 
-	const handleDelConversation = (convId) => {
-
+	const handleDelConversation = async () => {
+		try {
+			await ApiRequest.delete(`conversation/${item.convId}`)
+			localStorage.removeItem('convId')
+			localStorage.removeItem('receiverId')
+			window.location.reload()
+		} catch (error) {
+			console.log(error)
+		}
 	}
 	return (
 		<>
@@ -56,14 +65,14 @@ function User({ item, itemArray }) {
 					<div className={isOnline === item?._id ? "active" : ""}></div>
 				</div>
 				<div className="name">
-					<h4 style={{ fontWeight: isSeen && item?.totalUnseen > 0 ? "bold" : "500", }}>
+					<h4 style={{ fontWeight: item?.lastSms?.isSeen ? "bold" : "500", }}>
 						{item?.username}
 					</h4>
 					<div className="lastSmsAndTime">
-						<p style={{ fontWeight: isSeen && item.totalUnseen > 0 ? "bold" : "initial", }}>
+						<p style={{ fontWeight: !item?.lastSms?.seenBy.includes(localStorage.getItem('userId')) > 0 ? "bold" : "initial", }}>
 							{item?.lastSms ? item.lastSms?.text?.length < 25 ? item.lastSms?.text : item?.lastSms?.text?.slice(0, 25) + '...' : 'Say Assalamualaikum'}
 						</p>
-						<p>{item?.time}16h</p>
+						{item?.lastSms && <p> {timeFormat.includes('just') ? 'Just now' : timeFormat[0] + timeFormat[1].slice(0, 1)}</p>}
 					</div>
 				</div>
 
@@ -75,7 +84,7 @@ function User({ item, itemArray }) {
 
 				<div ref={clickRef} id={item._id} className="userOption">
 					<button onClick={() => OpenUserDetails(item)}>View profile</button>
-					<button onClick={() => handleDelConversation(item.id)}>Delete chat</button>
+					<button onClick={() => handleDelConversation()}>Delete chat</button>
 				</div>
 			</div>
 		</>

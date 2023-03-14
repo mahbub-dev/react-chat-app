@@ -128,6 +128,20 @@ const focusInput = () => {
 	elem2.style.display = "block";
 	elem.focus();
 };
+
+// detect last seen Message Object
+const getLastSeenMessag = (message) => {
+	if (Array.isArray(message)) {
+		return message
+			?.slice()
+			?.reverse()
+			?.find((m) =>
+				m.seenBy.includes(localStorage.getItem("receiverId"))
+			);
+	} else {
+		return {};
+	}
+};
 export {
 	responSive,
 	getSendDate,
@@ -136,4 +150,5 @@ export {
 	handleImageChange,
 	optionHide,
 	focusInput,
+	getLastSeenMessag
 };

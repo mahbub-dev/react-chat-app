@@ -10,11 +10,10 @@ function User({ item, itemArray }) {
 	const handleAddDualConv = async (e) => {
 		e.stopPropagation()
 		try {
-			const res = await ApiRequest.post(
+			await ApiRequest.post(
 				`conversation/dual/${item?._id}`
 			);
 			setRemoveItem(true)
-			console.log(res.data);
 		} catch (error) {
 			console.log(error)
 		}
@@ -22,7 +21,7 @@ function User({ item, itemArray }) {
 	}
 	return (
 		<>
-			<div className="user" onClick={()=>OpenUserDetails(true,item)} style={{ display: removeItem ? 'none' : 'flex' }} >
+			<div className="user" onClick={() => OpenUserDetails(true, item)} style={{ display: removeItem ? 'none' : 'flex' }} >
 				<div className="img">
 					<img src={item?.profilePicture} alt="img" />
 				</div>

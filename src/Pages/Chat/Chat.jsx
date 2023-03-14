@@ -1,18 +1,9 @@
-﻿import { useEffect, useState } from "react";
-import { ChatHeader, ChatView, MessageInput } from "../../Components";
+﻿import { ChatHeader, ChatView, MessageInput } from "../../Components";
 import { useGlobalContext } from "../../context";
 import "./Chat.scss";
 
 function Chat({ device }) {
-	const [currentChatUser, setCurrentChatUser] = useState({});
-	const [chat, setChat] = useState([])
-	const [isOnline, setIsOnline] = useState("");
 	const { conversation, setConversation } = useGlobalContext()
-	// useEffect(() => {
-	// 	setCurrentChatUser(currentChat?.convUser);
-	// 	setIsOnline(currentChat?.isOnline);
-	// }, [currentChat]);
-	// get message from server
 	return (
 		<div className="rightside">
 			<ChatHeader currentChatUser={conversation} />

@@ -6,6 +6,7 @@ export { default as Peoples } from "./LeftSideComp/Peoples/Peoples.jsx";
 export { default as Groups } from "./LeftSideComp/Groups/Groups.jsx";
 export { default as Settings } from "./LeftSideComp/Settings/Settings.jsx";
 export { default as UserLoader } from "./LeftSideComp/UserLoader/UserLoader";
+export { default as Profile } from "./LeftSideComp/Profile/Profile";
 // rigt side components
 export { default as ChatHeader } from "./RightSideComp/ChatHeader/ChatHeader.jsx";
 export { default as ChatView } from "./RightSideComp/ChatView/ChatView";

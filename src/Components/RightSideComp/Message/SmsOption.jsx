@@ -10,7 +10,7 @@ import { useSocket } from '../../../socketContext'
 
 const SmsOption = ({ message }) => {
     const { conversation, setConversation, setReplyRefSms } = useGlobalContext()
-    const { socket, sendDataToSocketServer } = useSocket()
+    const { sendDataToSocketServer } = useSocket()
     const [showMoreBtn, setShowMoreBtn] = useState('none')
     const [showReactItem, setShowReactItem] = useState('none')
     const convId = localStorage.getItem('convId')

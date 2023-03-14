@@ -19,9 +19,9 @@ const buttonData = [
         icon: 'https://www.svgrepo.com/show/498932/settings.svg'
     }, {
         title: 'Profile',
-        icon: localStorage.getItem('profilePicture')
+     
     }, {
-        title: 'Expand',
+        title: 'Logout',
         icon: 'https://www.svgrepo.com/show/495014/arrow-right-3.svg'
     },
 ]

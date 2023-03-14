@@ -1,38 +1,24 @@
-﻿import { useEffect, useState } from "react";
+﻿import { useState } from "react";
 import { useGlobalContext } from "../../../context";
 import SmsOption from "./SmsOption";
 import "./Message.scss";
 
-function Message({ i, message, handleReply }) {
-	// console.log(messages)
-	const { handleModals, OpenUploadImage } = useGlobalContext();
+function Message({ currentChat, message }) {
+	const { handleModals, OpenUploadImage, lastSeen } = useGlobalContext();
+	// console.log(lastSeen)
 	const [showTime, setShowTime] = useState('none')
-	// let time = format(message?.createdAt).split(" ");
-	// if (time.length === 3) {
-	// 	time[2] = null;
-	// 	time[1] === "seconds" && (time[1] = "s");
-	// 	time[1] === "minutes" && (time[1] = "m");
-	// 	time[1] === "hours" && (time[1] = "h");
-	// 	time[1] === "day" && (time[1] = "d");
-	// } else {
-	// 	time = "Just now";
-	// }
-	let replySender = ''
-	if (message.sender._id === localStorage.getItem('userId') || message?.replyRef?.sender._id === localStorage.getItem('userId')) {
-		replySender = 'You'
-	}
 	return (
 		<>
 			<div id={message?.sender._id === localStorage.getItem('userId') ? "own" : "other"} className="messages">
 				<div className="tooltip" style={{ display: showTime }}>
 					{new Date(message.createdAt).toLocaleTimeString()}
 				</div>
-				<SmsOption message={message} handleReply={handleReply} />
+				<SmsOption message={message} />
 				<div className="sms-wrapper" >
 					{message?.replyRef &&
 						<div className="repliedRef">
 							<span>
-								{message.sender._id === localStorage.getItem('userId') ? 'You' : message.sender.username.split(' ')[1]} replied
+								{message?.sender?._id === localStorage.getItem('userId') ? 'You' : message?.sender?.username.split(' ')[1]} replied
 								to {message?.replyRef?.sender._id === localStorage.getItem('userId') ? 'you' : message.replyRef.sender.username.split(' ')[1]}
 							</span>
 							<span className="repliedSms">
@@ -62,11 +48,12 @@ function Message({ i, message, handleReply }) {
 									/>
 								))}
 
-							{i === 1 && (
+							{lastSeen?._id === message?._id && (
 								<img
-									src={''}
+									src={currentChat[0]?.profilePicture}
 									alt="seen"
 									className="seen"
+									title={`seen by ${currentChat[0]?.username.split(' ')[0]}`}
 								/>
 							)}
 						</div>

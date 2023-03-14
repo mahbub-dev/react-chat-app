@@ -32,7 +32,6 @@ const SocketProvider = ({ children }) => {
 		});
 	}, [socket, friendId]);
 
-	
 	const sendDataToSocketServer = (data) => {
 		socket?.emit("sendMessage", {
 			message: data,
@@ -41,6 +40,15 @@ const SocketProvider = ({ children }) => {
 			convType: localStorage.getItem("convType"),
 		});
 	};
+
+	const sendSeenStatusToSocketServer = (data) => {
+		socket.emit("isSeen", {
+			message: data,
+			senderId: localStorage.getItem("userId"),
+			receiverId: localStorage.getItem("receiverId"),
+		});
+	};
+
 	return (
 		<SocketContext.Provider
 			value={{
@@ -48,6 +56,7 @@ const SocketProvider = ({ children }) => {
 				socket,
 				typingStatus,
 				sendDataToSocketServer,
+				sendSeenStatusToSocketServer,
 			}}>
 			{children}
 		</SocketContext.Provider>

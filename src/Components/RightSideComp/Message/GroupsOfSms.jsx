@@ -1,6 +1,6 @@
 import React from 'react'
 import Message from './Message'
-const GroupsOfSms = ({ index, messages, array }) => {
+const GroupsOfSms = ({ index, messages, array, currentChat }) => {
     const today = new Date()
     const yesterday = new Date()
     yesterday.setDate(today.getDate() - 1)
@@ -17,8 +17,8 @@ const GroupsOfSms = ({ index, messages, array }) => {
         <div key={index}>
             {<div className="convDate">{date}</div>}
             {
-                messages.map((message, i,arr) =>
-                    <Message message={message} i={i} key={i} array={arr} />
+                messages.map((message, i, arr) =>
+                    <Message message={message} key={i} array={arr} currentChat={currentChat} />
                 )
             }
         </div>

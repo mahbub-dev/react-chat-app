@@ -27,6 +27,7 @@ function Login() {
 				setLoggedUser(res?.data);
 				navigate(`/home`);
 				localStorage.setItem("sound", "yes");
+				localStorage.setItem('currentComp', 'Chats')
 				window.location.reload();
 			} else if (res?.status === 403) {
 				navigate("/signup/confirm");

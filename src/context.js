@@ -13,6 +13,7 @@ const AppProvider = ({ children }) => {
 	const [userComps, setUserComps] = useState("");
 	const [newMessagCount, setNewMessageCount] = useState(0);
 	const [replyRefSms, setReplyRefSms] = useState({});
+	const [lastSeen, setLastSeen] = useState({});
 	const [chatList, setChatList] = useState([]);
 	const soundRef = useRef("yes");
 	useEffect(() => {
@@ -83,7 +84,8 @@ const AppProvider = ({ children }) => {
 		setConversation,
 		chatList,
 		setChatList,
-
+		lastSeen,
+		setLastSeen,
 		userList,
 		setUserList,
 		searchValue,

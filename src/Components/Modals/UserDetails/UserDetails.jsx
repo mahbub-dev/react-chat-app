@@ -4,7 +4,7 @@ import { useGlobalContext } from "../../../context";
 import { handleModals } from "../../../Utils/functions";
 import "./userdetails.scss";
 const UserDetails = () => {
-	const {user } = useGlobalContext();
+	const { user } = useGlobalContext();
 	return (
 		<div className="user-details">
 			<div
@@ -25,8 +25,6 @@ const UserDetails = () => {
 			</div>
 			<h4>{user?.username}</h4>
 			<div className="other">
-				<p>Email: {user?.email ? user.email : ""}</p>
-				<p>Phone: {user?.phone ? user.phone : ""}</p>
 				{/* <p>status: {user?.status ? user.status : "ofline"}</p> */}
 			</div>
 		</div>

@@ -37,10 +37,21 @@ const updateConversation = async (data, cb) => {
 	}
 };
 
+const updateSeenStatus = async (convId, cb) => {
+	try {
+		const res = await ApiRequest.put(
+			`conversation/message/updateseen/${convId}`
+		);
+		cb(res);
+	} catch (error) {
+		cb(error?.response);
+		console.log(error);
+	}
+};
 export {
 	createConversation,
 	getCoversation,
 	deleteConversation,
 	updateConversation,
+	updateSeenStatus,
 };
-
