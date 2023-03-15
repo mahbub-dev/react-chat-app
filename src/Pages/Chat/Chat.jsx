@@ -14,7 +14,7 @@ function Chat({ device }) {
 				device={device}
 			/>
 			{/* message input  */}
-			<form className="inputField" encType="multipart/form-data" onSubmit={(e) => { e.preventDefault(); console.log(e.target.files) }}>
+			<form className="inputField" encType="multipart/form-data" onSubmit={(e) => { e.preventDefault() }}>
 				<MessageInput
 					messages={conversation}
 					setMessages={setConversation}

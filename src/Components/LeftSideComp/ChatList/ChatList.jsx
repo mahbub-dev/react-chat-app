@@ -8,24 +8,23 @@ import Loading from "../../Loading/Loading";
 import Search from "../Search/Search";
 import { getLastSeenMessag } from '../../../Utils/functions'
 import User from "./User/User";
-import {updateSeenStatus } from "../../../Api Request/conversationRequest";
+import { updateSeenStatus } from "../../../Api Request/conversationRequest";
 
 const ChatList = ({ handleConversation }) => {
 	const { socket, sendSeenStatusToSocketServer } = useSocket()
-	const [chats, setChats] = useState([]);
+	// const [chats, setChats] = useState([]);
 	const [responseStatus, setResponseStatus] = useState(200);
 	const [detectCurrentChat, setDetectCurrentChat] = useState(localStorage.getItem('convId'));
 	const { searchValue, setConversation: setMessages, setChatList, chatList, setLastSeen } = useGlobalContext();
 	const userId = localStorage.getItem("userId");
-	const convRef = useRef(chats)
-
+	const convRef = useRef()
+	// console.log(chatList)
 	useEffect(() => {
 		const getConv = async () => {
 			try {
 				const res = await ApiRequest.get(`/conversation/?search=${searchValue}`);
-				// console.log(res.data)
 				convRef.current = res.data
-				setChatList(convRef.current)
+				setChatList(res.data)
 				setResponseStatus(res.status)
 			} catch (error) {
 				setResponseStatus(error?.response.status)
@@ -40,35 +39,31 @@ const ChatList = ({ handleConversation }) => {
 		socket?.on("getMessage", (data) => {
 			// console.log(data)
 			const updateConv = [...convRef.current]
-			let addLastestMessage = updateConv?.find(i => i._id === data.senderId);
+			let addLastestMessage = updateConv.find(i => i._id === data.senderId);
 			addLastestMessage.lastSms = data.message[data.message.length - 1]
-
 			if (localStorage.getItem('receiverId') === data.senderId) {
+				// console.log(data)
 				data.message[data.message.length - 1]?.seenBy.push(userId)
 				setMessages(p => ({ ...p, message: data.message }))
-				getLastSeenMessag(data.message)
 				setLastSeen(getLastSeenMessag(data.message))
+				sendSeenStatusToSocketServer(data.message)
 				updateSeenStatus(localStorage.getItem('convId'), (res) => {
 					if (res.status === 200) {
-						sendSeenStatusToSocketServer(data.message)
 					}
 				})
 			} else {
 				console.log(data.senderId)
-				// addLastestMessage.lastSms.isSeen = true
-				// setUnreadMessage((p) => [...p, data]);
-				// sendSeenStatus(false);
-				// soundRef.current === "yes" && playSound();
 			}
-			setChatList(p => updateConv)
+			setChatList(updateConv)
 		});
 
 
 		// get Seen Status
 		socket.on('getSeen', (d) => {
+			console.log(d.message)
 			setLastSeen(getLastSeenMessag(d.message))
 		})
-	}, [socket, setMessages]);
+	}, [socket]);
 	return (
 		<>
 			<Search />
