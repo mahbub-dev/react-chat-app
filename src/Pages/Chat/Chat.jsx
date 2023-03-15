@@ -14,12 +14,12 @@ function Chat({ device }) {
 				device={device}
 			/>
 			{/* message input  */}
-			<div className="inputField">
+			<form className="inputField" encType="multipart/form-data" onSubmit={(e) => { e.preventDefault(); console.log(e.target.files) }}>
 				<MessageInput
 					messages={conversation}
 					setMessages={setConversation}
 				/>
-			</div>
+			</form>
 		</div>
 	);
 }

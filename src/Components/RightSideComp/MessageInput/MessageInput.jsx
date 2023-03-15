@@ -16,7 +16,7 @@ import "./messageinput.scss";
 const MessageInput = ({ messages: conv, setMessages }) => {
 	const { socket, typingStatus, sendDataToSocketServer } = useSocket();
 	const { message: messages, _id, } = conv
-	const { setUnreadMessage, soundRef, replyRefSms, chatList, setChatList } = useGlobalContext();
+	const { soundRef, replyRefSms, chatList, setChatList } = useGlobalContext();
 	const closeReply = useRef()
 	const [text, setText] = useState("");
 	const [images, setImages] = useState([]);
@@ -64,7 +64,7 @@ const MessageInput = ({ messages: conv, setMessages }) => {
 			}
 			if (messages.length === 0) {
 				if (!text.toLowerCase().startsWith("assalamualaikum") || !text.toLowerCase().endsWith("assalamualaikum")) {
-					alert(" Pleas start chat with 'Assalamualaikum' ");
+					alert(" Please start chat with 'Assalamualaikum' ");
 					return
 				}
 			}
@@ -97,8 +97,8 @@ const MessageInput = ({ messages: conv, setMessages }) => {
 	}, [location, setText]);
 	return (
 		<>
-			{/* reply ref */}
-			<div className="reply-info" ref={closeReply}>
+			{/* reply ref  */}
+			<div className="reply-info" ref={closeReply} >
 				<p className="reply_to"><span> replying to: <b>{replyRefSms?.sender?.username}</b></span>
 					<button onClick={(e) => {
 						closeReply.current.style.display = 'none'
@@ -107,14 +107,17 @@ const MessageInput = ({ messages: conv, setMessages }) => {
 					</button>
 				</p>
 				<p>{replyRefSms?.text}</p>
-			</div>
+			</div >
 
 			{/* typing status  */}
-			{typingStatus.isTyping && typingStatus.sender === location && (
-				<div className="typing-container">
-					<TypingDots />
-				</div>
-			)}
+			{
+				typingStatus.isTyping && typingStatus.sender === location && (
+					<div className="typing-container">
+						<TypingDots />
+					</div>
+				)
+			}
+
 
 			{/* text input  */}
 			<Input
@@ -122,14 +125,32 @@ const MessageInput = ({ messages: conv, setMessages }) => {
 				setText={setText}
 				handleOnEnter={handleOnEnter}
 			/>
-			{images.length > 0 && (
-				<div className="images">
-					{images.map((i, index) => (
-						<img src={i} alt={"img"} key={index} />
-					))}
-				</div>
-			)}
-			{/* image input  */}
+
+			{
+				images.length > 0 && (
+					<div className="images">
+						{images.map((i, index) => (
+							<img src={i} alt={"img"} key={index} />
+						))}
+					</div>
+				)
+			}
+
+			{/* attachment input  */}
+			<input
+				id="attachment"
+				onChange={(e) =>
+					handleImageChange((e) => {
+						console.log()
+					})
+				}
+				type="file"
+				multiple
+				max={2}
+				accept='application/pdf,audio/*,video/*'
+				style={{ display: "none" }}
+			/>
+
 			<input
 				id="uploadImage"
 				onChange={() =>
@@ -138,6 +159,7 @@ const MessageInput = ({ messages: conv, setMessages }) => {
 					})
 				}
 				type="file"
+				accept="image/*"
 				multiple
 				style={{ display: "none" }}
 			/>

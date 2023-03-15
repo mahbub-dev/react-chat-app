@@ -1,5 +1,6 @@
 ﻿/* eslint-disable no-loop-func */
 import tone from "./Iphone 7 Message Tone.mp3";
+import { ApiRequestFormData } from "../Api Request/apiRequest";
 
 // handle emoji selection
 document.addEventListener("mousedown", (event) => {
@@ -77,37 +78,32 @@ const playSound = () => {
 	});
 };
 
-const handleImageChange = (cb) => {
+const handleImageChange = async (cb) => {
 	const file = document.querySelector("#uploadImage")["files"];
 	const files = [];
-	const image = [];
 	for (let i = 0; i < file.length; i++) {
 		files.push(file[i]);
 	}
 	if (files.length < 3) {
+		const formData = new FormData();
 		for (let i = 0; i < files.length; i++) {
 			const elem = files[i];
-			const reader = new FileReader();
-			reader.readAsDataURL(elem);
-			reader.onloadend = () => {
-				if (
-					elem.type === `image/jpg` ||
-					elem.type === "image/png" ||
-					elem.type === "image/jpeg"
-				) {
-					image.push(reader.result);
-				} else {
-					alert("You can upload only jpg,png,jpeg file");
-				}
-			};
+			if (
+				elem.type === `image/jpg` ||
+				elem.type === "image/png" ||
+				elem.type === "image/jpeg"
+			) {
+				formData.append("files", elem);
+			} else {
+				alert("You can upload only jpg,png,jpeg file");
+			}
 		}
+
+		const response = await ApiRequestFormData.post("/uploads", formData);
+		cb(response.data);
 	} else {
 		alert("You can not upload more than 2 image at a time");
 	}
-
-	setTimeout(() => {
-		cb(image);
-	}, 1000);
 };
 
 // get date month and year
@@ -150,5 +146,5 @@ export {
 	handleImageChange,
 	optionHide,
 	focusInput,
-	getLastSeenMessag
+	getLastSeenMessag,
 };

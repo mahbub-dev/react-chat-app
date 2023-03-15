@@ -3,10 +3,10 @@ import { useLocation } from "react-router-dom";
 import { io } from "socket.io-client";
 const SocketContext = createContext();
 const SocketProvider = ({ children }) => {
-	const localSocketServer = "ws://localhost:3001";
-	const cloudSocketServer = "wss://socket-server-dtrx.onrender.com";
 	const friendId = useLocation().pathname.split("/")[2];
-	const socketInitait = io(localSocketServer, { autoConnect: false });
+	const socketInitait = io(process.env.REACT_APP_SOKECT_SERVER, {
+		autoConnect: false,
+	});
 	const [socket, setSocket] = useState(socketInitait);
 	const [typingStatus, setTypingStatus] = useState({
 		isTyping: false,
