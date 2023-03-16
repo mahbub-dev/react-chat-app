@@ -29,6 +29,9 @@
 		width: fit-content;
 		max-width: 220px;
 		word-wrap: break-word;
+		@include small-down {
+		font-size: 13px;
+	}
 	}
 	span {
 		color: rgba(0, 0, 0, 0.664);
@@ -174,5 +177,6 @@
 	}
 }
 .convDate {
+	    margin: 0.5rem 0;
 	width: 100%;
 }
