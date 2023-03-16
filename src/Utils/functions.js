@@ -35,12 +35,19 @@ const optionHide = (ids) => {
 const responSive = (direction) => {
 	const right = document.querySelector(".rightside");
 	const left = document.querySelector(".leftside");
+	const navButtons = document.querySelector(".navButtons");
 	if (direction === "right") {
+		localStorage.setItem("isChatBoxOpened", "true");
 		left.style.position = "absolute";
 		left.style.transform = `translateX(-100%)`;
 		right.style.position = "initial";
+		navButtons.style.opacity = "0";
+		navButtons.style.width = "0";
 		right.style.transform = "translateX(0%)";
 	} else {
+		localStorage.setItem("isChatBoxOpened", "false");
+		navButtons.style.opacity = "1";
+		navButtons.style.width = "50px";
 		right.style.position = "absolute";
 		right.style.transform = "translateX(-100%)";
 		left.style.position = "initial";

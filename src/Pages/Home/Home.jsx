@@ -7,7 +7,7 @@ import { getLastSeenMessag } from '../../Utils/functions'
 import { updateSeenStatus } from "../../Api Request/conversationRequest";
 import { ChatList, Peoples, Groups, Profile } from "../../Components";
 import { useSocket, } from "../../socketContext";
-// import { responSive } from "../../Utils/functions";
+import { responSive } from "../../Utils/functions";
 import buttonData from "./navbuttonData";
 import Chat from "../Chat/Chat";
 import "./home.scss";
@@ -19,19 +19,21 @@ function Home() {
 		setConversation, setChatList, setLastSeen, loggedUser } = useGlobalContext();
 	const btnRef = useRef()
 	const userId = localStorage.getItem("userId");
-	const [currentConv, setCurrentConv] = useState('')
-	// const [windowWidth, setWindowWidth] = useState(500);
+	// const [currentConv, setCurrentConv] = useState('')
+	const windowWidth = useRef()
 	window.addEventListener("resize", (e) => {
-		// setWindowWidth(e.target.innerWidth);
+		windowWidth.current = e.target.innerWidth
 	});
-
+	useEffect(() => {
+		windowWidth.current = window.innerWidth
+	}, [])
 	const handleConversation = (item) => {
 		let { convId, _id: receiverId, convType, lastSms } = item
 		getMessage(convId)
 		localStorage.setItem("convId", convId);
 		localStorage.setItem('receiverId', receiverId)
 		localStorage.setItem('convType', convType)
-		setCurrentConv(convId)
+		// setCurrentConv(convId)
 		updateSeenStatus(convId, (res) => {
 			!lastSms?.seenBy?.includes(userId) && lastSms?.seenBy?.push(userId)
 			setChatList(p => {
@@ -43,9 +45,10 @@ function Home() {
 				setLastSeen(res.data.message[res.data.message.length - 1])
 			}
 		})
-		// windowWidth <= 500 && responSive("right");
+		// console.log(windowWidth)
+		windowWidth.current < 501 && responSive('right')
 	};
-
+	// console.log(windowWidth)
 	const getMessage = async (convId) => {
 		try {
 			const res = await ApiRequest.get(
@@ -64,7 +67,7 @@ function Home() {
 
 	//detect current chat after reload
 	useEffect(() => {
-		setCurrentConv(localStorage.getItem('convId'))
+		// setCurrentConv(localStorage.getItem('convId'))
 	}, [])
 
 	// set seen status
@@ -109,6 +112,11 @@ function Home() {
 		} else handleButtonClick(currentRender)
 	}, [])
 
+	useEffect(() => {
+		if (windowWidth.current < 501) {
+			localStorage.getItem('isChatBoxOpened') === 'true' && responSive('right')
+		}
+	}, [])
 	return (
 		<div className="home" id="home">
 			<div className="navButtons" ref={btnRef}>

@@ -60,7 +60,6 @@ const ChatList = ({ handleConversation }) => {
 
 		// get Seen Status
 		socket.on('getSeen', (d) => {
-			console.log(d.message)
 			setLastSeen(getLastSeenMessag(d.message))
 		})
 	}, [socket]);

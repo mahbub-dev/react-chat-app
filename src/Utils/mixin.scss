@@ -79,7 +79,6 @@
 @mixin mobileResponsive {
 	@include small-down {
 		.leftside {
-			border: none;
 			padding: 0.2rem;
 			width: 100%;
 			// position: absolute;
