@@ -85,31 +85,80 @@ const playSound = () => {
 	});
 };
 
-const handleImageChange = async (cb) => {
-	const file = document.querySelector("#uploadImage")["files"];
-	const files = [];
-	for (let i = 0; i < file.length; i++) {
-		files.push(file[i]);
+const handleUpload = async (event, type, cb) => {
+	if (type === "image") {
+		const res = await handleImageUpload(event);
+		cb(res);
+	} else {
+		const res = await handleAttachMentUpload(event);
+		const pdf = [];
+		const videos = [];
+		const audios = [];
+		res.forEach((i) => {
+			if (i.endsWith(".mp4" || ".mkv")) {
+				videos.push(i);
+			} else if (i.endsWith(".mp3")) {
+				audios.push = i;
+			} else if (i.endsWith("pdf")) {
+				pdf.push(i);
+			}
+		});
+		cb({ audios, videos, pdf });
 	}
-	if (files.length < 3) {
+};
+// handle image upload
+const handleImageUpload = async (event) => {
+	try {
+		const files = event.target.files;
+		if (files.length < 3) {
+			const formData = new FormData();
+			for (const file of files) {
+				if (
+					file.type === `image/jpg` ||
+					file.type === "image/png" ||
+					file.type === "image/jpeg"
+				) {
+					formData.append("files", file);
+				} else {
+					alert("You can upload only jpg,png,jpeg file");
+				}
+			}
+			const response = await ApiRequestFormData.post(
+				"/uploads",
+				formData
+			);
+			return response.data;
+		} else {
+			alert("You can not upload more than 2 image at a time");
+		}
+	} catch (error) {
+		console.log(error?.response);
+	}
+};
+
+// handle attachment upload
+const handleAttachMentUpload = async (event) => {
+	try {
+		const files = event.target.files;
 		const formData = new FormData();
-		for (let i = 0; i < files.length; i++) {
-			const elem = files[i];
+		for (const file of files) {
 			if (
-				elem.type === `image/jpg` ||
-				elem.type === "image/png" ||
-				elem.type === "image/jpeg"
+				[
+					"application/pdf",
+					"video/mp4",
+					"video/mkv",
+					"audio/mp3",
+				].includes(file.type)
 			) {
-				formData.append("files", elem);
+				formData.append("files", file);
 			} else {
-				alert("You can upload only jpg,png,jpeg file");
+				alert("Your file type is not supported in our system");
 			}
 		}
-
 		const response = await ApiRequestFormData.post("/uploads", formData);
-		cb(response.data);
-	} else {
-		alert("You can not upload more than 2 image at a time");
+		return response.data;
+	} catch (error) {
+		console.log(error);
 	}
 };
 
@@ -150,7 +199,7 @@ export {
 	getSendDate,
 	handleModals,
 	playSound,
-	handleImageChange,
+	handleUpload,
 	optionHide,
 	focusInput,
 	getLastSeenMessag,

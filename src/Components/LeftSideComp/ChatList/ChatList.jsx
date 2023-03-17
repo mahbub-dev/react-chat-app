@@ -79,7 +79,7 @@ const ChatList = ({ handleConversation }) => {
 								onClick={() => { handleConversation(item); setDetectCurrentChat(item.convId) }}
 								className="item"
 								key={index}
-								style={{ background: (detectCurrentChat === item.convId) ? '#F5F5F5' : 'initial' }}
+								style={{ background: (detectCurrentChat === item.convId) ? '#F5F5F5' : 'initial', borderRadius: '10px' }}
 							>
 								<User
 									item={item}

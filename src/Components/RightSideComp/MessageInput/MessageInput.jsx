@@ -8,7 +8,7 @@ import { createMessage } from "../../../Api Request/messageRequest";
 import { useGlobalContext } from "../../../context";
 import { useSocket } from "../../../socketContext";
 import { ImCross } from 'react-icons/im'
-import { handleImageChange, playSound } from "../../../Utils/functions";
+import { handleUpload, playSound } from "../../../Utils/functions";
 import TypingDots from "../TypingDots/TypingDots";
 import Input from "./Input/Input";
 import "./messageinput.scss";
@@ -20,6 +20,7 @@ const MessageInput = ({ messages: conv, setMessages }) => {
 	const closeReply = useRef()
 	const [text, setText] = useState("");
 	const [images, setImages] = useState([]);
+	const [attachment, setAttachment] = useState({})
 	const location = useLocation().pathname.split("/")[1];
 	const sender = localStorage.getItem("userId");
 	// function for sending message 
@@ -28,6 +29,7 @@ const MessageInput = ({ messages: conv, setMessages }) => {
 			let { data } = await ApiRequest.post(`conversation/message/`, {
 				convId,
 				message,
+
 			});
 			// console.log(res.data);
 			if (data?.replyRef) {
@@ -50,6 +52,9 @@ const MessageInput = ({ messages: conv, setMessages }) => {
 		let inputedMessage = {
 			text,
 			images,
+			videos: attachment.videos,
+			audios: attachment.audios,
+			pdf: attachment.pdf,
 			seenBy: localStorage.getItem('userId')
 		};
 		// if there reply ref 
@@ -140,8 +145,8 @@ const MessageInput = ({ messages: conv, setMessages }) => {
 			<input
 				id="attachment"
 				onChange={(e) =>
-					handleImageChange((e) => {
-						console.log()
+					handleUpload(e, 'attach', (res) => {
+						setAttachment(res)
 					})
 				}
 				type="file"
@@ -153,8 +158,8 @@ const MessageInput = ({ messages: conv, setMessages }) => {
 
 			<input
 				id="uploadImage"
-				onChange={() =>
-					handleImageChange((result) => {
+				onChange={(e) =>
+					handleUpload(e, 'image', (result) => {
 						setImages(result);
 					})
 				}

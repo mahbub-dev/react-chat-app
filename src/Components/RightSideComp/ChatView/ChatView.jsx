@@ -24,7 +24,7 @@ const ChatView = ({ device, messages, currentChat, }) => {
 			className="chatView"
 		>
 			<div className="particiapants">
-				<img width={'40px'} src={currentChat[0]?.profilePicture} alt="" />
+				<img width={'50px'} height={'50px'} style={{borderRadius:'50%'}} src={currentChat[0]?.profilePicture} alt="" />
 				<h5>{currentChat[0]?.username}</h5>
 			</div>
 			{false ? (

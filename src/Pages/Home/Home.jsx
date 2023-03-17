@@ -5,7 +5,7 @@ import React, { useEffect, useRef, useState } from "react";
 import ApiRequest from "../../Api Request/apiRequest";
 import { getLastSeenMessag } from '../../Utils/functions'
 import { updateSeenStatus } from "../../Api Request/conversationRequest";
-import { ChatList, Peoples, Groups, Profile } from "../../Components";
+import { ActiveUser, ChatList, Peoples, Profile } from "../../Components";
 import { useSocket, } from "../../socketContext";
 import { responSive } from "../../Utils/functions";
 import buttonData from "./navbuttonData";
@@ -83,13 +83,10 @@ function Home() {
 				setRenderComponent(<ChatList handleConversation={handleConversation} />)
 				break;
 			case 'Active Friends':
-				setRenderComponent('Active Friend')
+				setRenderComponent(<ActiveUser />)
 				break;
 			case 'Add Friends':
 				setRenderComponent(<Peoples />)
-				break;
-			case 'Groups':
-				setRenderComponent(<Groups />)
 				break;
 			case 'Settings':
 				setRenderComponent('Settings')
