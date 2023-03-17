@@ -1,8 +1,5 @@
 import React from 'react'
-import './activeUser.scss'
 import { useSocket } from '../../../socketContext'
-import ChatList from '../ChatList/ChatList'
-import User from '../ChatList/User/User'
 import { useGlobalContext } from '../../../context'
 
 const ActiveUser = () => {

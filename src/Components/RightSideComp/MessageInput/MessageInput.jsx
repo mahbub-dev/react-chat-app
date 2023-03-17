@@ -16,7 +16,7 @@ import "./messageinput.scss";
 const MessageInput = ({ messages: conv, setMessages }) => {
 	const { socket, typingStatus, sendDataToSocketServer } = useSocket();
 	const { message: messages, _id, } = conv
-	const { soundRef, replyRefSms, chatList, setChatList } = useGlobalContext();
+	const { replyRefSms, chatList, setChatList } = useGlobalContext();
 	const closeReply = useRef()
 	const [text, setText] = useState("");
 	const [images, setImages] = useState([]);

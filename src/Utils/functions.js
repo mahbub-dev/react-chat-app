@@ -78,6 +78,7 @@ const playSound = () => {
 				"click",
 				() => {
 					audio.play();
+					window.removeEventListener("click", () => {});
 				},
 				{ once: true }
 			);

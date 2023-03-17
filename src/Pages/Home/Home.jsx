@@ -5,7 +5,7 @@ import React, { useEffect, useRef, useState } from "react";
 import ApiRequest from "../../Api Request/apiRequest";
 import { getLastSeenMessag } from '../../Utils/functions'
 import { updateSeenStatus } from "../../Api Request/conversationRequest";
-import { ActiveUser, ChatList, Peoples, Profile } from "../../Components";
+import { ActiveUser, ChatList, Peoples, Profile, Settings } from "../../Components";
 import { useSocket, } from "../../socketContext";
 import { responSive } from "../../Utils/functions";
 import buttonData from "./navbuttonData";
@@ -89,7 +89,7 @@ function Home() {
 				setRenderComponent(<Peoples />)
 				break;
 			case 'Settings':
-				setRenderComponent('Settings')
+				setRenderComponent(<Settings />)
 				break;
 			case 'Profile':
 				setRenderComponent(<Profile />)

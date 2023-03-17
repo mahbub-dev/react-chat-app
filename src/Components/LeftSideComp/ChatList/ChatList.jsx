@@ -1,12 +1,11 @@
 ﻿/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useRef, useState } from "react";
 import ApiRequest from "../../../Api Request/apiRequest";
-import { getUser } from "../../../Api Request/userRequest";
 import { useGlobalContext } from "../../../context";
 import { useSocket } from "../../../socketContext";
 import Loading from "../../Loading/Loading";
 import Search from "../Search/Search";
-import { getLastSeenMessag } from '../../../Utils/functions'
+import { getLastSeenMessag, playSound } from '../../../Utils/functions'
 import User from "./User/User";
 import { updateSeenStatus } from "../../../Api Request/conversationRequest";
 
@@ -15,9 +14,14 @@ const ChatList = ({ handleConversation }) => {
 	// const [chats, setChats] = useState([]);
 	const [responseStatus, setResponseStatus] = useState(200);
 	const [detectCurrentChat, setDetectCurrentChat] = useState(localStorage.getItem('convId'));
-	const { searchValue, setConversation: setMessages, setChatList, chatList, setLastSeen } = useGlobalContext();
+	const { searchValue, setConversation: setMessages, setChatList, chatList, setLastSeen, soundStatus, setUnreadMessage, unreadMessage } = useGlobalContext();
 	const userId = localStorage.getItem("userId");
 	const convRef = useRef()
+	const soundRef = useRef()
+	// useEffect(() => {
+	// 	soundRef.current = soundStatus
+	// }, [soundStatus])
+	// console.log(soundStatus)
 	// console.log(chatList)
 	useEffect(() => {
 		const getConv = async () => {
@@ -52,17 +56,27 @@ const ChatList = ({ handleConversation }) => {
 					}
 				})
 			} else {
-				console.log(data.senderId)
+				setUnreadMessage(p => [...p, data])
+				soundRef.current = true
 			}
 			setChatList(updateConv)
 		});
-
 
 		// get Seen Status
 		socket.on('getSeen', (d) => {
 			setLastSeen(getLastSeenMessag(d.message))
 		})
+
 	}, [socket]);
+
+
+	useEffect(() => {
+		if (soundStatus === "on") {
+			soundRef.current &&
+				playSound();
+			soundRef.current = false
+		}
+	}, [unreadMessage, setUnreadMessage]);
 	return (
 		<>
 			<Search />
