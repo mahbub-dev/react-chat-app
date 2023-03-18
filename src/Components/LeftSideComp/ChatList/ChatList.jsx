@@ -52,10 +52,7 @@ const ChatList = ({ handleConversation }) => {
 				setMessages(p => ({ ...p, message: data.message }))
 				setLastSeen(getLastSeenMessag(data.message))
 				sendSeenStatusToSocketServer(data.message)
-				updateSeenStatus(localStorage.getItem('convId'), (res) => {
-					if (res.status === 200) {
-					}
-				})
+				updateSeenStatus(localStorage.getItem('convId'), (res) => {})
 			} else {
 				if (!data.isDeleted) {
 					setUnreadMessage(data)

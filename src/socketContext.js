@@ -50,6 +50,14 @@ const SocketProvider = ({ children }) => {
 		});
 	};
 
+	const sendIsTypingStatusToSocketServer = (isTyping) => {
+		let status = {
+			isTyping,
+			senderId: localStorage.getItem("userId"),
+			receiverId: localStorage.getItem("receiverId"),
+		};
+		socket.emit("sendTypingStatus", status);
+	};
 	return (
 		<SocketContext.Provider
 			value={{
@@ -58,6 +66,7 @@ const SocketProvider = ({ children }) => {
 				typingStatus,
 				sendDataToSocketServer,
 				sendSeenStatusToSocketServer,
+				sendIsTypingStatusToSocketServer,
 			}}>
 			{children}
 		</SocketContext.Provider>
