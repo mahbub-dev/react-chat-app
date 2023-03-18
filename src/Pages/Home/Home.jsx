@@ -13,7 +13,6 @@ import Chat from "../Chat/Chat";
 import "./home.scss";
 import { useGlobalContext } from "../../context";
 function Home() {
-
 	const { sendSeenStatusToSocketServer } = useSocket();
 	const {
 		setConversation, setChatList, setLastSeen, loggedUser } = useGlobalContext();
@@ -116,6 +115,8 @@ function Home() {
 	}, [])
 	return (
 		<div className="home" id="home">
+			<div className="notificaion">
+			</div>
 			<div className="navButtons" ref={btnRef}>
 				{
 					buttonData.map((i, ind) => (

@@ -18,12 +18,13 @@ const AppProvider = ({ children }) => {
 	const [soundStatus, setSoundStatus] = useState(
 		localStorage.getItem("sound")
 	);
-	const [notificationStatus, setNotificationStatus] = useState("");
+	const [notificationStatus, setNotificationStatus] = useState(
+		localStorage.getItem("notification")
+	);
 	useEffect(() => {
 		// setSoundStatus(localStorage.getItem("sound"));
 		// notificationStatus.current = localStorage.getItem("notification");
 	}, []);
-	
 
 	// handle Modals
 	const [user, setUser] = useState("");
@@ -73,9 +74,10 @@ const AppProvider = ({ children }) => {
 		getLoginUser();
 	}, []);
 
+	// send notification 
+	
 	const memoValue = {
 		user,
-
 		OpenUserDetails,
 		OpenUploadImage,
 		OpenEmailUpdateForm,
@@ -107,6 +109,7 @@ const AppProvider = ({ children }) => {
 		setNewMessageCount,
 		setSoundStatus,
 		soundStatus,
+		notificationStatus,
 		setNotificationStatus,
 	};
 	return (

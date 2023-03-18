@@ -32,9 +32,10 @@ const SocketProvider = ({ children }) => {
 		});
 	}, [socket, friendId]);
 
-	const sendDataToSocketServer = (data) => {
+	const sendDataToSocketServer = (data, isDeleted = false) => {
 		socket?.emit("sendMessage", {
 			message: data,
+			isDeleted,
 			receiverId: localStorage.getItem("receiverId"),
 			senderId: localStorage.getItem("userId"),
 			convType: localStorage.getItem("convType"),

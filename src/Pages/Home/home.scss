@@ -12,7 +12,7 @@
 	display: flex;
 	.navButtons {
 		width: 70px;
-		transition: opacity 0.5s ease-in-out,width 0.6s ease-in-out;
+		transition: opacity 0.5s ease-in-out, width 0.6s ease-in-out;
 		@include small-down {
 			width: 50px;
 		}
@@ -56,4 +56,20 @@
 	@include mobileResponsive;
 }
 
-// responsive
+// notification
+.notificaion {
+	position: absolute;
+	width: 100%;
+	top: -55px;
+	z-index: 1;
+	transition: top ease-in-out 0.3s;
+	margin: auto;
+	p {
+		background-color: greenyellow;
+		width: -moz-fit-content;
+		width: fit-content;
+		margin: auto;
+		padding: 0.5rem;
+		border-radius: 5px;
+	}
+}

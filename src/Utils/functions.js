@@ -195,6 +195,19 @@ const getLastSeenMessag = (message) => {
 		return {};
 	}
 };
+
+// send notification
+const showNotification = (data) => {
+	const elem = document.querySelector(".notificaion");
+	const message = data.message[data.message.length - 1];
+	// console.log(message);
+	
+	elem.innerHTML = `<p><b>${message.sender.username} messaged you</b><br/><span>${message.text}</span></p>`;
+	elem.style.top = "0px";
+	setTimeout(() => {
+		elem.style.top = "-55px";
+	}, 2000);
+};
 export {
 	responSive,
 	getSendDate,
@@ -204,4 +217,5 @@ export {
 	optionHide,
 	focusInput,
 	getLastSeenMessag,
+	showNotification,
 };

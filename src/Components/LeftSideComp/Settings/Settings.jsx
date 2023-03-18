@@ -5,16 +5,16 @@ import OnOffBtn from "./OnOffBtn";
 import "./settings.scss";
 
 const Settings = () => {
-	const { setSoundStatus,soundStatus, setNotificationStatus } = useGlobalContext();
+	const { setSoundStatus, soundStatus, notificationStatus, setNotificationStatus } = useGlobalContext();
 	return (
 		<div className="settings">
 			<div className="setting-item">
 				<span>Sound</span>
-				<OnOffBtn setting={'sound'}  status={soundStatus} setStatus={setSoundStatus} />
+				<OnOffBtn setting={'sound'} status={soundStatus} setStatus={setSoundStatus} />
 			</div>
 			<div className="setting-item">
 				<span>Notification</span>
-				<OnOffBtn setting={'notification'} setStatus={setNotificationStatus} />
+				<OnOffBtn setting={'notification'} status={notificationStatus} setStatus={setNotificationStatus} />
 			</div>
 		</div>
 	);

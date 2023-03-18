@@ -17,7 +17,6 @@ const OnOffBtn = ({ setting, setStatus, status }) => {
         }
     }
     useEffect(() => {
-        const preStatus = localStorage.getItem(setting)
         if (status === 'on') {
             dotRef.current.classList.add('transform')
             slideRef.current.classList.add('background')

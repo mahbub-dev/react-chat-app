@@ -42,7 +42,9 @@ const MessageInput = ({ messages: conv, setMessages }) => {
 			let addLastestMessage = updateConv?.find(i => i._id === localStorage.getItem('receiverId'));
 			addLastestMessage.lastSms = data
 			setChatList(p => updateConv)
-			setMessages(p => ({ ...p, message: messages }))
+			setMessages(p => {
+				return { ...p, message: messages }
+			})
 		} catch (error) {
 			console.log(error)
 		}
