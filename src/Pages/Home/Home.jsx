@@ -5,7 +5,7 @@ import React, { useEffect, useRef, useState } from "react";
 import ApiRequest from "../../Api Request/apiRequest";
 import { getLastSeenMessag } from '../../Utils/functions'
 import { updateSeenStatus } from "../../Api Request/conversationRequest";
-import { ChatList, Peoples, Groups, Profile } from "../../Components";
+import { ActiveUser, ChatList, Peoples, Profile, Settings } from "../../Components";
 import { useSocket, } from "../../socketContext";
 import { responSive } from "../../Utils/functions";
 import buttonData from "./navbuttonData";
@@ -13,7 +13,6 @@ import Chat from "../Chat/Chat";
 import "./home.scss";
 import { useGlobalContext } from "../../context";
 function Home() {
-
 	const { sendSeenStatusToSocketServer } = useSocket();
 	const {
 		setConversation, setChatList, setLastSeen, loggedUser } = useGlobalContext();
@@ -83,16 +82,13 @@ function Home() {
 				setRenderComponent(<ChatList handleConversation={handleConversation} />)
 				break;
 			case 'Active Friends':
-				setRenderComponent('Active Friend')
+				setRenderComponent(<ActiveUser />)
 				break;
 			case 'Add Friends':
 				setRenderComponent(<Peoples />)
 				break;
-			case 'Groups':
-				setRenderComponent(<Groups />)
-				break;
 			case 'Settings':
-				setRenderComponent('Settings')
+				setRenderComponent(<Settings />)
 				break;
 			case 'Profile':
 				setRenderComponent(<Profile />)
@@ -119,6 +115,8 @@ function Home() {
 	}, [])
 	return (
 		<div className="home" id="home">
+			<div className="notificaion">
+			</div>
 			<div className="navButtons" ref={btnRef}>
 				{
 					buttonData.map((i, ind) => (

@@ -1,7 +1,7 @@
 ﻿/* eslint-disable react-hooks/exhaustive-deps */
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import ApiRequest from "./Api Request/apiRequest";
-import { handleModals } from "./Utils/functions";
+import { handleModals, playSound } from "./Utils/functions";
 
 const AppContext = createContext();
 const AppProvider = ({ children }) => {
@@ -15,24 +15,31 @@ const AppProvider = ({ children }) => {
 	const [replyRefSms, setReplyRefSms] = useState({});
 	const [lastSeen, setLastSeen] = useState({});
 	const [chatList, setChatList] = useState([]);
-	const soundRef = useRef("yes");
+	const [soundStatus, setSoundStatus] = useState(
+		localStorage.getItem("sound")
+	);
+	const [notificationStatus, setNotificationStatus] = useState(
+		localStorage.getItem("notification")
+	);
 	useEffect(() => {
-		soundRef.current = localStorage.getItem("sound");
+		// setSoundStatus(localStorage.getItem("sound"));
+		// notificationStatus.current = localStorage.getItem("notification");
 	}, []);
+
 	// handle Modals
 	const [user, setUser] = useState("");
 	const [showImage, setShowImage] = useState();
 	const [email, setEmail] = useState("");
-	useEffect(() => {
-		let newSmsCount = [];
-		unreadMessage?.forEach((i) => {
-			newSmsCount.push(i.sender);
-		});
-		const newMessage = newSmsCount?.filter(
-			(item, index, arr) => arr.indexOf(item) === index
-		);
-		setNewMessageCount(newMessage.length);
-	}, [unreadMessage]);
+	// useEffect(() => {
+	// 	let newSmsCount = [];
+	// 	unreadMessage?.forEach((i) => {
+	// 		newSmsCount.push(i.sender);
+	// 	});
+	// 	const newMessage = newSmsCount?.filter(
+	// 		(item, index, arr) => arr.indexOf(item) === index
+	// 	);
+	// 	setNewMessageCount(newMessage.length);
+	// }, [unreadMessage]);
 
 	const OpenUserDetails = (data) => {
 		setUser(data);
@@ -67,9 +74,10 @@ const AppProvider = ({ children }) => {
 		getLoginUser();
 	}, []);
 
+	// send notification 
+	
 	const memoValue = {
 		user,
-
 		OpenUserDetails,
 		OpenUploadImage,
 		OpenEmailUpdateForm,
@@ -99,7 +107,10 @@ const AppProvider = ({ children }) => {
 		setUserComps,
 		newMessagCount,
 		setNewMessageCount,
-		soundRef,
+		setSoundStatus,
+		soundStatus,
+		notificationStatus,
+		setNotificationStatus,
 	};
 	return (
 		<AppContext.Provider value={memoValue}> {children}</AppContext.Provider>

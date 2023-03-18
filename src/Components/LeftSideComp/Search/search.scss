@@ -4,10 +4,6 @@
 	color: #a9b5c1;
 	margin-top: 0.5rem;
 	padding-bottom: 10px;
-	@include small-down {
-		padding-bottom: 0;
-		margin-top: 0rem;
-	}
 	input {
 		@include small-up {
 			border-radius: 15px;

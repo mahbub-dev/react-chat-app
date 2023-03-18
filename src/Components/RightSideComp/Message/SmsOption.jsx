@@ -36,9 +36,11 @@ const SmsOption = ({ message }) => {
             await ApiRequest.delete(`/conversation/message/${message._id}?convId=${convId}`)
             const { message: messages } = conversation
             const removeFromUi = messages.filter(i => i._id !== message._id)
-            setConversation(p => ({ ...p, message: removeFromUi }))
+            setConversation(p => { 
+                return { ...p, message: removeFromUi } 
+            })
             // send upadet message array to the socket 
-            sendDataToSocketServer(removeFromUi)
+            sendDataToSocketServer(removeFromUi,true)
         } catch (error) {
             console.log(error)
         }

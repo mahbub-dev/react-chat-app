@@ -54,7 +54,8 @@ const ChatHeader = ({ currentChatUser, isOnline }) => {
 				className="back"
 				onClick={() => {
 					responSive("left");
-					navigate("/home");
+					localStorage.removeItem('convId')
+					localStorage.removeItem('receiverId')
 				}}
 			/>
 		</div>

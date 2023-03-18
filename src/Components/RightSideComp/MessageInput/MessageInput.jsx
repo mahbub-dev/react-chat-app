@@ -3,31 +3,32 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import ApiRequest from "../../../Api Request/apiRequest";
-import { updateConversation, updateSeenStatus } from "../../../Api Request/conversationRequest";
-import { createMessage } from "../../../Api Request/messageRequest";
 import { useGlobalContext } from "../../../context";
 import { useSocket } from "../../../socketContext";
 import { ImCross } from 'react-icons/im'
-import { handleImageChange, playSound } from "../../../Utils/functions";
+import { handleUpload } from "../../../Utils/functions";
 import TypingDots from "../TypingDots/TypingDots";
 import Input from "./Input/Input";
 import "./messageinput.scss";
 
 const MessageInput = ({ messages: conv, setMessages }) => {
-	const { socket, typingStatus, sendDataToSocketServer } = useSocket();
+	const { socket, sendDataToSocketServer, sendIsTypingStatusToSocketServer } = useSocket();
+	const [typingStatus, setIsTypingStatus] = useState({})
 	const { message: messages, _id, } = conv
-	const { soundRef, replyRefSms, chatList, setChatList } = useGlobalContext();
+	const { replyRefSms, chatList, setChatList } = useGlobalContext();
 	const closeReply = useRef()
 	const [text, setText] = useState("");
 	const [images, setImages] = useState([]);
+	const [attachment, setAttachment] = useState({})
 	const location = useLocation().pathname.split("/")[1];
-	const sender = localStorage.getItem("userId");
+	// const sender = localStorage.getItem("userId");
 	// function for sending message 
 	const handleMessageSent = async (convId, message) => {
 		try {
 			let { data } = await ApiRequest.post(`conversation/message/`, {
 				convId,
 				message,
+
 			});
 			// console.log(res.data);
 			if (data?.replyRef) {
@@ -40,7 +41,9 @@ const MessageInput = ({ messages: conv, setMessages }) => {
 			let addLastestMessage = updateConv?.find(i => i._id === localStorage.getItem('receiverId'));
 			addLastestMessage.lastSms = data
 			setChatList(p => updateConv)
-			setMessages(p => ({ ...p, message: messages }))
+			setMessages(p => {
+				return { ...p, message: messages }
+			})
 		} catch (error) {
 			console.log(error)
 		}
@@ -50,6 +53,9 @@ const MessageInput = ({ messages: conv, setMessages }) => {
 		let inputedMessage = {
 			text,
 			images,
+			videos: attachment.videos,
+			audios: attachment.audios,
+			pdf: attachment.pdf,
 			seenBy: localStorage.getItem('userId')
 		};
 		// if there reply ref 
@@ -79,22 +85,22 @@ const MessageInput = ({ messages: conv, setMessages }) => {
 
 	// send typing status
 	useEffect(() => {
-		let status = {
-			isTyping: true,
-			sender,
-			receiverId: location,
-		};
 		if (text === "") {
-			status.isTyping = false;
-			socket.emit("sendTypingStatus", status);
+			sendIsTypingStatusToSocketServer(false)
 		} else {
-			socket.emit("sendTypingStatus", status);
+			sendIsTypingStatusToSocketServer(true)
 		}
-	}, [text, socket, sender, location]);
+	}, [text]);
 
+	// get typing status 
+	useEffect(() => {
+		socket.on('getTypingStatus', (data) => {
+			setIsTypingStatus(data)
+		})
+	}, [socket])
 	useEffect(() => {
 		setText("");
-	}, [location, setText]);
+	}, [setText]);
 	return (
 		<>
 			{/* reply ref  */}
@@ -111,7 +117,7 @@ const MessageInput = ({ messages: conv, setMessages }) => {
 
 			{/* typing status  */}
 			{
-				typingStatus.isTyping && typingStatus.sender === location && (
+				typingStatus.isTyping && localStorage.getItem('receiverId') === typingStatus.senderId &&(
 					<div className="typing-container">
 						<TypingDots />
 					</div>
@@ -140,8 +146,8 @@ const MessageInput = ({ messages: conv, setMessages }) => {
 			<input
 				id="attachment"
 				onChange={(e) =>
-					handleImageChange((e) => {
-						console.log()
+					handleUpload(e, 'attach', (res) => {
+						setAttachment(res)
 					})
 				}
 				type="file"
@@ -153,8 +159,8 @@ const MessageInput = ({ messages: conv, setMessages }) => {
 
 			<input
 				id="uploadImage"
-				onChange={() =>
-					handleImageChange((result) => {
+				onChange={(e) =>
+					handleUpload(e, 'image', (result) => {
 						setImages(result);
 					})
 				}

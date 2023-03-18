@@ -1,12 +1,11 @@
 ﻿/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useRef, useState } from "react";
 import ApiRequest from "../../../Api Request/apiRequest";
-import { getUser } from "../../../Api Request/userRequest";
 import { useGlobalContext } from "../../../context";
 import { useSocket } from "../../../socketContext";
 import Loading from "../../Loading/Loading";
 import Search from "../Search/Search";
-import { getLastSeenMessag } from '../../../Utils/functions'
+import { getLastSeenMessag, showNotification, playSound } from '../../../Utils/functions'
 import User from "./User/User";
 import { updateSeenStatus } from "../../../Api Request/conversationRequest";
 
@@ -15,9 +14,15 @@ const ChatList = ({ handleConversation }) => {
 	// const [chats, setChats] = useState([]);
 	const [responseStatus, setResponseStatus] = useState(200);
 	const [detectCurrentChat, setDetectCurrentChat] = useState(localStorage.getItem('convId'));
-	const { searchValue, setConversation: setMessages, setChatList, chatList, setLastSeen } = useGlobalContext();
+	const { searchValue, setConversation: setMessages, setChatList, chatList, setLastSeen, notificationStatus, soundStatus, setUnreadMessage, unreadMessage } = useGlobalContext();
 	const userId = localStorage.getItem("userId");
 	const convRef = useRef()
+	const soundRef = useRef()
+	const notificationRef = useRef()
+	// useEffect(() => {
+	// 	soundRef.current = soundStatus
+	// }, [soundStatus])
+	// console.log(soundStatus)
 	// console.log(chatList)
 	useEffect(() => {
 		const getConv = async () => {
@@ -47,22 +52,37 @@ const ChatList = ({ handleConversation }) => {
 				setMessages(p => ({ ...p, message: data.message }))
 				setLastSeen(getLastSeenMessag(data.message))
 				sendSeenStatusToSocketServer(data.message)
-				updateSeenStatus(localStorage.getItem('convId'), (res) => {
-					if (res.status === 200) {
-					}
-				})
+				updateSeenStatus(localStorage.getItem('convId'), (res) => {})
 			} else {
-				console.log(data.senderId)
+				if (!data.isDeleted) {
+					setUnreadMessage(data)
+					soundRef.current = true
+					notificationRef.current = true
+				}
 			}
 			setChatList(updateConv)
 		});
-
 
 		// get Seen Status
 		socket.on('getSeen', (d) => {
 			setLastSeen(getLastSeenMessag(d.message))
 		})
+
 	}, [socket]);
+
+
+	useEffect(() => {
+		if (soundStatus === "on") {
+			soundRef.current &&
+				playSound();
+			soundRef.current = false
+		}
+		if (notificationStatus === 'on') {
+			notificationRef.current &&
+				showNotification(unreadMessage)
+			notificationRef.current = false
+		}
+	}, [unreadMessage, setUnreadMessage]);
 	return (
 		<>
 			<Search />
@@ -79,7 +99,7 @@ const ChatList = ({ handleConversation }) => {
 								onClick={() => { handleConversation(item); setDetectCurrentChat(item.convId) }}
 								className="item"
 								key={index}
-								style={{ background: (detectCurrentChat === item.convId) ? '#F5F5F5' : 'initial' }}
+								style={{ background: (detectCurrentChat === item.convId) ? '#F5F5F5' : 'initial', borderRadius: '10px' }}
 							>
 								<User
 									item={item}

@@ -11,7 +11,6 @@ function Chat({ device }) {
 			<ChatView
 				messages={conversation.message || []}
 				currentChat={conversation?.participants || []}
-				device={device}
 			/>
 			{/* message input  */}
 			<form className="inputField" encType="multipart/form-data" onSubmit={(e) => { e.preventDefault() }}>
