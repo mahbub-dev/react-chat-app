@@ -1,12 +1,13 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { useGlobalContext } from "../../../context";
-import SmsOption from "./SmsOption";
 import "./Message.scss";
+import SmsOption from "./SmsOption";
 
 function Message({ currentChat, message }) {
 	const { handleModals, OpenUploadImage, lastSeen } = useGlobalContext();
 	// console.log(lastSeen)
 	const [showTime, setShowTime] = useState('none')
+	console.log(message)
 	return (
 		<>
 			<div id={message?.sender._id === localStorage.getItem('userId') ? "own" : "other"} className="messages">
@@ -36,9 +37,10 @@ function Message({ currentChat, message }) {
 
 							{message.react && <span className="showReact"><img src={message.react} alt="react" /></span>}
 
-							{message?.images?.length > 0 &&
+							{/* images  render*/}
+							{message?.attachment?.fileType === 'images' &&
 								<div>
-									{message?.images.map((img, index) => (
+									{message?.attachment?.links.map((img, index) => (
 										<img
 											className="messageImg"
 											onClick={() =>
@@ -52,10 +54,10 @@ function Message({ currentChat, message }) {
 								</div>
 							}
 
-
-							{message?.pdf.length > 0 &&
+							{/* pdf render */}
+							{message?.attachment?.fileType === 'pdf' &&
 								<div>
-									{message?.pdf.map((i, ind) => (
+									{message?.attachment?.links?.map((i, ind) => (
 										<a href={i} key={ind} onClick={(e) => {
 											e.preventDefault();
 											fetch(i)
@@ -75,25 +77,27 @@ function Message({ currentChat, message }) {
 											<img src="https://www.svgrepo.com/show/484943/pdf-file.svg" width={'40px'} alt="pdf" />
 										</a>
 									))
+									
 									}
 								</div>
 							}
 
 
-
+							{/* audio file render  */}
 							{
-								message?.audios.length > 0 &&
-								<div>
-									{message?.audios.map((i, ind) => (
+								message?.attachment?.fileType === 'audios' &&
+								<div className="audio">
+									{message?.attachment?.links.map((i, ind) => (
 										<audio key={ind} controls width={'250px'} src={i}></audio>
 									))}
 								</div>
 							}
 
+							{/* video file render  */}
 							{
-								message?.videos.length > 0 &&
-								<div>
-									{message?.videos.map((i, ind) => (
+								message?.attachment?.fileType === 'videos' &&
+								<div className="vedio">
+									{message?.attachment?.links?.map((i, ind) => (
 										<video key={ind} controls width={'250px'} src={i}></video>
 									))}
 								</div>

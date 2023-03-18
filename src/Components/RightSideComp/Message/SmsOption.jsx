@@ -36,11 +36,11 @@ const SmsOption = ({ message }) => {
             await ApiRequest.delete(`/conversation/message/${message._id}?convId=${convId}`)
             const { message: messages } = conversation
             const removeFromUi = messages.filter(i => i._id !== message._id)
-            setConversation(p => { 
-                return { ...p, message: removeFromUi } 
+            setConversation(p => {
+                return { ...p, message: removeFromUi }
             })
             // send upadet message array to the socket 
-            sendDataToSocketServer(removeFromUi,true)
+            sendDataToSocketServer(removeFromUi, true)
         } catch (error) {
             console.log(error)
         }
@@ -87,7 +87,7 @@ const SmsOption = ({ message }) => {
         }
     }
     return (
-        <div className="option-container">
+        <div className="option-container" style={{ marginTop: message?.replyRef ? 'auto' : 'initial ' }}>
             <div className="more-btns" style={{ display: showMoreBtn }}>
                 <button onClick={handleRemove} className='remove'>Remove</button>
                 <button>Forward</button>

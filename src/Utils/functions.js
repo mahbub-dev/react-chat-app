@@ -88,27 +88,29 @@ const playSound = () => {
 
 const handleUpload = async (event, type, cb) => {
 	if (type === "image") {
-		const res = await handleImageUpload(event);
-		cb(res);
+		const res = await handleImageUpload(event, (progress) => cb(progress));
+		return res;
 	} else {
-		const res = await handleAttachMentUpload(event);
-		const pdf = [];
-		const videos = [];
-		const audios = [];
-		res.forEach((i) => {
+		const res = await handleAttachMentUpload(event, (progress) =>
+			cb(progress)
+		);
+		let pdf = { fileType: "pdf", links: [] };
+		let videos = { fileType: "videos", links: [] };
+		let audios = { fileType: "audios", links: [] };
+		res?.forEach((i) => {
 			if (i.endsWith(".mp4" || ".mkv")) {
-				videos.push(i);
+				videos.links.push(i);
 			} else if (i.endsWith(".mp3")) {
-				audios.push = i;
+				audios.links.push(i);
 			} else if (i.endsWith("pdf")) {
-				pdf.push(i);
+				pdf.links.push(i);
 			}
 		});
-		cb({ audios, videos, pdf });
+		return [audios, videos, pdf].filter((i) => i.links.length > 0);
 	}
 };
 // handle image upload
-const handleImageUpload = async (event) => {
+const handleImageUpload = async (event, cb) => {
 	try {
 		const files = event.target.files;
 		if (files.length < 3) {
@@ -126,9 +128,17 @@ const handleImageUpload = async (event) => {
 			}
 			const response = await ApiRequestFormData.post(
 				"/uploads",
-				formData
+				formData,
+				{
+					onUploadProgress: (progressEvent) => {
+						const progress = Math.round(
+							(progressEvent.loaded / progressEvent.total) * 100
+						);
+						cb(progress);
+					},
+				}
 			);
-			return response.data;
+			return { fileType: "images", links: response.data };
 		} else {
 			alert("You can not upload more than 2 image at a time");
 		}
@@ -138,7 +148,7 @@ const handleImageUpload = async (event) => {
 };
 
 // handle attachment upload
-const handleAttachMentUpload = async (event) => {
+const handleAttachMentUpload = async (event, cb) => {
 	try {
 		const files = event.target.files;
 		const formData = new FormData();
@@ -148,7 +158,7 @@ const handleAttachMentUpload = async (event) => {
 					"application/pdf",
 					"video/mp4",
 					"video/mkv",
-					"audio/mp3",
+					"audio/mpeg",
 				].includes(file.type)
 			) {
 				formData.append("files", file);
@@ -156,7 +166,15 @@ const handleAttachMentUpload = async (event) => {
 				alert("Your file type is not supported in our system");
 			}
 		}
-		const response = await ApiRequestFormData.post("/uploads", formData);
+		const response = await ApiRequestFormData.post("/uploads", formData, {
+			onUploadProgress: (progressEvent) => {
+				const progress = Math.round(
+					(progressEvent.loaded / progressEvent.total) * 100
+				);
+				cb(progress);
+				// console.log(`File Upload Progress: ${progress}%`);
+			},
+		});
 		return response.data;
 	} catch (error) {
 		console.log(error);
@@ -201,7 +219,7 @@ const showNotification = (data) => {
 	const elem = document.querySelector(".notificaion");
 	const message = data.message[data.message.length - 1];
 	// console.log(message);
-	
+
 	elem.innerHTML = `<p><b>${message.sender.username} messaged you</b><br/><span>${message.text}</span></p>`;
 	elem.style.top = "0px";
 	setTimeout(() => {
