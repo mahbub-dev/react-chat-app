@@ -1,13 +1,15 @@
 ﻿/* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
+import { useGlobalContext } from "../../../context";
 import GroupsOfSms from "../Message/GroupsOfSms";
 import "./chatview.scss";
 
-const ChatView = ({ device, messages, currentChat, }) => {
+const ChatView = ({ messages, currentChat, }) => {
+	const scrollRef = useRef()
+	const { conversation } = useGlobalContext()
 	useEffect(() => {
-		const divEl = document.querySelector(`#${device}ChatView`);
-		divEl.scrollBy(0, divEl.scrollHeight);
-	}, [messages, device]);
+		scrollRef.current.scrollBy(0, scrollRef.current.scrollHeight);
+	}, [conversation]);
 
 	const groupedMessages = {};
 	messages.forEach(message => {
@@ -20,11 +22,11 @@ const ChatView = ({ device, messages, currentChat, }) => {
 	});
 	return (
 		<div
-			id={device === "mobile" ? "mobileChatView" : "desktopChatView"}
 			className="chatView"
+			ref={scrollRef}
 		>
 			<div className="particiapants">
-				<img width={'50px'} height={'50px'} style={{borderRadius:'50%'}} src={currentChat[0]?.profilePicture} alt="" />
+				<img width={'50px'} height={'50px'} style={{ borderRadius: '50%' }} src={currentChat[0]?.profilePicture} alt="" />
 				<h5>{currentChat[0]?.username}</h5>
 			</div>
 			{false ? (

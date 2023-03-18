@@ -2,10 +2,7 @@
 .chatView {
 	overflow: auto;
 	height: 88%;
-	padding: 0.5rem;
-	@include small-down {
-		padding: 0.3rem;
-	}
+	padding: 1.2rem 0.5rem;
 	.particiapants {
 		margin: 2rem;
 	}
