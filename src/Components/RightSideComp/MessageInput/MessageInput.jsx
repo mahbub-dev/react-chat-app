@@ -3,10 +3,11 @@
 /* eslint-disable no-loop-func */
 import React, { useEffect, useRef, useState } from "react";
 import { ImCross } from 'react-icons/im';
-import ApiRequest from "../../../Api Request/apiRequest";
+import ApiRequest, { ApiRequestFormData } from "../../../Api Request/apiRequest";
 import { useGlobalContext } from "../../../context";
 import { useSocket } from "../../../socketContext";
 import { handleUpload } from "../../../Utils/functions";
+import { TiDelete } from "react-icons/ti";
 import TypingDots from "../TypingDots/TypingDots";
 import Input from "./Input/Input";
 import "./messageinput.scss";
@@ -15,7 +16,7 @@ const MessageInput = ({ messages: conv, setMessages }) => {
 	const { socket, sendDataToSocketServer, sendIsTypingStatusToSocketServer } = useSocket();
 	const [typingStatus, setIsTypingStatus] = useState({})
 	const { message: messages, _id, } = conv
-	const { replyRefSms, chatList, setChatList } = useGlobalContext();
+	const { replyRefSms, chatList, setChatList,conversation } = useGlobalContext();
 	const closeReply = useRef()
 	const [text, setText] = useState("");
 	const [images, setImages] = useState({});
@@ -88,11 +89,29 @@ const MessageInput = ({ messages: conv, setMessages }) => {
 		}
 		setText("");
 		setAttachment({})
-		setUploadProgress('')
 		setImages([]);
 	};
-
-
+	// remove uploads 
+	const removeUpload = async (item) => {
+		try {
+			if (typeof item === 'string') {
+				await ApiRequest.delete(`/uploads/?path=${item}`)
+				setImages(p => {
+					const filterItems = p.links.filter(i => i !== item)
+					return { fileType: p.fileType, links: filterItems }
+				})
+			} else {
+				item.links.forEach(async i => {
+					await ApiRequest.delete(`/uploads/?path=${i}`)
+				})
+				setAttachment(p=>{
+					return p.filter(i=>i.fileType !== item.fileType)
+				})
+			}
+		} catch (error) {
+			console.log(error)
+		}
+	}
 	// send typing status
 	useEffect(() => {
 		if (text === "") {
@@ -108,9 +127,13 @@ const MessageInput = ({ messages: conv, setMessages }) => {
 			setIsTypingStatus(data)
 		})
 	}, [socket])
+
+	// clearing all state on user change 
 	useEffect(() => {
 		setText("");
-	}, [setText]);
+		setAttachment({})
+		setImages([]);
+	}, [conversation]);
 	return (
 		<>
 			{/* reply ref  */}
@@ -147,20 +170,49 @@ const MessageInput = ({ messages: conv, setMessages }) => {
 			/>
 
 			{
-				images?.length > 0 && (
+				images?.links?.length > 0 && (
 					<div className="images">
-						{images.map((i, index) => (
-							<img src={i} alt={"img"} key={index} />
+						{images?.links?.map((i, index) => (
+							<div className="upload-image-wrapper" key={index}>
+								<button onClick={() => removeUpload(i)} className="btn-upload-close" >
+									<TiDelete className="close" />
+								</button>
+								<img src={i} alt={"img"} key={index} />
+							</div>
 						))}
 					</div>
 				)
 			}
 
+			{
+				attachment.length > 0 &&
+				<div className="attach">
+					{attachment?.map((item, index) =>
+						<div className="element" key={index}>
+							<button className="btn-upload-close" onClick={() => removeUpload(item)}>
+								<TiDelete className="close" />
+							</button>
+							<p>{item.fileType}</p>
+							<span>
+								{item.links.length}
+							</span>
+						</div>
+					)}
+				</div>
+			}
+
+
 			{/* attachment input  */}
+			{/* the following input tags are attach with label in input component  */}
 			<input
-				id={(uploadProgress === '' || uploadProgress === 100) ? "attachment" : ''}
+				id={uploadProgress === '' ? "attachment" : ''}
 				onChange={async (e) => {
-					const res = await handleUpload(e, 'attach', (progress) => setUploadProgress(progress))
+					const res = await handleUpload(e, 'attach', (progress) => {
+						if (progress === 100) {
+							setUploadProgress('')
+						} else
+							setUploadProgress(progress)
+					})
 					setAttachment(res)
 				}
 				}
@@ -172,10 +224,13 @@ const MessageInput = ({ messages: conv, setMessages }) => {
 			/>
 
 			<input
-				id={(uploadProgress === '' || uploadProgress === 100) ? "uploadImage" : ''}
+				id={(uploadProgress === '') ? "uploadImage" : ''}
 				onChange={async (e) => {
 					const res = await handleUpload(e, 'image', (progress) => {
-						setUploadProgress(progress)
+						if (progress === 100) {
+							setUploadProgress('')
+						} else
+							setUploadProgress(progress)
 					})
 					setImages(res);
 				}

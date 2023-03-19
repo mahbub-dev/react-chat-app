@@ -1,6 +1,6 @@
-﻿/* eslint-disable no-loop-func */
-import tone from "./Iphone 7 Message Tone.mp3";
+/* eslint-disable no-loop-func */
 import { ApiRequestFormData } from "../Api Request/apiRequest";
+import tone from "./Iphone 7 Message Tone.mp3";
 
 // handle emoji selection
 document.addEventListener("mousedown", (event) => {
@@ -113,35 +113,32 @@ const handleUpload = async (event, type, cb) => {
 const handleImageUpload = async (event, cb) => {
 	try {
 		const files = event.target.files;
-		if (files.length < 3) {
-			const formData = new FormData();
-			for (const file of files) {
-				if (
-					file.type === `image/jpg` ||
-					file.type === "image/png" ||
-					file.type === "image/jpeg"
-				) {
-					formData.append("files", file);
-				} else {
-					alert("You can upload only jpg,png,jpeg file");
-				}
-			}
-			const response = await ApiRequestFormData.post(
-				"/uploads",
-				formData,
-				{
-					onUploadProgress: (progressEvent) => {
-						const progress = Math.round(
-							(progressEvent.loaded / progressEvent.total) * 100
-						);
-						cb(progress);
-					},
-				}
-			);
-			return { fileType: "images", links: response.data };
-		} else {
+		if (files.length > 2) {
 			alert("You can not upload more than 2 image at a time");
+			return {};
 		}
+		const formData = new FormData();
+		for (const file of files) {
+			if (
+				file.type === `image/jpg` ||
+				file.type === "image/png" ||
+				file.type === "image/jpeg"
+			) {
+				formData.append("files", file);
+			} else {
+				alert("You can upload only jpg,png,jpeg file");
+				return {}
+			}
+		}
+		const response = await ApiRequestFormData.post("/uploads", formData, {
+			onUploadProgress: (progressEvent) => {
+				const progress = Math.round(
+					(progressEvent.loaded / progressEvent.total) * 100
+				);
+				cb(progress);
+			},
+		});
+		return { fileType: "images", links: response.data };
 	} catch (error) {
 		console.log(error?.response);
 	}
@@ -152,6 +149,10 @@ const handleAttachMentUpload = async (event, cb) => {
 	try {
 		const files = event.target.files;
 		const formData = new FormData();
+		if (files.length > 4) {
+			alert("You can not upload more than 4 file at a time");
+			return [];
+		}
 		for (const file of files) {
 			if (
 				[
@@ -164,6 +165,7 @@ const handleAttachMentUpload = async (event, cb) => {
 				formData.append("files", file);
 			} else {
 				alert("Your file type is not supported in our system");
+				return []
 			}
 		}
 		const response = await ApiRequestFormData.post("/uploads", formData, {

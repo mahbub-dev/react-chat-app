@@ -77,8 +77,7 @@ function Message({ currentChat, message }) {
 											<img src="https://www.svgrepo.com/show/484943/pdf-file.svg" width={'40px'} alt="pdf" />
 										</a>
 									))
-									
-									}
+								}
 								</div>
 							}
 
