@@ -7,7 +7,6 @@ function Message({ currentChat, message }) {
 	const { handleModals, OpenUploadImage, lastSeen } = useGlobalContext();
 	// console.log(lastSeen)
 	const [showTime, setShowTime] = useState('none')
-	console.log(message)
 	return (
 		<>
 			<div id={message?.sender._id === localStorage.getItem('userId') ? "own" : "other"} className="messages">

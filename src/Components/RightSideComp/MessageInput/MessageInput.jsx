@@ -16,10 +16,9 @@ const MessageInput = ({ messages: conv, setMessages }) => {
 	const { socket, sendDataToSocketServer, sendIsTypingStatusToSocketServer } = useSocket();
 	const [typingStatus, setIsTypingStatus] = useState({})
 	const { message: messages, _id, } = conv
-	const { replyRefSms, chatList, setChatList,conversation } = useGlobalContext();
+	const { replyRefSms, chatList, setChatList, conversation } = useGlobalContext();
 	const closeReply = useRef()
 	const [text, setText] = useState("");
-	const [images, setImages] = useState({});
 	const [attachment, setAttachment] = useState([])
 	const [uploadProgress, setUploadProgress] = useState('')
 	// const sender = localStorage.getItem("userId");
@@ -58,8 +57,8 @@ const MessageInput = ({ messages: conv, setMessages }) => {
 		}
 
 		if (_id) {
-			if (text === "" && images?.length < 1) {
-				alert("Please write something before send");
+			if (text === "" && attachment?.length < 0) {
+				alert("Please add something before send");
 				return
 			}
 			if (messages.length === 0) {
@@ -69,7 +68,7 @@ const MessageInput = ({ messages: conv, setMessages }) => {
 				}
 			}
 			if (uploadProgress === '' || uploadProgress === 100) {
-				const m = [text, images, ...attachment]
+				const m = [text, ...attachment]
 				m.forEach(item => {
 					if (typeof item === 'string') {
 						handleMessageSent(_id, { ...inputedMessage, text: item })
@@ -88,26 +87,20 @@ const MessageInput = ({ messages: conv, setMessages }) => {
 			alert("Please select a user");
 		}
 		setText("");
-		setAttachment({})
-		setImages([]);
+		setAttachment([])
+		// setImages({});
 	};
 	// remove uploads 
 	const removeUpload = async (item) => {
 		try {
-			if (typeof item === 'string') {
-				await ApiRequest.delete(`/uploads/?path=${item}`)
-				setImages(p => {
-					const filterItems = p.links.filter(i => i !== item)
-					return { fileType: p.fileType, links: filterItems }
-				})
-			} else {
-				item.links.forEach(async i => {
-					await ApiRequest.delete(`/uploads/?path=${i}`)
-				})
-				setAttachment(p=>{
-					return p.filter(i=>i.fileType !== item.fileType)
-				})
-			}
+
+			item.links.forEach(async i => {
+				await ApiRequest.delete(`/uploads/?path=${i}`)
+			})
+			setAttachment(p => {
+				return p.filter(i => i.fileType !== item.fileType)
+			})
+
 		} catch (error) {
 			console.log(error)
 		}
@@ -131,8 +124,8 @@ const MessageInput = ({ messages: conv, setMessages }) => {
 	// clearing all state on user change 
 	useEffect(() => {
 		setText("");
-		setAttachment({})
-		setImages([]);
+		setAttachment([])
+		// setImages([]);
 	}, [conversation]);
 	return (
 		<>
@@ -169,7 +162,7 @@ const MessageInput = ({ messages: conv, setMessages }) => {
 				handleOnEnter={handleOnEnter}
 			/>
 
-			{
+			{/* {
 				images?.links?.length > 0 && (
 					<div className="images">
 						{images?.links?.map((i, index) => (
@@ -182,7 +175,7 @@ const MessageInput = ({ messages: conv, setMessages }) => {
 						))}
 					</div>
 				)
-			}
+			} */}
 
 			{
 				attachment.length > 0 &&
@@ -207,23 +200,25 @@ const MessageInput = ({ messages: conv, setMessages }) => {
 			<input
 				id={uploadProgress === '' ? "attachment" : ''}
 				onChange={async (e) => {
-					const res = await handleUpload(e, 'attach', (progress) => {
+					const res = await handleUpload(e, (progress) => {
 						if (progress === 100) {
 							setUploadProgress('')
 						} else
 							setUploadProgress(progress)
 					})
-					setAttachment(res)
+					console.log(res)
+					setAttachment(p => {
+						return [...p, ...res ]
+					})
 				}
 				}
 				type="file"
 				multiple
 				max={2}
-				accept='application/pdf,audio/*,video/*'
 				style={{ display: "none" }}
 			/>
 
-			<input
+			{/* <input
 				id={(uploadProgress === '') ? "uploadImage" : ''}
 				onChange={async (e) => {
 					const res = await handleUpload(e, 'image', (progress) => {
@@ -239,7 +234,7 @@ const MessageInput = ({ messages: conv, setMessages }) => {
 				accept="image/*"
 				multiple
 				style={{ display: "none" }}
-			/>
+			/> */}
 		</>
 	);
 };
