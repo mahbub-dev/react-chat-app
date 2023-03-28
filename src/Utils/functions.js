@@ -1,8 +1,10 @@
-﻿/* eslint-disable no-loop-func */
-import tone from "./Iphone 7 Message Tone.mp3";
+/* eslint-disable no-loop-func */
+import axios from "axios";
 import { ApiRequestFormData } from "../Api Request/apiRequest";
-
-// handle emoji selection
+import tone from "./Iphone 7 Message Tone.mp3";
+import { Cloudinary } from "@cloudinary/url-gen";
+import { Resize } from "@cloudinary/url-gen/actions";
+// handle emoji select
 document.addEventListener("mousedown", (event) => {
 	const btn = document.querySelector(".emoji");
 	const emojiDiv = document.querySelector(".customEmoji");
@@ -86,80 +88,107 @@ const playSound = () => {
 	});
 };
 
-const handleUpload = async (event, type, cb) => {
-	if (type === "image") {
-		const res = await handleImageUpload(event);
-		cb(res);
-	} else {
-		const res = await handleAttachMentUpload(event);
-		const pdf = [];
-		const videos = [];
-		const audios = [];
-		res.forEach((i) => {
-			if (i.endsWith(".mp4" || ".mkv")) {
-				videos.push(i);
-			} else if (i.endsWith(".mp3")) {
-				audios.push = i;
-			} else if (i.endsWith("pdf")) {
-				pdf.push(i);
-			}
-		});
-		cb({ audios, videos, pdf });
-	}
+const handleUpload = async (event, cb) => {
+	const res = await handleAttachMentUpload(event, (progress) => cb(progress));
+	console.log(res);
+	let pdf = { fileType: "pdf", links: [] };
+	let videos = { fileType: "videos", links: [] };
+	let audios = { fileType: "audios", links: [] };
+	let images = { fileType: "images", links: [] };
+	res?.forEach((i) => {
+		if (i.endsWith(".mp4" || ".mkv")) {
+			videos.links.push(i);
+		}
+		if (i.endsWith(".mp3")) {
+			audios.links.push(i);
+		}
+		if (i.endsWith("pdf")) {
+			pdf.links.push(i);
+		}
+		if ([".jpg", ".png", ".jpeg"].some((type) => i.endsWith(type))) {
+			images.links.push(i);
+			console.log(i);
+		}
+	});
+	return [audios, videos, pdf, images].filter((i) => i.links.length > 0);
 };
 // handle image upload
-const handleImageUpload = async (event) => {
-	try {
-		const files = event.target.files;
-		if (files.length < 3) {
-			const formData = new FormData();
-			for (const file of files) {
-				if (
-					file.type === `image/jpg` ||
-					file.type === "image/png" ||
-					file.type === "image/jpeg"
-				) {
-					formData.append("files", file);
-				} else {
-					alert("You can upload only jpg,png,jpeg file");
-				}
-			}
-			const response = await ApiRequestFormData.post(
-				"/uploads",
-				formData
-			);
-			return response.data;
-		} else {
-			alert("You can not upload more than 2 image at a time");
-		}
-	} catch (error) {
-		console.log(error?.response);
-	}
-};
+// const handleImageUpload = async (event, cb) => {
+// 	try {
+// 		const files = event.target.files;
+// 		if (files.length > 2) {
+// 			alert("You can not upload more than 2 image at a time");
+// 			return {};
+// 		}
+// 		const formData = new FormData();
+// 		for (const file of files) {
+// 			if (
+// 				file.type === `image/jpg` ||
+// 				file.type === "image/png" ||
+// 				file.type === "image/jpeg"
+// 			) {
+// 				formData.append("files", file);
+// 			} else {
+// 				alert("You can upload only jpg,png,jpeg file");
+// 				return {};
+// 			}
+// 		}
+// 		formData.append("api_key", "832315918243728");
+// 		formData.append("upload_preset", "nvfrxqof");
+// 		const response = await ApiRequestFormData.post(formData, {
+// 			onUploadProgress: (progressEvent) => {
+// 				const progress = Math.round(
+// 					(progressEvent.loaded / progressEvent.total) * 100
+// 				);
+// 				cb(progress);
+// 			},
+// 		});
+// 		// return { fileType: "images", links: response.data };
+// 		console.log(response);
+// 	} catch (error) {
+// 		console.log(error?.response);
+// 	}
+// };
 
 // handle attachment upload
-const handleAttachMentUpload = async (event) => {
+const handleAttachMentUpload = async (event, cb) => {
 	try {
 		const files = event.target.files;
 		const formData = new FormData();
+		if (files.length > 4) {
+			alert("You can not upload more than 4 file at a time");
+			return [];
+		}
 		for (const file of files) {
 			if (
 				[
 					"application/pdf",
 					"video/mp4",
 					"video/mkv",
-					"audio/mp3",
+					"audio/mpeg",
+					"image/jpg",
+					"image/png",
+					"image/jpeg",
 				].includes(file.type)
 			) {
 				formData.append("files", file);
 			} else {
 				alert("Your file type is not supported in our system");
+				return [];
 			}
 		}
-		const response = await ApiRequestFormData.post("/uploads", formData);
+		const response = await ApiRequestFormData.post("/uploads", formData, {
+			onUploadProgress: (progressEvent) => {
+				const progress = Math.round(
+					(progressEvent.loaded / progressEvent.total) * 100
+				);
+				cb(progress);
+			},
+		});
 		return response.data;
 	} catch (error) {
 		console.log(error);
+		alert(error.response.data);
 	}
 };
 
@@ -201,7 +230,7 @@ const showNotification = (data) => {
 	const elem = document.querySelector(".notificaion");
 	const message = data.message[data.message.length - 1];
 	// console.log(message);
-	
+
 	elem.innerHTML = `<p><b>${message.sender.username} messaged you</b><br/><span>${message.text}</span></p>`;
 	elem.style.top = "0px";
 	setTimeout(() => {

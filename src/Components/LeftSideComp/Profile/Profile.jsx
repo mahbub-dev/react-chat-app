@@ -1,8 +1,9 @@
-import { useRef, useState } from "react";
+import {  useState } from "react";
+import ApiRequest from "../../../Api Request/apiRequest";
 import { updateUser } from "../../../Api Request/userRequest";
 import { useGlobalContext } from "../../../context";
 import { ChangeEmail, ChangPassword, handleProfilesModal } from "./index";
-import { ApiRequestFormData } from "../../../Api Request/apiRequest";
+
 import Item from "./Item";
 import "./profile.scss";
 
@@ -16,23 +17,24 @@ const Profile = () => {
 	async function imageUpload(e) {
 		try {
 			var file = e.target.files[0];
-			var reader = new FileReader();
-			reader.readAsDataURL(file);
-			reader.onload = async () => {
-				if (
-					file.type === `image/jpg` ||
-					file.type === "image/png" ||
-					file.type === "image/jpeg"
-				) {
+			if (
+				file.type === `image/jpg` ||
+				file.type === "image/png" ||
+				file.type === "image/jpeg"
+			) {
+				formData.append('file', file);
+				formData.append('upload_preset', 'nvfrxqof'); // replace with your upload preset name
+				const response = await fetch('https://api.cloudinary.com/v1_1/mahbubsclould/image/upload', {
+					method: 'POST',
+					body: formData
+				});
+				const data = await response.json();
+				await ApiRequest.put('/user', { profilePicture: data.secure_url })
+				setUploadProfilePicture(data.secure_url)
+			} else {
+				alert("file type must be png,jpg or jpeg");
+			}
 
-					formData.append('files', file)
-					formData.append('profilePicture', loggedUser.profilePicture)
-					await ApiRequestFormData.put(`user/`, formData)
-					setUploadProfilePicture(reader.result)
-				} else {
-					alert("file type must be png,jpg or jpeg");
-				}
-			};
 		} catch (error) {
 			console.log(error)
 		}

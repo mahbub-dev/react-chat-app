@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { BsEmojiSmile, BsFillImageFill } from "react-icons/bs";
+import { BsEmojiSmile, } from "react-icons/bs";
 import { MdSend,MdAttachFile } from "react-icons/md";
 import emojiCode from "./emojicode";
 import "./input.scss";
@@ -37,10 +37,6 @@ const Input = ({ setText, value, handleOnEnter }) => {
 						</div>
 					))}
 				</div>
-
-				<label htmlFor="uploadImage">
-					<BsFillImageFill className="upload-image icon" />
-				</label>
 				<label htmlFor="attachment">
 					<MdAttachFile className="upload-image icon" />
 				</label>

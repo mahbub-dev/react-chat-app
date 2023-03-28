@@ -5,7 +5,6 @@ const ApiRequest = axios.create({
 	baseURL: baseUrl,
 	headers: {
 		// "Access-Control-Allow-Origin": "true",
-
 		"Content-Type": "application/json",
 		Authorization: `Bearer ${token}`,
 	},

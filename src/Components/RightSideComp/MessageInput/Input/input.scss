@@ -65,9 +65,8 @@
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
-	justify-content: start;
+	justify-content: flex-start;
 	padding: 0.5rem;
-
 	border-radius: 5px;
 	.item {
 		cursor: pointer;

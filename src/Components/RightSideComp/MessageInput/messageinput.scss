@@ -1,20 +1,70 @@
-﻿.typing-container {
+﻿@import "../../../responsive-break-point.scss";
+.typing-container {
 	position: absolute;
 	top: -15px;
 	left: 9%;
 }
-.images {
+.images,
+.attach {
 	display: flex;
 	align-items: center;
 	position: absolute;
 	top: -70px;
 	right: 15%;
+	@include small-down {
+		right: 1%;
+	}
 	width: fit-content;
-	img {
-		width: 70px;
-		height: 70px;
+	.upload-image-wrapper {
+		position: relative;
+		img {
+			@include small-down {
+				width: 60px;
+			}
+			height: 70px;
+			border-radius: 5px;
+			margin-right: 0.5rem;
+		}
+	}
+	.btn-upload-close {
+		position: absolute;
+		right: -3px;
+		top: -11px;
+		font-size: 20px;
+		background: none;
+		border: none;
+		outline: none;
+		color: gray;
+		.close {
+			color: gray;
+		}
+	}
+}
+.attach {
+	@include small-down {
+		left: 1%;
+	}
+	left: 15%;
+	gap: 0.5rem;
+	.element {
+		position: relative;
+		flex-direction: column;
+		gap: 0.5rem;
+		display: flex;
+		padding: 0.5rem;
+		align-items: center;
+		justify-content: center;
+		background: gray;
 		border-radius: 5px;
-		margin-right: 0.5rem;
+		width: 70px;
+		@include small-down {
+			width: 60px;
+		}
+		height: 70px;
+		.btn-upload-close {
+			right: -10px;
+			top: -12px;
+		}
 	}
 }
 .inputField {
@@ -38,14 +88,13 @@
 			justify-content: space-between;
 			button {
 				margin-right: 4%;
-				background:none;
+				background: none;
 				border: none;
 				outline: none;
 				cursor: pointer;
-				.unselect-reply{
+				.unselect-reply {
 					font-size: 15px;
-					padding: .2rem;
-
+					padding: 0.2rem;
 				}
 			}
 		}
@@ -76,4 +125,9 @@
 			}
 		}
 	}
+}
+
+.uploadProgress {
+	position: absolute;
+	top: -50%;
 }
