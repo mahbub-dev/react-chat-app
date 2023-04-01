@@ -179,6 +179,11 @@
 .convDate {
 	margin: 0.5rem 0;
 	width: 100%;
+	@include small-down{
+		font-size: 11px;
+	}
+    
+
 }
 
 .audio,

@@ -1,9 +1,7 @@
 /* eslint-disable no-loop-func */
-import axios from "axios";
+
 import { ApiRequestFormData } from "../Api Request/apiRequest";
 import tone from "./Iphone 7 Message Tone.mp3";
-import { Cloudinary } from "@cloudinary/url-gen";
-import { Resize } from "@cloudinary/url-gen/actions";
 // handle emoji select
 document.addEventListener("mousedown", (event) => {
 	const btn = document.querySelector(".emoji");
