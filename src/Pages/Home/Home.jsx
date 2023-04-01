@@ -15,7 +15,7 @@ import { useGlobalContext } from "../../context";
 function Home() {
 	const { sendSeenStatusToSocketServer } = useSocket();
 	const {
-		setConversation, setChatList, setLastSeen, loggedUser } = useGlobalContext();
+		setConversation, setChatList, setLastSeen, loggedUser, inputRef } = useGlobalContext();
 	const btnRef = useRef()
 	const userId = localStorage.getItem("userId");
 	// const [currentConv, setCurrentConv] = useState('')
@@ -46,6 +46,10 @@ function Home() {
 		})
 		// console.log(windowWidth)
 		windowWidth.current < 501 && responSive('right')
+
+		const { setText, setAttachment } = inputRef.current
+		setText('')
+		setAttachment([])
 	};
 	// console.log(windowWidth)
 	const getMessage = async (convId) => {

@@ -3,7 +3,7 @@
 /* eslint-disable no-loop-func */
 import React, { useEffect, useRef, useState } from "react";
 import { ImCross } from 'react-icons/im';
-import ApiRequest, { ApiRequestFormData } from "../../../Api Request/apiRequest";
+import ApiRequest from "../../../Api Request/apiRequest";
 import { useGlobalContext } from "../../../context";
 import { useSocket } from "../../../socketContext";
 import { handleUpload } from "../../../Utils/functions";
@@ -16,7 +16,7 @@ const MessageInput = ({ messages: conv, setMessages }) => {
 	const { socket, sendDataToSocketServer, sendIsTypingStatusToSocketServer } = useSocket();
 	const [typingStatus, setIsTypingStatus] = useState({})
 	const { message: messages, _id, } = conv
-	const { replyRefSms, chatList, setChatList, conversation } = useGlobalContext();
+	const { replyRefSms, inputRef, setReplyRefSms, chatList, setChatList, conversation } = useGlobalContext();
 	const closeReply = useRef()
 	const [text, setText] = useState("");
 	const [attachment, setAttachment] = useState([])
@@ -79,6 +79,7 @@ const MessageInput = ({ messages: conv, setMessages }) => {
 							}, 10);
 					}
 				})
+				setReplyRefSms({})
 			} else {
 				alert('Please wait until the upload  is finished')
 				return
@@ -88,12 +89,10 @@ const MessageInput = ({ messages: conv, setMessages }) => {
 		}
 		setText("");
 		setAttachment([])
-		// setImages({});
 	};
 	// remove uploads 
 	const removeUpload = async (item) => {
 		try {
-
 			item.links.forEach(async i => {
 				await ApiRequest.delete(`/uploads/?path=${i}`)
 			})
@@ -123,16 +122,15 @@ const MessageInput = ({ messages: conv, setMessages }) => {
 
 	// clearing all state on user change 
 	useEffect(() => {
-		setText("");
-		setAttachment([])
-		// setImages([]);
-	}, [conversation]);
+		inputRef.current = { setAttachment, setText }
+	}, []);
 	return (
 		<>
 			{/* reply ref  */}
 			<div className="reply-info" ref={closeReply} >
 				<p className="reply_to"><span> replying to: <b>{replyRefSms?.sender?.username}</b></span>
 					<button onClick={(e) => {
+						setReplyRefSms({})
 						closeReply.current.style.display = 'none'
 					}}>
 						<ImCross className="unselect-reply" />
@@ -208,7 +206,7 @@ const MessageInput = ({ messages: conv, setMessages }) => {
 					})
 					console.log(res)
 					setAttachment(p => {
-						return [...p, ...res ]
+						return [...p, ...res]
 					})
 				}
 				}

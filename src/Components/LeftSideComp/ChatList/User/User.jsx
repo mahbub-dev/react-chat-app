@@ -83,8 +83,8 @@ function User({ item, itemArray }) {
 
 
 				<div ref={clickRef} id={item._id} className="userOption">
-					<button onClick={() => OpenUserDetails(item)}>View profile</button>
-					<button onClick={() => handleDelConversation()}>Delete chat</button>
+					<button onClick={(e) => { e.stopPropagation(); OpenUserDetails(item) }}>View profile</button>
+					<button onClick={(e) => { e.stopPropagation(); handleDelConversation() }}>Delete chat</button>
 				</div>
 			</div>
 		</>
