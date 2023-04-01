@@ -16,7 +16,7 @@ const MessageInput = ({ messages: conv, setMessages }) => {
 	const { socket, sendDataToSocketServer, sendIsTypingStatusToSocketServer } = useSocket();
 	const [typingStatus, setIsTypingStatus] = useState({})
 	const { message: messages, _id, } = conv
-	const { replyRefSms, setReplyRefSms, chatList, setChatList, conversation } = useGlobalContext();
+	const { replyRefSms, inputRef, setReplyRefSms, chatList, setChatList, conversation } = useGlobalContext();
 	const closeReply = useRef()
 	const [text, setText] = useState("");
 	const [attachment, setAttachment] = useState([])
@@ -89,7 +89,6 @@ const MessageInput = ({ messages: conv, setMessages }) => {
 		}
 		setText("");
 		setAttachment([])
-		// setImages({});
 	};
 	// remove uploads 
 	const removeUpload = async (item) => {
@@ -123,10 +122,8 @@ const MessageInput = ({ messages: conv, setMessages }) => {
 
 	// clearing all state on user change 
 	useEffect(() => {
-		setText("");
-		setAttachment([])
-		// setImages([]);
-	}, [conversation]);
+		inputRef.current = { setAttachment, setText }
+	}, []);
 	return (
 		<>
 			{/* reply ref  */}
