@@ -5,7 +5,6 @@ import { Home, Auth } from "./Pages";
 import SocketProvider from "./socketContext";
 import Reset from "./Pages/Auth/Reset/Reset";
 
-
 function App() {
 	const user = localStorage.getItem("userId");
 	return (

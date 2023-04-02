@@ -2,7 +2,7 @@
 import { useGlobalContext } from "../../context";
 import "./Chat.scss";
 
-function Chat({ device }) {
+function Chat({isMessageNotFound}) {
 	const { conversation, setConversation } = useGlobalContext()
 	return (
 		<div className="rightside">
@@ -11,6 +11,7 @@ function Chat({ device }) {
 			<ChatView
 				messages={conversation.message || []}
 				currentChat={conversation?.participants || []}
+				isMessageNotFound={isMessageNotFound}
 			/>
 			{/* message input  */}
 			<form className="inputField" encType="multipart/form-data" onSubmit={(e) => { e.preventDefault() }}>

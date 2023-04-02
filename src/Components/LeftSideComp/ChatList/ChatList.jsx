@@ -33,7 +33,7 @@ const ChatList = ({ handleConversation }) => {
 				setResponseStatus(res.status)
 			} catch (error) {
 				setResponseStatus(error?.response.status)
-				console.log(error.response?.data);
+				setChatList([])
 			}
 		};
 		getConv()
@@ -52,7 +52,7 @@ const ChatList = ({ handleConversation }) => {
 				setMessages(p => ({ ...p, message: data.message }))
 				setLastSeen(getLastSeenMessag(data.message))
 				sendSeenStatusToSocketServer(data.message)
-				updateSeenStatus(localStorage.getItem('convId'), (res) => {})
+				updateSeenStatus(localStorage.getItem('convId'), (res) => { })
 			} else {
 				if (!data.isDeleted) {
 					setUnreadMessage(data)
@@ -86,7 +86,8 @@ const ChatList = ({ handleConversation }) => {
 	return (
 		<>
 			<Search />
-			{responseStatus === 200 ? (
+
+			{chatList.length > 0 ? (
 				chatList
 					.sort(
 						(a, b) =>
@@ -108,10 +109,8 @@ const ChatList = ({ handleConversation }) => {
 							</div>
 						);
 					})
-			) : responseStatus !== 404 ? (
-				<Loading />
 			) : (
-				"No data Found"
+				responseStatus === 404 ? 'not found' : <Loading />
 			)}
 		</>
 	);

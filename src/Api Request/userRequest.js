@@ -26,7 +26,6 @@ const getUser = async (searchText = "", cb) => {
 		const res = await ApiRequest.get(`/user/?search=${searchText}`);
 		cb(res);
 	} catch (err) {
-		console.log(err);
 		cb(err?.response);
 	}
 };
