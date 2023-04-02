@@ -14,16 +14,12 @@ const ChatList = ({ handleConversation }) => {
 	// const [chats, setChats] = useState([]);
 	const [responseStatus, setResponseStatus] = useState(200);
 	const [detectCurrentChat, setDetectCurrentChat] = useState(localStorage.getItem('convId'));
-	const { searchValue, setConversation: setMessages, setChatList, chatList, setLastSeen, notificationStatus, soundStatus, setUnreadMessage, unreadMessage } = useGlobalContext();
+	const [isMessageCome, setIsMessageCome] = useState()
+	const { searchValue, setConversation: setMessages, conversation, setChatList, chatList, setLastSeen, notificationStatus, soundStatus, setUnreadMessage, unreadMessage } = useGlobalContext();
 	const userId = localStorage.getItem("userId");
 	const convRef = useRef()
 	const soundRef = useRef()
 	const notificationRef = useRef()
-	// useEffect(() => {
-	// 	soundRef.current = soundStatus
-	// }, [soundStatus])
-	// console.log(soundStatus)
-	// console.log(chatList)
 	useEffect(() => {
 		const getConv = async () => {
 			try {
@@ -40,9 +36,13 @@ const ChatList = ({ handleConversation }) => {
 	}, [searchValue]);
 
 	// receive message by socket and send seen status 
+
 	useEffect(() => {
 		socket?.on("getMessage", (data) => {
-			// console.log(data)
+			if (!data.isDeleted) {
+				soundRef.current = true
+			}
+
 			const updateConv = [...convRef.current]
 			let addLastestMessage = updateConv.find(i => i._id === data.senderId);
 			addLastestMessage.lastSms = data.message[data.message.length - 1]
@@ -53,10 +53,10 @@ const ChatList = ({ handleConversation }) => {
 				setLastSeen(getLastSeenMessag(data.message))
 				sendSeenStatusToSocketServer(data.message)
 				updateSeenStatus(localStorage.getItem('convId'), (res) => { })
+
 			} else {
 				if (!data.isDeleted) {
 					setUnreadMessage(data)
-					soundRef.current = true
 					notificationRef.current = true
 				}
 			}
@@ -72,17 +72,22 @@ const ChatList = ({ handleConversation }) => {
 
 
 	useEffect(() => {
-		if (soundStatus === "on") {
-			soundRef.current &&
-				playSound();
-			soundRef.current = false
-		}
+
 		if (notificationStatus === 'on') {
 			notificationRef.current &&
 				showNotification(unreadMessage)
 			notificationRef.current = false
 		}
-	}, [unreadMessage, setUnreadMessage]);
+	}, [unreadMessage]);
+
+	useEffect(() => {
+		if (soundStatus === "on") {
+			soundRef.current &&
+				playSound();
+			soundRef.current = false
+
+		}
+	}, [conversation])
 	return (
 		<>
 			<Search />

@@ -233,7 +233,7 @@ const showNotification = (data) => {
 	elem.style.top = "0px";
 	setTimeout(() => {
 		elem.style.top = "-55px";
-	}, 2000);
+	}, 4000);
 };
 export {
 	responSive,

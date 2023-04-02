@@ -57,7 +57,7 @@ const MessageInput = ({ messages: conv, setMessages }) => {
 		}
 
 		if (_id) {
-			if (text === "" && attachment?.length < 0) {
+			if (text === "" && attachment?.length === 0) {
 				alert("Please add something before send");
 				return
 			}
