@@ -3,7 +3,6 @@ import { AiFillCheckCircle } from "react-icons/ai";
 import { MdOutlineError } from "react-icons/md";
 import { TiDelete } from "react-icons/ti";
 import ApiRequest from "../../../../Api Request/apiRequest";
-import { updateUser } from "../../../../Api Request/userRequest";
 import { useGlobalContext } from "../../../../context";
 import { handleProfilesModal } from "../index";
 import "./changeEmail.scss";
@@ -13,39 +12,39 @@ function ChangeEmail() {
 	const [isValidEmail, setIsValidEmail] = useState(false);
 	const [inputVal, setInputVal] = useState("");
 	const [password, setPassword] = useState("");
-	const [checkPass, setCheckPass] = useState("");
 	const [finalRes, setFinalRes] = useState("");
 	const [code, setCode] = useState("");
-	const [randomCode, setRandomCode] = useState("");
-	const handleCheckPass = async () => {
+	const [isCodeSent, setIsCodeSent] = useState(false);
+	const [errorRes, setErrorRes] = useState('')
+	const handleSendCode = async () => {
 		try {
-			const res = await ApiRequest.post(
-				`auth/emailchange/?email=${inputVal}&checkPass='true'`,
-				{ password }
+			await ApiRequest.post(
+				`auth/sendcode/${inputVal}?id=${localStorage.getItem('userId')}`,
 			);
-			setRandomCode(res?.data);
+			setIsCodeSent(true);
 		} catch (error) {
-			setCheckPass("WrongPass");
+
 		}
 	};
 
 	const handleConfirm = async () => {
-		if (code === randomCode) {
-			updateUser({ email: inputVal }, (res) => {
-				if (res.status === 200) {
-					setFinalRes("success");
-					setRandomCode("");
-					setPassword("");
-					setInputVal("");
-					setLoggedUser(res.data);
-					setTimeout(() => {
-						handleModals(false, "change-email");
-						setFinalRes("");
-					}, 4000);
-				}
-			});
-		} else {
-			setFinalRes("doesn't match");
+		try {
+			if (code && password) {
+				const res = await ApiRequest.post(`/user/changemail`, { email: inputVal, code, password })
+				setFinalRes("success");
+				setIsCodeSent("");
+				setPassword("");
+				setInputVal("");
+				setLoggedUser(res.data);
+				setTimeout(() => {
+					handleModals(false, "change-email");
+					setFinalRes("");
+				}, 4000);
+			} else setErrorRes('please fill up the required field')
+		} catch (error) {
+			if (error?.response) {
+				setErrorRes(error?.response?.data);
+			}
 		}
 	};
 
@@ -65,13 +64,6 @@ function ChangeEmail() {
 		hangleEmailEdit();
 	}, [inputVal]);
 
-	useEffect(() => {
-		checkPass &&
-			setTimeout(() => {
-				setCheckPass("");
-			}, 5000);
-	}, [checkPass, setCheckPass]);
-
 	return (
 		<div className="change-email">
 			<div className="modalsWrapper">
@@ -86,7 +78,7 @@ function ChangeEmail() {
 						<div
 							className="inputBox"
 							style={{
-								display: randomCode ? "none" : "flex",
+								display: isCodeSent ? "none" : "flex",
 							}}
 						>
 							{isValidEmail ? (
@@ -110,25 +102,20 @@ function ChangeEmail() {
 									setInputVal(e.target.value);
 								}}
 							/>
-							<input
-								readOnly={!isValidEmail}
-								type="password"
-								placeholder="Password"
-								onChange={(e) => setPassword(e.target.value)}
-								value={password}
-							/>
-							{checkPass === "WrongPass" && <p>Wrong Password</p>}
 							<button
-								disabled={password ? false : true}
-								onClick={handleCheckPass}
+								onClick={handleSendCode}
+								type="button"
+								disabled={!isValidEmail}
 							>
 								Submit
 							</button>
 						</div>
+
+
 						<div
 							className="codeBox"
 							style={{
-								display: randomCode ? "flex" : "none",
+								display: isCodeSent ? "flex" : "none",
 							}}
 						>
 							<p>
@@ -141,10 +128,15 @@ function ChangeEmail() {
 								placeholder="Enter code"
 								onChange={(e) => setCode(e.target.value)}
 							/>
-							{finalRes === "doesn't match" && (
-								<p>Code doesn't match</p>
-							)}
-							<button onClick={handleConfirm}>Confirm</button>
+							<input
+								type="password"
+								placeholder="Password"
+								onChange={(e) => setPassword(e.target.value)}
+								value={password}
+							/>
+							<p>{errorRes}</p>
+
+							<button type="button" onClick={handleConfirm}>Confirm</button>
 						</div>
 					</>
 				)}
