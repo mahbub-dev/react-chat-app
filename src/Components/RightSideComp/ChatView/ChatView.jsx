@@ -3,14 +3,14 @@ import React, { useEffect, useRef } from "react";
 import { useGlobalContext } from "../../../context";
 import GroupsOfSms from "../Message/GroupsOfSms";
 import "./chatview.scss";
+import Loading from "../../Loading/Loading";
 
-const ChatView = ({ messages, currentChat, }) => {
+const ChatView = ({ messages, currentChat, isMessageNotFound }) => {
 	const scrollRef = useRef()
 	const { conversation } = useGlobalContext()
 	useEffect(() => {
 		scrollRef.current.scrollBy(0, scrollRef.current.scrollHeight);
 	}, [conversation]);
-
 	const groupedMessages = {};
 	messages.forEach(message => {
 		const date = new Date(message.createdAt).toDateString();
@@ -25,32 +25,25 @@ const ChatView = ({ messages, currentChat, }) => {
 			className="chatView"
 			ref={scrollRef}
 		>
-			<div className="particiapants">
+			{messages?.length > 0 && <div className="particiapants">
 				<img width={'50px'} height={'50px'} style={{ borderRadius: '50%' }} src={currentChat[0]?.profilePicture} alt="" />
 				<h5>{currentChat[0]?.username}</h5>
-			</div>
-			{false ? (
-				<p>Please select a user</p>
-			) : messages.length ? (
-				messages?.length > 0 ? (
-					Object.keys(groupedMessages)?.map((m, i, arr) => {
-						return (
-							<div key={m} >
-								<GroupsOfSms
-									messages={groupedMessages[m]}
-									index={i}
-									currentChat={currentChat}
-									array={arr}
-
-								/>
-							</div>
-						);
-					})
-				) : (
-					"loading ..."
-				)
+			</div>}
+			{messages?.length > 0 ? (
+				Object.keys(groupedMessages)?.map((m, i, arr) => {
+					return (
+						<div key={m} >
+							<GroupsOfSms
+								messages={groupedMessages[m]}
+								index={i}
+								currentChat={currentChat}
+								array={arr}
+							/>
+						</div>
+					);
+				})
 			) : (
-				<p>Say Assalamualaikum to start chat </p>
+				isMessageNotFound.current ? <p>Say Assalamualaikum to start chat </p> : <Loading />
 			)}
 		</div>
 	);

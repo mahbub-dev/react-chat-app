@@ -18,7 +18,7 @@ function Home() {
 		setConversation, setChatList, setLastSeen, loggedUser, inputRef } = useGlobalContext();
 	const btnRef = useRef()
 	const userId = localStorage.getItem("userId");
-	// const [currentConv, setCurrentConv] = useState('')
+	const isMessageNotFound = useRef(false)
 	const windowWidth = useRef()
 	window.addEventListener("resize", (e) => {
 		windowWidth.current = e.target.innerWidth
@@ -59,8 +59,13 @@ function Home() {
 			);
 			setConversation(res.data)
 			setLastSeen(getLastSeenMessag(res.data.message))
+			res.data.messageStatus === 404 && (isMessageNotFound.current = true
+			)
+
 		} catch (error) {
-			console.log(error.response?.data);
+			console.log(error?.response)
+			// setConversation(JSON.parse(error.response.data))
+
 		}
 	};
 	// get message
@@ -147,9 +152,7 @@ function Home() {
 			</div>
 
 			{/* ************** right side ************/}
-			<Chat
-				device={"desktop"}
-			/>
+			<Chat isMessageNotFound={isMessageNotFound} />
 		</div>
 	);
 }
