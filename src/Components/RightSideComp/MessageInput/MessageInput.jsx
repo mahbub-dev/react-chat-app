@@ -16,7 +16,7 @@ const MessageInput = ({ messages: conv, setMessages }) => {
 	const { socket, sendDataToSocketServer, sendIsTypingStatusToSocketServer } = useSocket();
 	const [typingStatus, setIsTypingStatus] = useState({})
 	const { message: messages, _id, } = conv
-	const { replyRefSms, inputRef, setReplyRefSms, chatList, setChatList, conversation } = useGlobalContext();
+	const { replyRefSms, inputRef, setReplyRefSms, chatList, setChatList } = useGlobalContext();
 	const closeReply = useRef()
 	const [text, setText] = useState("");
 	const [attachment, setAttachment] = useState([])
