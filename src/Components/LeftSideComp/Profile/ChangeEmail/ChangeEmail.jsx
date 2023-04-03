@@ -6,8 +6,11 @@ import ApiRequest from "../../../../Api Request/apiRequest";
 import { useGlobalContext } from "../../../../context";
 import { handleProfilesModal } from "../index";
 import "./changeEmail.scss";
+import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function ChangeEmail() {
+	const navigate = useNavigate()
 	const { handleModals, setLoggedUser } = useGlobalContext();
 	const [isValidEmail, setIsValidEmail] = useState(false);
 	const [inputVal, setInputVal] = useState("");
@@ -22,17 +25,22 @@ function ChangeEmail() {
 				`auth/sendcode/${inputVal}?id=${localStorage.getItem('userId')}`,
 			);
 			setIsCodeSent(true);
+			window.history.pushState(null, null, `?code_sent=true&email=${inputVal}`)
 		} catch (error) {
 
 		}
 	};
-
+	useEffect(() => {
+		const queryParam = new URLSearchParams(window.location.search)
+		queryParam.get('code_sent') === 'true' && setIsCodeSent(true)
+		queryParam.get('email') && setInputVal(queryParam.get('email'))
+	}, [])
 	const handleConfirm = async () => {
 		try {
 			if (code && password) {
 				const res = await ApiRequest.post(`/user/changemail`, { email: inputVal, code, password })
 				setFinalRes("success");
-				setIsCodeSent("");
+				setIsCodeSent(false);
 				setPassword("");
 				setInputVal("");
 				setLoggedUser(res.data);
@@ -63,13 +71,18 @@ function ChangeEmail() {
 		};
 		hangleEmailEdit();
 	}, [inputVal]);
-
 	return (
 		<div className="change-email">
 			<div className="modalsWrapper">
 				<TiDelete
 					className="close"
-					onClick={() => handleProfilesModal(false, "change-email")}
+					onClick={() => {
+						handleProfilesModal(false, "change-email");
+						window.history.replaceState(null, null, '/');
+						setIsCodeSent(false);
+						setPassword("");
+						setInputVal("");
+					}}
 				/>
 				{finalRes === "success" ? (
 					<p>Your email has been changed</p>
