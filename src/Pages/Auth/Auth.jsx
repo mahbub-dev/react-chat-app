@@ -1,6 +1,7 @@
 ﻿import React, { useEffect, useState } from "react";
 import { Signup, Login, VerifyEmail } from "../../Components/Auth";
 import "./auth.scss";
+import { Outlet } from "react-router-dom";
 
 const Auth = () => {
 	const [style, setStyle] = useState("0");
@@ -10,18 +11,18 @@ const Auth = () => {
 		localStorage.getItem("confirmEmail") && setStyle("-33.5");
 	}, []);
 	useEffect(() => {
-		isConfirm && setStyle("0") && localStorage.setItem('auth','login')
+		isConfirm && setStyle("0") && localStorage.setItem('auth', 'login')
 	}, [isConfirm]);
 	return (
 		<div className="auth">
-			<div style={{ transform: `translateY(${style}%)` }}>
+			<Outlet />
+			{/* <div style={{ transform: `translateY(${style}%)` }}>
 				<Login setStyle={setStyle} />
 				<div
 					className="confirm"
 					style={{
-						opacity: `${
-							Math.abs(parseFloat(style)) === 33.5 ? "1" : "0"
-						}`,
+						opacity: `${Math.abs(parseFloat(style)) === 33.5 ? "1" : "0"
+							}`,
 					}}
 				>
 					<VerifyEmail
@@ -30,7 +31,7 @@ const Auth = () => {
 					/>
 				</div>
 				<Signup setStyle={setStyle} />
-			</div>
+			</div> */}
 		</div>
 	);
 };

@@ -1,26 +1,34 @@
 ﻿import React, { useState } from "react";
 import { ConfirmEmail, SendConfirmCode } from "../../Api Request/authRequest";
-const VerifyEmail = ({ classname, setIsConfirm }) => {
+import { useLocation, useNavigate } from "react-router-dom";
+import ApiRequest from "../../Api Request/apiRequest";
+const VerifyEmail = () => {
+	const navigate = useNavigate()
+	const location = useLocation().search
+	const email = new URLSearchParams(location).get('email')
 	const [code, setCode] = useState("");
 	const [err, setErr] = useState("");
 	// confirm reset code request
-	const confirmResetCode = async () => {
-		ConfirmEmail(code, (res) => {
-			if (res.status === 200) {
-				localStorage.setItem("token", res.data);
-				setIsConfirm(true);
-				localStorage.removeItem("confirmEmail");
-			} else {
-				console.log(res.data);
-				setCode("");
-				setErr(res?.data);
-			}
-		});
-	};
+
+	const confirmResetCode = async (e) => {
+		e.preventDefault()
+		try {
+			const res = await ApiRequest.post(
+				`auth/confirm/?email=${email}&code=${code}`
+			);
+			localStorage.setItem("token", res.data);
+			navigate('/auth/setpassword')
+		} catch (error) {
+			console.log(error.response.data);
+			setCode("");
+			setErr(error.response?.data);
+		}
+	}
+
+
 
 	//  resend confirm code
 	const resendCode = () => {
-		const email = localStorage.getItem("confirmEmail");
 		SendConfirmCode(email, (res) => {
 			if (res.status === 200) {
 				setErr("new code has been sent");
@@ -29,25 +37,27 @@ const VerifyEmail = ({ classname, setIsConfirm }) => {
 	};
 
 	return (
-		<div className={classname}>
-			<p>
-				an email has been sent to {localStorage.getItem("confirmEmail")}
-			</p>
-			<input
-				required
-				type="text"
-				placeholder={"Enter the code"}
-				value={code}
-				onChange={(e) => {
-					setCode(e.target.value);
-					setErr("");
-				}}
-			/>
-			{err && <p>{err}</p>}
-			<span onClick={resendCode}>resend</span>
-			<button type="button" onClick={confirmResetCode}>
-				Confirm
-			</button>
+		<div>
+			<form onSubmit={confirmResetCode}>
+				<p>
+					An email has been sent to {email}
+				</p>
+				<br />
+				<input
+					required
+					type="text"
+					placeholder={"Enter the code"}
+					value={code}
+					onChange={(e) => {
+						setCode(e.target.value);
+						setErr("");
+					}}
+				/>
+				<br /> <br />
+				{err && <p>{err}</p>} <br />
+				<span onClick={resendCode}>Resend</span> <br /> <br />
+				<button type="submit">Confirm</button>
+			</form>
 		</div>
 	);
 };

@@ -5,17 +5,20 @@ import React, { useEffect, useRef, useState } from "react";
 import ApiRequest from "../../Api Request/apiRequest";
 import { getLastSeenMessag } from '../../Utils/functions'
 import { updateSeenStatus } from "../../Api Request/conversationRequest";
-import { ActiveUser, ChatList, Peoples, Profile, Settings } from "../../Components";
 import { useSocket, } from "../../socketContext";
 import { responSive } from "../../Utils/functions";
 import buttonData from "./navbuttonData";
 import Chat from "../Chat/Chat";
 import "./home.scss";
 import { useGlobalContext } from "../../context";
+import { Outlet, useNavigate, useLocation } from "react-router-dom";
+
 function Home() {
+	const navigate = useNavigate()
+	const convId = useLocation().pathname.split('/')[useLocation().pathname.split('/').length - 1]
 	const { sendSeenStatusToSocketServer } = useSocket();
 	const {
-		setConversation, setChatList, setLastSeen, loggedUser, inputRef } = useGlobalContext();
+		setConversation, setChatList, setLastSeen, loggedUser, setLoggedUser, inputRef, handleConversationRef } = useGlobalContext();
 	const btnRef = useRef()
 	const userId = localStorage.getItem("userId");
 	const isMessageNotFound = useRef(false)
@@ -26,9 +29,12 @@ function Home() {
 	useEffect(() => {
 		windowWidth.current = window.innerWidth
 	}, [])
-	const handleConversation = (item) => {
+
+	handleConversationRef.current = (item) => {
 		let { convId, _id: receiverId, convType, lastSms } = item
-		getMessage(convId)
+		setConversation(p => ({ ...p, message: [] }))
+		navigate(`/t/${convId}`)
+		getMessage(convId, 30)
 		localStorage.setItem("convId", convId);
 		localStorage.setItem('receiverId', receiverId)
 		localStorage.setItem('convType', convType)
@@ -46,83 +52,42 @@ function Home() {
 		})
 		// console.log(windowWidth)
 		windowWidth.current < 501 && responSive('right')
-
 		const { setText, setAttachment } = inputRef.current
 		setText('')
 		setAttachment([])
 	};
-	// console.log(windowWidth)
-	const getMessage = async (convId) => {
+
+	const getMessage = async (convId, page) => {
 		try {
 			const res = await ApiRequest.get(
-				`/conversation/message/${convId}`
+				`/conversation/message/${convId}/?page=${page}`
 			);
+			let { message, ...rest } = res.data
 			setConversation(res.data)
-			setLastSeen(getLastSeenMessag(res.data.message))
-			res.data.messageStatus === 404 && (isMessageNotFound.current = true
-			)
 
+			setLastSeen(getLastSeenMessag(res.data.message))
+			res.data.messageStatus === 404 && (isMessageNotFound.current = true)
 		} catch (error) {
 			console.log(error?.response)
-			// setConversation(JSON.parse(error.response.data))
-
+			if (error.response.status === 500 || 400) {
+				navigate(`/t/${localStorage.getItem('convId') || "not_found"}`)
+			}
 		}
 	};
 	// get message
-	useEffect(() => {
-		getMessage(localStorage.getItem('convId'))
-	}, []);
 
-	//detect current chat after reload
 	useEffect(() => {
-		// setCurrentConv(localStorage.getItem('convId'))
-	}, [])
+		getMessage(convId, 30)
+	}, [convId]);
 
-	// set seen status
-	const [renderConponent, setRenderComponent] = useState(
-		<ChatList handleConversation={handleConversation} />
-	);
 	const [title, setTitle] = useState('Chats')
-	const handleButtonClick = (identifier) => {
-		localStorage.setItem('currentComp', identifier)
-		setTitle(identifier)
-		switch (identifier) {
-			case 'Chats':
-				setRenderComponent(<ChatList handleConversation={handleConversation} />)
-				break;
-			case 'Active Friends':
-				setRenderComponent(<ActiveUser />)
-				break;
-			case 'Add Friends':
-				setRenderComponent(<Peoples />)
-				break;
-			case 'Settings':
-				setRenderComponent(<Settings />)
-				break;
-			case 'Profile':
-				setRenderComponent(<Profile />)
-				break;
-			case 'Logout':
-				localStorage.clear()
-				window.location.reload()
-				break;
-			default:
-				break;
-		}
-	}
-	useEffect(() => {
-		const currentRender = localStorage.getItem('currentComp')
-		if (currentRender === null) {
-			handleButtonClick('Chats')
-		} else handleButtonClick(currentRender)
-	}, [])
-
 	useEffect(() => {
 		if (windowWidth.current < 501) {
 			localStorage.getItem('isChatBoxOpened') === 'true' && responSive('right')
 		}
 	}, [])
-	return (
+
+	return <>
 		<div className="home" id="home">
 			<div className="notificaion">
 			</div>
@@ -132,7 +97,15 @@ function Home() {
 						<button
 							key={ind}
 							title={i.title}
-							onClick={() => handleButtonClick(i.title)}
+							onClick={() => {
+								if (i.title === 'Logout') {
+									localStorage.clear();
+									setLoggedUser('')
+									navigate(i.path)
+									return
+								};
+								navigate(`${i.path}/${convId}`); setTitle(i.title)
+							}}
 							style={{ background: title === i.title && ' rgb(243, 239, 239)' }}
 						>
 							<img
@@ -147,14 +120,19 @@ function Home() {
 			<div className="leftside">
 				<h1 style={{ textAlign: "left", fontSize: "25px" }}>{title ? title : 'Chats'}</h1>
 				<div style={{ height: "81%", overflow: "auto" }}>
-					{renderConponent}
+					<Outlet />
 				</div>
 			</div>
 
 			{/* ************** right side ************/}
-			<Chat isMessageNotFound={isMessageNotFound} />
+
+			<Chat isMessageNotFound={isMessageNotFound} getMessage={getMessage} />
 		</div>
-	);
+	</>
 }
+
+
+
+
 
 export default Home;

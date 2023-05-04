@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { loginRequest } from "../../../Api Request/authRequest";
 import { useGlobalContext } from "../../../context";
 import "./login.scss";
@@ -25,7 +25,7 @@ function Login({ setStyle: setNewStyle }) {
 		loginRequest({ loginId, password }, (res) => {
 			if (res?.status === 200) {
 				setLoggedUser(res?.data);
-				navigate(`/home`);
+				navigate(`/`);
 				localStorage.setItem("sound", "yes");
 				window.location.reload();
 			} else if (res?.status === 403) {
@@ -64,15 +64,12 @@ function Login({ setStyle: setNewStyle }) {
 					<button type="submit">Login</button>
 				</form>
 				<p>
-					<a href="/auth/reset">Forget password</a>
+					<Link to="/auth/reset">Forget password</Link>
 				</p>
-				<p
-					onClick={() => {
-						setNewStyle("-67");
-						localStorage.setItem("auth", "signup");
-					}}
-				>
-					Create a new Account
+				<p>
+					<Link to={'/auth/signup'} >
+						Create a new Account
+					</Link>
 				</p>
 			</div>
 		</div>

@@ -11,14 +11,14 @@ const createMessage = async ({ conversationId, message }, cb) => {
 	}
 };
 
-const getMessage = async (coversationId, cb) => {
-	try {
-		const res = await ApiRequest.get(`/message/${coversationId}`);
-		cb(res);
-	} catch (err) {
-		cb(err);
-	}
-};
+// const getMessage = async (coversationId, cb) => {
+// 	try {
+// 		const res = await ApiRequest.get(`/message/${coversationId}`);
+// 		cb(res);
+// 	} catch (err) {
+// 		cb(err);
+// 	}
+// };
 
 const updateSeenStatus = async (data, cb) => {
 	try {
@@ -30,4 +30,15 @@ const updateSeenStatus = async (data, cb) => {
 	}
 };
 
+const getMessage = async (convId, page) => {
+	try {
+		const res = await ApiRequest.get(
+			`/conversation/message/${convId}/?page=${page}`
+		);
+		return res;
+	} catch (error) {
+		console.log(error?.response);
+		return error.response;
+	}
+};
 export { createMessage, getMessage, updateSeenStatus };

@@ -1,6 +1,11 @@
 ﻿import axios from "axios";
-const baseUrl = process.env.REACT_APP_API_SERVER;
+
+let baseUrl = "";
+process.env.NODE_ENV === "production"
+	? (baseUrl = process.env.REACT_APP_API_SERVER)
+	: (baseUrl = process.env.REACT_APP_DEV_API_SERVER);
 const token = localStorage.getItem("token");
+console.log(baseUrl);
 const ApiRequest = axios.create({
 	baseURL: baseUrl,
 	headers: {
