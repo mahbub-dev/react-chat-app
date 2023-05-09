@@ -5,9 +5,7 @@ const SocketContext = createContext();
 const SocketProvider = ({ children }) => {
 	const friendId = useLocation().pathname.split("/")[2];
 	const socketInitait = io(
-		process.env.NODE_ENV === "production"
-			? process.env.REACT_APP_SOKECT_SERVER
-			: process.env.REACT_APP_DEV_SOKECT_SERVER,
+		process.env.REACT_APP_SOKECT_SERVER,
 		{
 			autoConnect: false,
 		}
