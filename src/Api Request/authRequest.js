@@ -37,7 +37,7 @@ const SendConfirmCode = async (inputVal, cb) => {
 	try {
 		const res = await ApiRequest.post(`auth/sendCode/${inputVal}`);
 		cb(res);
-		localStorage.setItem("confirmEmail", inputVal);
+		
 	} catch (error) {
 		cb(error?.response);
 		console.log(error?.response?.data);

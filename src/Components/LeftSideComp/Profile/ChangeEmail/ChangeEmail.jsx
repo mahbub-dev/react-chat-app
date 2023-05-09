@@ -6,11 +6,9 @@ import ApiRequest from "../../../../Api Request/apiRequest";
 import { useGlobalContext } from "../../../../context";
 import { handleProfilesModal } from "../index";
 import "./changeEmail.scss";
-import { useLocation } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 
 function ChangeEmail() {
-	const navigate = useNavigate()
+
 	const { handleModals, setLoggedUser } = useGlobalContext();
 	const [isValidEmail, setIsValidEmail] = useState(false);
 	const [inputVal, setInputVal] = useState("");

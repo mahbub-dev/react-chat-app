@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { createUser } from "../../../Api Request/userRequest";
 import "../Login/login.scss";
 import "./Signup.scss";
@@ -14,7 +14,6 @@ function Signup({ setStyle: setNewStyle }) {
 		confirmPassword: "",
 		password: "",
 	});
-	const navigate = useNavigate();
 	const handleShow = () => {
 		if (isShow) {
 			setStyle("password");
@@ -97,13 +96,10 @@ function Signup({ setStyle: setNewStyle }) {
 					<span className="errShow">{err ? err : null}</span>
 					<button type="submit">Singup</button>
 				</form>
-				<p
-					onClick={() => {
-						setNewStyle("0");
-						localStorage.setItem("auth", "login");
-					}}
-				>
-					I already have an Account
+				<p>
+					<Link to={'/auth'}>
+						I already have an Account
+					</Link>
 				</p>
 			</div>
 		</div>

@@ -5,6 +5,7 @@ import { handleModals, playSound } from "./Utils/functions";
 
 const AppContext = createContext();
 const AppProvider = ({ children }) => {
+	const handleConversationRef = useRef();
 	const [loggedUser, setLoggedUser] = useState("");
 	const [conversation, setConversation] = useState([]);
 	const [userList, setUserList] = useState("");
@@ -15,7 +16,7 @@ const AppProvider = ({ children }) => {
 	const [replyRefSms, setReplyRefSms] = useState({});
 	const [lastSeen, setLastSeen] = useState({});
 	const [chatList, setChatList] = useState([]);
-	const inputRef = useRef({})
+	const inputRef = useRef({});
 	const [soundStatus, setSoundStatus] = useState(
 		localStorage.getItem("sound")
 	);
@@ -75,8 +76,8 @@ const AppProvider = ({ children }) => {
 		getLoginUser();
 	}, []);
 
-	// send notification 
-	
+	// send notification
+
 	const memoValue = {
 		user,
 		OpenUserDetails,
@@ -112,7 +113,8 @@ const AppProvider = ({ children }) => {
 		soundStatus,
 		notificationStatus,
 		setNotificationStatus,
-		inputRef
+		inputRef,
+		handleConversationRef,
 	};
 	return (
 		<AppContext.Provider value={memoValue}> {children}</AppContext.Provider>

@@ -5,21 +5,64 @@ import { useGlobalContext } from "../../../context";
 import { useSocket } from "../../../socketContext";
 import Loading from "../../Loading/Loading";
 import Search from "../Search/Search";
-import { getLastSeenMessag, showNotification, playSound } from '../../../Utils/functions'
+import { getLastSeenMessag, showNotification, playSound, responSive } from '../../../Utils/functions'
 import User from "./User/User";
 import { updateSeenStatus } from "../../../Api Request/conversationRequest";
+import { Chat } from "../../../Pages";
+import { Outlet, useNavigate } from "react-router-dom";
 
-const ChatList = ({ handleConversation }) => {
+const ChatList = () => {
 	const { socket, sendSeenStatusToSocketServer } = useSocket()
+	// console.log(handleConversationRef.current)
+	const navigate = useNavigate()
 	// const [chats, setChats] = useState([]);
 	const [responseStatus, setResponseStatus] = useState(200);
 	const [detectCurrentChat, setDetectCurrentChat] = useState(localStorage.getItem('convId'));
-	const [isMessageCome, setIsMessageCome] = useState()
-	const { searchValue, setConversation: setMessages, conversation, setChatList, chatList, setLastSeen, notificationStatus, soundStatus, setUnreadMessage, unreadMessage } = useGlobalContext();
+	const {
+		inputRef,
+		searchValue,
+		setConversation: setMessages,
+		conversation,
+		setChatList, chatList,
+		setLastSeen,
+		notificationStatus,
+		soundStatus,
+		setUnreadMessage,
+		unreadMessage,
+		handleConversationRef
+	} = useGlobalContext();
+
 	const userId = localStorage.getItem("userId");
 	const convRef = useRef()
 	const soundRef = useRef()
 	const notificationRef = useRef()
+	const windowWidth = useRef()
+	const handleConversation = (item) => {
+		navigate(`/t/${item._id}`)
+		let { convId, _id: receiverId, convType, lastSms } = item
+		// getMessage(convId, 30)
+		localStorage.setItem("convId", convId);
+		localStorage.setItem('receiverId', receiverId)
+		localStorage.setItem('convType', convType)
+		// setCurrentConv(convId)
+		updateSeenStatus(convId, (res) => {
+			!lastSms?.seenBy?.includes(userId) && lastSms?.seenBy?.push(userId)
+			setChatList(p => {
+				p[p.indexOf(item)] = item
+				return p
+			})
+			if (res?.status === 200) {
+				sendSeenStatusToSocketServer(res.data.message)
+				setLastSeen(res.data.message[res.data.message.length - 1])
+			}
+		})
+		// console.log(windowWidth)
+		windowWidth.current < 501 && responSive('right')
+
+		const { setText, setAttachment } = inputRef.current
+		setText('')
+		setAttachment([])
+	};
 	useEffect(() => {
 		const getConv = async () => {
 			try {
@@ -102,7 +145,7 @@ const ChatList = ({ handleConversation }) => {
 					.map((item, index, arr) => {
 						return (
 							<div
-								onClick={() => { handleConversation(item); setDetectCurrentChat(item.convId) }}
+								onClick={() => { handleConversationRef.current(item); setDetectCurrentChat(item.convId) }}
 								className="item"
 								key={index}
 								style={{ background: (detectCurrentChat === item.convId) ? '#F5F5F5' : 'initial', borderRadius: '10px' }}
@@ -117,6 +160,7 @@ const ChatList = ({ handleConversation }) => {
 			) : (
 				responseStatus === 404 ? 'not found' : <Loading />
 			)}
+			<Outlet />
 		</>
 	);
 };
