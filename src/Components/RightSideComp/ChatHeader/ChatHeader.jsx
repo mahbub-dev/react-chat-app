@@ -7,11 +7,11 @@ import "./chatheader.scss";
 const ChatHeader = ({ currentChatUser, isOnline }) => {
 	const navigate = useNavigate();
 	const location = useLocation().pathname.split("/")[1];
-	const { handleModals, OpenUserDetails } = useGlobalContext();
+	const { handleModals, OpenUserDetails, participant } = useGlobalContext();
 	const { onlineUsers } = useSocket();
 	let active;
 	onlineUsers?.forEach((i) =>
-		i.userId.includes(currentChatUser?._id)
+		i?.userId?.includes(currentChatUser?._id)
 			? (active = "online")
 			: (active = "ofline")
 	);
@@ -20,23 +20,23 @@ const ChatHeader = ({ currentChatUser, isOnline }) => {
 	return (
 		<div className="header">
 			<div className="wrapper">
-				{currentChatUser?.participants?.length === 1 ? (
+				{Object.keys(participant).length > 0 ? (
 					<div
 						className="opened-user"
 						onClick={() =>
-							OpenUserDetails(currentChatUser?.participants[0], handleModals)
+							OpenUserDetails(participant, handleModals)
 						}
 					>
 						<div className="img">
-							{currentChatUser?.participants[0]?.profilePicture && (
+							{participant?.profilePicture && (
 								<img
-									src={currentChatUser?.participants[0]?.profilePicture}
+									src={participant?.profilePicture}
 									alt="user"
 								/>
 							)}
 						</div>
 						<div className="name">
-							<h5>{currentChatUser?.participants[0]?.username}</h5>
+							<h5>{participant?.username}</h5>
 							{isOnline && <p>online</p>}
 						</div>
 					</div>

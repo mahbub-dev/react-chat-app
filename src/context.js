@@ -16,6 +16,7 @@ const AppProvider = ({ children }) => {
 	const [replyRefSms, setReplyRefSms] = useState({});
 	const [lastSeen, setLastSeen] = useState({});
 	const [chatList, setChatList] = useState([]);
+	const [participant, setParticipant] = useState({});
 	const inputRef = useRef({});
 	const [soundStatus, setSoundStatus] = useState(
 		localStorage.getItem("sound")
@@ -115,6 +116,8 @@ const AppProvider = ({ children }) => {
 		setNotificationStatus,
 		inputRef,
 		handleConversationRef,
+		participant,
+		setParticipant,
 	};
 	return (
 		<AppContext.Provider value={memoValue}> {children}</AppContext.Provider>
