@@ -24,8 +24,8 @@ Welcome to the Chat Web App! This application allows users to engage in real-tim
 Check out the live demo of the Chat Web App [here](https://react-chat-app-he2w.vercel.app/).
 
  ## Related Repository
- -Chat api server: https://github.com/mahbub-dev/react-chat-app-api
- -Chat socket server: https://github.com/mahbub-dev/socket-server
+ - Chat api server: https://github.com/mahbub-dev/react-chat-app-api
+ - Chat socket server: https://github.com/mahbub-dev/socket-server
 
 
 ## Technology
