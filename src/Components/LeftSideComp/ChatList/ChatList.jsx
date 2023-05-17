@@ -36,33 +36,33 @@ const ChatList = () => {
 	const convRef = useRef()
 	const soundRef = useRef()
 	const notificationRef = useRef()
-	const windowWidth = useRef()
-	const handleConversation = (item) => {
-		navigate(`/t/${item._id}`)
-		let { convId, _id: receiverId, convType, lastSms } = item
-		// getMessage(convId, 30)
-		localStorage.setItem("convId", convId);
-		localStorage.setItem('receiverId', receiverId)
-		localStorage.setItem('convType', convType)
-		// setCurrentConv(convId)
-		updateSeenStatus(convId, (res) => {
-			!lastSms?.seenBy?.includes(userId) && lastSms?.seenBy?.push(userId)
-			setChatList(p => {
-				p[p.indexOf(item)] = item
-				return p
-			})
-			if (res?.status === 200) {
-				sendSeenStatusToSocketServer(res.data.message)
-				setLastSeen(res.data.message[res.data.message.length - 1])
-			}
-		})
-		// console.log(windowWidth)
-		windowWidth.current < 501 && responSive('right')
+	// const windowWidth = useRef()
+	// const handleConversation = (item) => {
+	// 	navigate(`/t/${item._id}`)
+	// 	let { convId, _id: receiverId, convType, lastSms } = item
+	// 	// getMessage(convId, 30)
+	// 	localStorage.setItem("convId", convId);
+	// 	localStorage.setItem('receiverId', receiverId)
+	// 	localStorage.setItem('convType', convType)
+	// 	// setCurrentConv(convId)
+	// 	updateSeenStatus(convId, (res) => {
+	// 		!lastSms?.seenBy?.includes(userId) && lastSms?.seenBy?.push(userId)
+	// 		setChatList(p => {
+	// 			p[p.indexOf(item)] = item
+	// 			return p
+	// 		})
+	// 		if (res?.status === 200) {
+	// 			sendSeenStatusToSocketServer(res.data.message)
+	// 			setLastSeen(res.data.message[res.data.message.length - 1])
+	// 		}
+	// 	})
+	// 	// console.log(windowWidth)
+	// 	windowWidth.current < 501 && responSive('right')
 
-		const { setText, setAttachment } = inputRef.current
-		setText('')
-		setAttachment([])
-	};
+	// 	const { setText, setAttachment } = inputRef.current
+	// 	setText('')
+	// 	setAttachment([])
+	// };
 	useEffect(() => {
 		const getConv = async () => {
 			try {

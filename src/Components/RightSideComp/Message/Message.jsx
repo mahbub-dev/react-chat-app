@@ -4,12 +4,25 @@ import "./Message.scss";
 import SmsOption from "./SmsOption";
 
 function Message({ currentChat, message }) {
-	const { handleModals, OpenUploadImage, lastSeen } = useGlobalContext();
-	// console.log(lastSeen)
+	const { handleModals, OpenUploadImage, lastSeen, participant } = useGlobalContext();
+
 	const [showTime, setShowTime] = useState('none')
+	const getRepliedName = (smsId, repSmsId) => {
+		let text = ''
+		if (smsId === localStorage.getItem('userId')) {
+			text = 'You replied to'
+		} else {
+			text = participant.username.split(' ')[1] + ' replied to'
+		}
+		if (repSmsId === localStorage.getItem('userId')) {
+			smsId === localStorage.getItem('userId') ? text += ' yourself' : text += ' you'
+
+		} else text += " " + participant?.username.split(' ')[1]
+		return text
+	}
 	return (
 		<>
-			<div id={message?.sender._id === localStorage.getItem('userId') ? "own" : "other"} className="messages">
+			<div id={message?.sender === localStorage.getItem('userId') ? "own" : "other"} className="messages">
 				<div className="tooltip" style={{ display: showTime }}>
 					{new Date(message.createdAt).toLocaleTimeString()}
 				</div>
@@ -18,16 +31,14 @@ function Message({ currentChat, message }) {
 					{message?.replyRef &&
 						<div className="repliedRef">
 							<span>
-								{message?.sender?._id === localStorage.getItem('userId') ? 'You' : message?.sender?.username.split(' ')[1]} replied
-								to {message?.replyRef?.sender._id === localStorage.getItem('userId') ? 'you' : message.replyRef.sender.username.split(' ')[1]}
+								{getRepliedName(message?.sender, message.replyRef.sender)}
 							</span>
 							<span className="repliedSms">
 								{message?.replyRef?.text}
 							</span>
 						</div>}
 					<div style={{ display: "flex" }}>
-						<img className="profileImg" title={message?.sender?.username} src={message?.sender?.profilePicture} alt="" />
-
+						<img className="profileImg" title={participant?.username} src={participant?.profilePicture} alt="" />
 						<div className="sms-wrapper">
 							{message?.text !== "" &&
 								<p onMouseEnter={(e) => { setShowTime('block') }} onMouseLeave={(e) => { setShowTime('none') }}>
@@ -76,7 +87,7 @@ function Message({ currentChat, message }) {
 											<img src="https://www.svgrepo.com/show/484943/pdf-file.svg" width={'40px'} alt="pdf" />
 										</a>
 									))
-								}
+									}
 								</div>
 							}
 
@@ -103,17 +114,19 @@ function Message({ currentChat, message }) {
 
 
 
-							{lastSeen?._id === message?._id && (
-								<img
-									src={currentChat[0]?.profilePicture}
-									alt="seen"
-									className="seen"
-									title={`seen by ${currentChat[0]?.username.split(' ')[0]}`}
-								/>
-							)}
+
 						</div>
 					</div>
 				</div>
+
+				{lastSeen?._id === message?._id && (
+					<img
+						src={participant?.profilePicture}
+						alt="seen"
+						className="seen"
+						title={`seen by ${participant?.username}`}
+					/>
+				)}
 			</div>
 
 		</>

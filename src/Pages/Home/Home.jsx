@@ -18,7 +18,7 @@ function Home() {
 	const convId = useLocation().pathname.split('/')[useLocation().pathname.split('/').length - 1]
 	const { sendSeenStatusToSocketServer } = useSocket();
 	const {
-		setConversation, setChatList, setLastSeen, loggedUser, setLoggedUser, inputRef, handleConversationRef } = useGlobalContext();
+		setConversation, setChatList, setLastSeen, loggedUser, setLoggedUser, inputRef, handleConversationRef, setParticipant } = useGlobalContext();
 	const btnRef = useRef()
 	const userId = localStorage.getItem("userId");
 	const isMessageNotFound = useRef(false)
@@ -32,9 +32,9 @@ function Home() {
 
 	handleConversationRef.current = (item) => {
 		let { convId, _id: receiverId, convType, lastSms } = item
-		setConversation(p => ({ ...p, message: [] }))
+		// setConversation(p => ({ ...p, message: [] }))
 		navigate(`/t/${convId}`)
-		getMessage(convId, 30)
+		getMessage(convId, 50)
 		localStorage.setItem("convId", convId);
 		localStorage.setItem('receiverId', receiverId)
 		localStorage.setItem('convType', convType)
@@ -64,7 +64,7 @@ function Home() {
 			);
 			let { message, ...rest } = res.data
 			setConversation(res.data)
-
+			setParticipant(res?.data?.participants?.filter(i => i._id !== userId)[0])
 			setLastSeen(getLastSeenMessag(res.data.message))
 			res.data.messageStatus === 404 && (isMessageNotFound.current = true)
 		} catch (error) {
@@ -77,7 +77,7 @@ function Home() {
 	// get message
 
 	useEffect(() => {
-		getMessage(convId, 30)
+		getMessage(convId, 50)
 	}, [convId]);
 
 	const [title, setTitle] = useState('Chats')
