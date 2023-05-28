@@ -11,7 +11,7 @@ import {
 	Settings,
 } from "../Components";
 import { getMessage } from "../Api Request/messageRequest";
-import { AuthRoutes, HomeRoutes } from "./PrivateRoutes";
+import { AuthRoutes, HomeSecureRoutes } from "./PrivateRoutes";
 import { Login, Signup, VerifyEmail } from "../Components/Auth";
 import Reset from "../Pages/Auth/Reset/Reset";
 import { ResetReq, SetPassword } from "../Components/Auth/ResetPass";
@@ -26,9 +26,9 @@ const router = createBrowserRouter([
 				path: "/",
 				element: (
 					<SocketProvider>
-						<HomeRoutes>
+						<HomeSecureRoutes>
 							<Home />
-						</HomeRoutes>
+						</HomeSecureRoutes>
 					</SocketProvider>
 				),
 
@@ -60,11 +60,7 @@ const router = createBrowserRouter([
 			},
 			{
 				path: "/auth",
-				element: (
-					<AuthRoutes>
-						<Auth />
-					</AuthRoutes>
-				),
+				element: <Auth />,
 				children: [
 					{
 						path: "/auth",
@@ -74,7 +70,11 @@ const router = createBrowserRouter([
 						path: "/auth/signup/",
 						element: <Signup />,
 					},
-
+					{
+						path: "/auth/confirm",
+						element: <VerifyEmail />,
+					},
+					
 					{
 						path: "/auth/reset/",
 						element: <Reset />,
@@ -82,10 +82,6 @@ const router = createBrowserRouter([
 							{
 								path: "/auth/reset/",
 								element: <ResetReq />,
-							},
-							{
-								path: "/auth/reset/confirm",
-								element: <VerifyEmail />,
 							},
 							{
 								path: "/auth/reset/setpassword",

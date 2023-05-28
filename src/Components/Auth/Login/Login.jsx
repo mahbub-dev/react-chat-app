@@ -1,15 +1,17 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { loginRequest } from "../../../Api Request/authRequest";
 import { useGlobalContext } from "../../../context";
 import "./login.scss";
-function Login({ setStyle: setNewStyle }) {
+function Login() {
+	const location = useLocation()
 	const { setLoggedUser } = useGlobalContext();
 	const [err, setError] = useState("");
 	const [isShow, setIsShow] = useState(false);
 	const [style, setStyle] = useState("password");
 	const [password, setPassword] = useState("");
 	const [loginId, setLoginId] = useState("");
+	const [loading, setLoading] = useState(false)
 	const navigate = useNavigate();
 	const handleShow = () => {
 		if (isShow) {
@@ -22,6 +24,7 @@ function Login({ setStyle: setNewStyle }) {
 	};
 	const handleLogin = (e) => {
 		e.preventDefault();
+		setLoading(true)
 		loginRequest({ loginId, password }, (res) => {
 			if (res?.status === 200) {
 				setLoggedUser(res?.data);
@@ -29,15 +32,15 @@ function Login({ setStyle: setNewStyle }) {
 				localStorage.setItem("sound", "yes");
 				window.location.reload();
 			} else if (res?.status === 403) {
-				setNewStyle("-33.5");
-				localStorage.setItem("confirmEmail", loginId);
+				navigate(`/auth/confirm/?email=${loginId}&for='signup'`, { state: { from: location }, replace: true })
 			} else {
 				setError(res.data);
+				setLoading(false)
 			}
 		});
 	};
 	return (
-		<div className="login">
+		<div className="login basic-form">
 			<div className="login-wrapper">
 				<h1>Chat App</h1>
 				<form onSubmit={handleLogin}>
@@ -45,6 +48,7 @@ function Login({ setStyle: setNewStyle }) {
 						id="email"
 						type="text"
 						placeholder="Email or phone"
+						required
 						value={loginId}
 						onChange={(e) => setLoginId(e.target.value)}
 					/>
@@ -52,6 +56,7 @@ function Login({ setStyle: setNewStyle }) {
 						<input
 							type={style}
 							value={password}
+							required
 							placeholder="Passoword"
 							onChange={(e) => setPassword(e.target.value)}
 						/>
@@ -61,7 +66,7 @@ function Login({ setStyle: setNewStyle }) {
 						</span>
 					</span>
 					<span className="errShow">{err ? err : null}</span>
-					<button type="submit">Login</button>
+					<button className="basic-btn" type="submit">{loading ? 'Please wait' : 'Login'}</button>
 				</form>
 				<p>
 					<Link to="/auth/reset">Forget password</Link>

@@ -8,12 +8,13 @@ const AuthRoutes = ({ children }) => {
     }
     return children
 }
-const HomeRoutes = ({ children }) => {
-    const { loggedUser } = useGlobalContext()
-    if (loggedUser) {
+
+const HomeSecureRoutes = ({ children }) => {
+    const userId = localStorage.getItem('userId')
+    if (userId) {
         return children
     }
     return <Navigate to={`/auth`} />
 }
 
-export { AuthRoutes, HomeRoutes }
+export { AuthRoutes, HomeSecureRoutes }

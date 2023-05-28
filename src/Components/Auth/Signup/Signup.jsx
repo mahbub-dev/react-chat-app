@@ -1,12 +1,21 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { createUser } from "../../../Api Request/userRequest";
 import "../Login/login.scss";
 import "./Signup.scss";
-function Signup({ setStyle: setNewStyle }) {
+function Signup() {
+	const location = useLocation()
+	const navigate = useNavigate()
+	useEffect(() => {
+		if (location.state?.from === '/auth/confirm/') {
+			navigate('/auth/login')
+		}
+	}, [location, navigate])
+	console.log(location.state?.from)
 	const [err, setError] = useState("");
 	const [isShow, setIsShow] = useState(false);
 	const [style, setStyle] = useState("password");
+	const [isLoading, setIsLoading] = useState(false)
 	const [signupData, setSignupData] = useState({
 		username: "",
 		email: "",
@@ -29,21 +38,23 @@ function Signup({ setStyle: setNewStyle }) {
 	const handleSignup = (e) => {
 		e.preventDefault();
 		if (signupData.password === signupData.confirmPassword) {
+			setIsLoading(true)
 			createUser(signupData, (res) => {
 				if (res.status === 201) {
-					setNewStyle("-33.5");
-					localStorage.setItem("confirmEmail", signupData.email);
+					navigate(`/auth/confirm/?email=${signupData.email}&for='signup'`, { state: { from: location } })
 				} else {
+					setIsLoading(false)
 					setError(res?.data);
 					console.log(res);
 				}
 			});
 		} else {
-			alert("confirm password is not same as password");
+			alert("Confirm password is not same as password");
 		}
+
 	};
 	return (
-		<div className="signup login">
+		<div className="signup login basic-form">
 			<div className="login-wrapper signup-wrapper">
 				<h1>Chat App</h1>
 				<form onSubmit={handleSignup}>
@@ -94,7 +105,7 @@ function Signup({ setStyle: setNewStyle }) {
 						onChange={handleChange}
 					/>
 					<span className="errShow">{err ? err : null}</span>
-					<button type="submit">Singup</button>
+					<button className="basic-btn" type="submit">{isLoading ? 'Loading...' : 'Signup'}</button>
 				</form>
 				<p>
 					<Link to={'/auth'}>
