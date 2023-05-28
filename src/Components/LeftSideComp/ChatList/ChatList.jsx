@@ -9,7 +9,7 @@ import { getLastSeenMessag, showNotification, playSound, responSive } from '../.
 import User from "./User/User";
 import { updateSeenStatus } from "../../../Api Request/conversationRequest";
 import { Chat } from "../../../Pages";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
 const ChatList = () => {
 	const { socket, sendSeenStatusToSocketServer } = useSocket()
@@ -17,7 +17,7 @@ const ChatList = () => {
 	const navigate = useNavigate()
 	// const [chats, setChats] = useState([]);
 	const [responseStatus, setResponseStatus] = useState(200);
-	const [detectCurrentChat, setDetectCurrentChat] = useState(localStorage.getItem('convId'));
+	const detectCurrentChat = useLocation().pathname.split('/')[2]
 	const {
 		inputRef,
 		searchValue,
@@ -145,7 +145,7 @@ const ChatList = () => {
 					.map((item, index, arr) => {
 						return (
 							<div
-								onClick={() => { handleConversationRef.current(item); setDetectCurrentChat(item.convId) }}
+								onClick={() => { handleConversationRef.current(item) }}
 								className="item"
 								key={index}
 								style={{ background: (detectCurrentChat === item.convId) ? '#F5F5F5' : 'initial', borderRadius: '10px' }}

@@ -43,14 +43,17 @@ const responSive = (direction) => {
 		right.style.position = "initial";
 		navButtons.style.opacity = "0";
 		navButtons.style.width = "0";
+		navButtons.style.zIndex = "-1";
+
 		right.style.transform = "translateX(0%)";
 	} else {
 		localStorage.setItem("isChatBoxOpened", "false");
 		navButtons.style.opacity = "1";
-		navButtons.style.width = "50px";
+		navButtons.style.width = "100%";
 		right.style.position = "absolute";
 		right.style.transform = "translateX(-100%)";
 		left.style.position = "initial";
+		navButtons.style.zIndex = "2";
 		left.style.transform = `translateX(0%)`;
 	}
 };

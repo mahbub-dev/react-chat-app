@@ -82,6 +82,8 @@ function Home() {
 	}, [convId]);
 
 	const [title, setTitle] = useState('Chats')
+	const location = useLocation().pathname.split('/')[1]
+
 	useEffect(() => {
 		if (windowWidth.current < 501) {
 			localStorage.getItem('isChatBoxOpened') === 'true' && responSive('right')
@@ -118,7 +120,7 @@ function Home() {
 			</div>
 
 			<div className="leftside">
-				<h1 style={{ textAlign: "left", fontSize: "25px" }}>{title ? title : 'Chats'}</h1>
+				<h1 style={{ textAlign: "left", fontSize: "25px" ,textTransform:'capitalize'}}>{location !== 't' ? location : 'Chats'}</h1>
 				<div style={{ height: "81%", overflow: "auto" }}>
 					<Outlet />
 				</div>

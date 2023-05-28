@@ -2,9 +2,7 @@
 @import "../../../Utils/mixin.scss";
 .profile {
 	max-width: 500px;
-	@include small-down {
-		width: 300px;
-	}
+
 	.profile-box {
 		position: relative;
 		@include small-down {
