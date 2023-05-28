@@ -11,16 +11,17 @@ import buttonData from "./navbuttonData";
 import Chat from "../Chat/Chat";
 import "./home.scss";
 import { useGlobalContext } from "../../context";
-import { Outlet, useNavigate, useLocation } from "react-router-dom";
+import { Outlet, useNavigate, useLocation, Navigate } from "react-router-dom";
 
 function Home() {
+	const userId = localStorage.getItem("userId");
 	const navigate = useNavigate()
+
 	const convId = useLocation().pathname.split('/')[useLocation().pathname.split('/').length - 1]
 	const { sendSeenStatusToSocketServer } = useSocket();
 	const {
 		setConversation, setChatList, setLastSeen, loggedUser, setLoggedUser, inputRef, handleConversationRef, setParticipant } = useGlobalContext();
 	const btnRef = useRef()
-	const userId = localStorage.getItem("userId");
 	const isMessageNotFound = useRef(false)
 	const windowWidth = useRef()
 	window.addEventListener("resize", (e) => {
@@ -86,7 +87,6 @@ function Home() {
 			localStorage.getItem('isChatBoxOpened') === 'true' && responSive('right')
 		}
 	}, [])
-
 	return <>
 		<div className="home" id="home">
 			<div className="notificaion">

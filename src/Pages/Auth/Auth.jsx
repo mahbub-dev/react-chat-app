@@ -1,37 +1,13 @@
-﻿import React, { useEffect, useState } from "react";
-import { Signup, Login, VerifyEmail } from "../../Components/Auth";
-import "./auth.scss";
-import { Outlet } from "react-router-dom";
+﻿import "./auth.scss";
+import { Navigate, Outlet } from "react-router-dom";
 
 const Auth = () => {
-	const [style, setStyle] = useState("0");
-	const [isConfirm, setIsConfirm] = useState(false);
-	useEffect(() => {
-		localStorage.getItem("auth") === "signup" && setStyle("-67");
-		localStorage.getItem("confirmEmail") && setStyle("-33.5");
-	}, []);
-	useEffect(() => {
-		isConfirm && setStyle("0") && localStorage.setItem('auth', 'login')
-	}, [isConfirm]);
+	if (localStorage.getItem('userId')) {
+		return <Navigate to={`/t/${localStorage.getItem('convId')}`} />
+	}
 	return (
 		<div className="auth">
 			<Outlet />
-			{/* <div style={{ transform: `translateY(${style}%)` }}>
-				<Login setStyle={setStyle} />
-				<div
-					className="confirm"
-					style={{
-						opacity: `${Math.abs(parseFloat(style)) === 33.5 ? "1" : "0"
-							}`,
-					}}
-				>
-					<VerifyEmail
-						setIsConfirm={setIsConfirm}
-						classname={"signupConfirm"}
-					/>
-				</div>
-				<Signup setStyle={setStyle} />
-			</div> */}
 		</div>
 	);
 };
