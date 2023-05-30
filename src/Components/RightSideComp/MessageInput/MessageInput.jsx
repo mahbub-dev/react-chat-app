@@ -16,7 +16,7 @@ const MessageInput = ({ messages: conv, setMessages }) => {
 	const { socket, sendDataToSocketServer, sendIsTypingStatusToSocketServer } = useSocket();
 	const [typingStatus, setIsTypingStatus] = useState({})
 	const { message: messages, _id, } = conv
-	const { replyRefSms, inputRef, setReplyRefSms, chatList, setChatList } = useGlobalContext();
+	const { replyRefSms, inputRef, setReplyRefSms, chatList, setChatList ,participant} = useGlobalContext();
 	const closeReply = useRef()
 	const [text, setText] = useState("");
 	const [attachment, setAttachment] = useState([])
@@ -128,7 +128,7 @@ const MessageInput = ({ messages: conv, setMessages }) => {
 		<>
 			{/* reply ref  */}
 			<div className="reply-info" ref={closeReply} >
-				<p className="reply_to"><span> replying to: <b>{replyRefSms?.sender?.username}</b></span>
+				<p className="reply_to"><span> replying to: <b>{participant.username}</b></span>
 					<button onClick={(e) => {
 						setReplyRefSms({})
 						closeReply.current.style.display = 'none'

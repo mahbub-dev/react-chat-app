@@ -1,15 +1,14 @@
 ﻿import { createContext, useContext, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { io } from "socket.io-client";
+import { useGlobalContext } from "./context";
 const SocketContext = createContext();
 const SocketProvider = ({ children }) => {
+	const { loggedUser } = useGlobalContext();
 	const friendId = useLocation().pathname.split("/")[2];
-	const socketInitait = io(
-		process.env.REACT_APP_SOKECT_SERVER,
-		{
-			autoConnect: false,
-		}
-	);
+	const socketInitait = io(process.env.REACT_APP_SOKECT_SERVER, {
+		autoConnect: false,
+	});
 	const [socket, setSocket] = useState(socketInitait);
 	const [typingStatus, setTypingStatus] = useState({
 		isTyping: false,
@@ -40,7 +39,8 @@ const SocketProvider = ({ children }) => {
 			message: data,
 			isDeleted,
 			receiverId: localStorage.getItem("receiverId"),
-			senderId: localStorage.getItem("userId"),
+			senderId: loggedUser?._id,
+			senderName: loggedUser?.username,
 			convType: localStorage.getItem("convType"),
 		});
 	};

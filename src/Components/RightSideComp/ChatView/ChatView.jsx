@@ -41,7 +41,7 @@ const ChatView = ({ messages, currentChat, isMessageNotFound, getMessage }) => {
 		return setTimeout(() => scrollRef.current = ref.current, 1000)()
 	}
 
-
+console.log()
 	return (
 		<div
 			className="chatView"
@@ -52,7 +52,7 @@ const ChatView = ({ messages, currentChat, isMessageNotFound, getMessage }) => {
 				<h5>{participant?.username}</h5>
 			</div>}
 
-			<button style={{ display: `${(loadStateRef.current === convRef?.current?.totalMessages) ? 'none' : 'initial'}` }} className="basic-btn" onClick={(handleMessageLoading)}>Load Previous</button>
+			<button style={{ display: `${(loadStateRef.current === convRef?.current?.totalMessages || convRef?.current?.totalMessages < 50) ? 'none' : 'initial'}` }} className="basic-btn" onClick={(handleMessageLoading)}>Load Previous</button>
 			{messages?.length > 0 ? (
 				Object.keys(groupedMessages)?.map((m, i, arr) => {
 					return (

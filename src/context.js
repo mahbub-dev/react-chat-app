@@ -1,7 +1,7 @@
 ﻿/* eslint-disable react-hooks/exhaustive-deps */
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import ApiRequest from "./Api Request/apiRequest";
-import { handleModals, playSound } from "./Utils/functions";
+import { handleModals } from "./Utils/functions";
 
 const AppContext = createContext();
 const AppProvider = ({ children }) => {
@@ -24,25 +24,12 @@ const AppProvider = ({ children }) => {
 	const [notificationStatus, setNotificationStatus] = useState(
 		localStorage.getItem("notification")
 	);
-	useEffect(() => {
-		// setSoundStatus(localStorage.getItem("sound"));
-		// notificationStatus.current = localStorage.getItem("notification");
-	}, []);
+
 
 	// handle Modals
 	const [user, setUser] = useState("");
 	const [showImage, setShowImage] = useState();
 	const [email, setEmail] = useState("");
-	// useEffect(() => {
-	// 	let newSmsCount = [];
-	// 	unreadMessage?.forEach((i) => {
-	// 		newSmsCount.push(i.sender);
-	// 	});
-	// 	const newMessage = newSmsCount?.filter(
-	// 		(item, index, arr) => arr.indexOf(item) === index
-	// 	);
-	// 	setNewMessageCount(newMessage.length);
-	// }, [unreadMessage]);
 
 	const OpenUserDetails = (data) => {
 		setUser(data);
