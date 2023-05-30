@@ -6,13 +6,16 @@ import "./user.scss";
 import { useGlobalContext } from "../../../../context";
 import { format } from 'timeago.js'
 import ApiRequest from "../../../../Api Request/apiRequest";
-
+import { useNavigate } from "react-router-dom";
 function User({ item, itemArray }) {
+	const navigate = useNavigate()
 	const { OpenUserDetails } = useGlobalContext();
 	const [openOption, setOpenOption] = useState(false);
 	const { onlineUsers } = useSocket()
 	const timeFormat = format(item?.lastSms?.createdAt).split(' ')
+
 	const clickRef = useRef();
+
 	let isOnline = false;
 	onlineUsers.forEach((i) => {
 		i.userId === item?._id && (isOnline = i?.userId);
@@ -23,7 +26,6 @@ function User({ item, itemArray }) {
 		return () => {
 			document.removeEventListener("click", handleClickOutside);
 		};
-
 	}, []);
 
 	function handleClickOutside(event) {
@@ -39,6 +41,7 @@ function User({ item, itemArray }) {
 		optionHide(itemArray.map(i => i._id).filter(i => i !== item._id))
 		if (!openOption) {
 			clickRef.current.style.display = 'flex'
+			// console.log(btnRef.current.parentNode.nextSibling.style.zIndex = -1)
 			setOpenOption(true)
 		} else {
 			clickRef.current.style.display = 'none'
@@ -47,17 +50,19 @@ function User({ item, itemArray }) {
 	}
 
 	const handleDelConversation = async () => {
+		const isSure = window.confirm('You are deleting conversation! Are you sure?')
+		if (!isSure) return
 		try {
 			await ApiRequest.delete(`conversation/${item.convId}`)
 			localStorage.removeItem('convId')
 			localStorage.removeItem('receiverId')
-			window.location.reload()
+			navigate('/')
 		} catch (error) {
 			console.log(error)
 		}
 	}
 	return (
-		<>
+		<div>
 
 			<div className="user">
 				<div className="img">
@@ -80,14 +85,13 @@ function User({ item, itemArray }) {
 				<button className="option-btn  opBtn" style={{ display: openOption ? 'flex' : '' }} onClick={handleOptionClick}>
 					<SlOptions className="opBtn" />
 				</button>
-
-
-				<div ref={clickRef} id={item._id} className="userOption">
-					<button onClick={(e) => { e.stopPropagation(); OpenUserDetails(item) }}>View profile</button>
-					<button onClick={(e) => { e.stopPropagation(); handleDelConversation() }}>Delete chat</button>
-				</div>
 			</div>
-		</>
+			<div ref={clickRef} id={item._id} className="userOption">
+				<button onClick={(e) => { e.stopPropagation(); OpenUserDetails(item) }}>View profile</button>
+				<button onClick={(e) => { e.stopPropagation(); handleDelConversation() }}>Delete chat</button>
+			</div>
+
+		</div>
 	);
 }
 

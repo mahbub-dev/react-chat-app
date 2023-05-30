@@ -1,6 +1,6 @@
-﻿import React, { useState } from "react";
-import { SendConfirmCode } from "../../../Api Request/authRequest";
+import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { SendConfirmCode } from "../../../Api Request/authRequest";
 const ResetReq = () => {
 	const location = useLocation()
 	const [inputVal, setInputVal] = useState("");

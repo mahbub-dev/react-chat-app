@@ -22,6 +22,9 @@
 			flex-direction: row;
 			background-color: lightgray;
 			width: 100%;
+			gap: .5rem;
+			justify-content: center;
+			height: 70px;
 		}
 		display: flex;
 		flex-direction: column;

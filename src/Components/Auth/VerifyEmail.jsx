@@ -1,7 +1,7 @@
-﻿import React, { useState } from "react";
-import { SendConfirmCode } from "../../Api Request/authRequest";
+import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import ApiRequest from "../../Api Request/apiRequest";
+import { SendConfirmCode } from "../../Api Request/authRequest";
 const VerifyEmail = () => {
 	const navigate = useNavigate()
 	const location = useLocation()

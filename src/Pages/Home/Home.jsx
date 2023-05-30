@@ -11,7 +11,7 @@ import buttonData from "./navbuttonData";
 import Chat from "../Chat/Chat";
 import "./home.scss";
 import { useGlobalContext } from "../../context";
-import { Outlet, useNavigate, useLocation, Navigate } from "react-router-dom";
+import { Outlet, useNavigate, useLocation } from "react-router-dom";
 
 function Home() {
 	const userId = localStorage.getItem("userId");
@@ -63,7 +63,7 @@ function Home() {
 			const res = await ApiRequest.get(
 				`/conversation/message/${convId}/?page=${page}`
 			);
-			let { message, ...rest } = res.data
+
 			setConversation(res.data)
 			setParticipant(res?.data?.participants?.filter(i => i._id !== userId)[0])
 			setLastSeen(getLastSeenMessag(res.data.message))
@@ -120,7 +120,7 @@ function Home() {
 			</div>
 
 			<div className="leftside">
-				<h1 style={{ textAlign: "left", fontSize: "25px" ,textTransform:'capitalize'}}>{location !== 't' ? location : 'Chats'}</h1>
+				<h1 style={{ textAlign: "left", fontSize: "25px", textTransform: 'capitalize' }}>{location !== 't' ? location : 'Chats'}</h1>
 				<div style={{ height: "81%", overflow: "auto" }}>
 					<Outlet />
 				</div>

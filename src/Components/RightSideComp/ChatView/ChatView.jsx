@@ -1,12 +1,13 @@
-﻿/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef } from "react";
 import { useGlobalContext } from "../../../context";
+import Loading from "../../Loading/Loading";
 import GroupsOfSms from "../Message/GroupsOfSms";
 import "./chatview.scss";
-import Loading from "../../Loading/Loading";
 
 const ChatView = ({ messages, currentChat, isMessageNotFound, getMessage }) => {
 	const scrollRef = useRef()
+	const loadScroll = useRef()
 	const convRef = useRef()
 	const loadStateRef = useRef(100)
 	const { conversation, participant } = useGlobalContext()
@@ -15,6 +16,7 @@ const ChatView = ({ messages, currentChat, isMessageNotFound, getMessage }) => {
 		scrollRef?.current?.scrollTo({
 			top: scrollRef?.current?.scrollHeight,
 		});
+		loadScroll.current = scrollRef?.current?.scrollHeight
 	}, [conversation]);
 
 	const groupedMessages = {};
@@ -26,37 +28,31 @@ const ChatView = ({ messages, currentChat, isMessageNotFound, getMessage }) => {
 			groupedMessages[date] = [message];
 		}
 	});
-	useEffect(() => {
-		const handleMessageLoading = (e) => {
-			if (e.target.scrollTop <= 100) {
-				scrollRef.current = null
-				if (loadStateRef.current > convRef?.current?.totalMessages) {
-					loadStateRef.current = convRef?.current?.totalMessages
-				}
-				getMessage(convRef.current.convId, loadStateRef.current)
-				if (loadStateRef.current !== convRef?.current?.totalMessages) {
-					e.target.scrollTop = 500
-					loadStateRef.current += 50
-				}
-			}
+	const handleMessageLoading = (e) => {
+		const ref = { ...scrollRef }
+		scrollRef.current = null
+		if (loadStateRef.current > convRef?.current?.totalMessages) {
+			loadStateRef.current = convRef?.current?.totalMessages
 		}
-		const timer = setTimeout(() => {
-			scrollRef.current.addEventListener('scroll', handleMessageLoading);
-		}, 1000);
-		return () => clearTimeout(timer);
-	}, []);
+		getMessage(convRef.current.convId, loadStateRef.current)
+		if (loadStateRef.current !== convRef?.current?.totalMessages) {
+			loadStateRef.current += 50
+		}
+		return setTimeout(() => scrollRef.current = ref.current, 1000)()
+	}
 
-	// console.log(`loadState:${loadStateRef.current},messageLentgh:${messages.length}`)
+
 	return (
 		<div
 			className="chatView"
 			ref={scrollRef}
-		// onScroll={loadState !== conversation?.totalMessages ? handleMessageLoading : undefined}
 		>
 			{messages?.length > 0 && <div className="particiapants">
 				<img width={'50px'} height={'50px'} style={{ borderRadius: '50%' }} src={participant?.profilePicture} alt="" />
 				<h5>{participant?.username}</h5>
 			</div>}
+
+			<button style={{ display: `${(loadStateRef.current === convRef?.current?.totalMessages) ? 'none' : 'initial'}` }} className="basic-btn" onClick={(handleMessageLoading)}>Load Previous</button>
 			{messages?.length > 0 ? (
 				Object.keys(groupedMessages)?.map((m, i, arr) => {
 					return (

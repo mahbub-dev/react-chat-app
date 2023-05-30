@@ -1,12 +1,9 @@
-﻿import { BiLeftArrow } from "react-icons/bi";
-import { useLocation, useNavigate } from "react-router-dom";
+import { BiLeftArrow } from "react-icons/bi";
+import { responSive } from "../../../Utils/functions";
 import { useGlobalContext } from "../../../context";
 import { useSocket } from "../../../socketContext";
-import { responSive } from "../../../Utils/functions";
 import "./chatheader.scss";
 const ChatHeader = ({ currentChatUser, isOnline }) => {
-	const navigate = useNavigate();
-	const location = useLocation().pathname.split("/")[1];
 	const { handleModals, OpenUserDetails, participant } = useGlobalContext();
 	const { onlineUsers } = useSocket();
 	let active;

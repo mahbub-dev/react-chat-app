@@ -1,5 +1,5 @@
-﻿import "./auth.scss";
 import { Navigate, Outlet } from "react-router-dom";
+import "./auth.scss";
 
 const Auth = () => {
 	if (localStorage.getItem('userId')) {

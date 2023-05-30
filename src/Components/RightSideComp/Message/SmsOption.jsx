@@ -90,7 +90,6 @@ const SmsOption = ({ message }) => {
         <div className="option-container" style={{ marginTop: message?.replyRef ? 'auto' : 'initial ' }}>
             <div className="more-btns" style={{ display: showMoreBtn }}>
                 <button onClick={handleRemove} className='remove'>Remove</button>
-                <button>Forward</button>
             </div>
             <div className='reacts' style={{ display: showReactItem }}>
                 {emojiData.map((i, ind) => <button key={ind} onClick={() => handleReact(i.img)}><img src={i.img} alt={i.alt} /></button>)}

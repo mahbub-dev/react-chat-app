@@ -1,5 +1,5 @@
-﻿import "./resetPass.scss";
 import { Outlet } from "react-router-dom";
+import "./resetPass.scss";
 
 const Reset = () => {
 	return (
