@@ -114,7 +114,6 @@ const handleUpload = async (event, cb) => {
 	return [audios, videos, pdf, images].filter((i) => i.links.length > 0);
 };
 
-
 // handle attachment upload
 const handleAttachMentUpload = async (event, cb) => {
 	try {
@@ -195,14 +194,13 @@ const showNotification = (data) => {
 	const elem = document.querySelector(".notificaion");
 	const message = data.message[data.message.length - 1];
 	// console.log(message);
-
-	elem.innerHTML = `<p><b>${message.sender.username} messaged you</b><br/><span>${message.text}</span></p>`;
+	console.log(data);
+	elem.innerHTML = `<p><b>${data.senderName} messaged you</b><br/><span>${message.text}</span></p>`;
 	elem.style.top = "0px";
 	setTimeout(() => {
 		elem.style.top = "-55px";
 	}, 4000);
 };
-
 
 export {
 	responSive,
@@ -214,5 +212,4 @@ export {
 	focusInput,
 	getLastSeenMessag,
 	showNotification,
-
 };

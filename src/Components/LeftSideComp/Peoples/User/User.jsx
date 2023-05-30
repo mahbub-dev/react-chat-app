@@ -21,7 +21,7 @@ function User({ item, itemArray }) {
 	}
 	return (
 		<>
-			<div className="user" onClick={() => OpenUserDetails(true, item)} style={{ display: removeItem ? 'none' : 'flex' }} >
+			<div className="user" onClick={() => OpenUserDetails(item)} style={{ display: removeItem ? 'none' : 'flex' }} >
 				<div className="img">
 					<img src={item?.profilePicture} alt="img" />
 				</div>
