@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { createUser } from "../../../Api Request/userRequest";
 import "../Login/login.scss";
 import "./Signup.scss";

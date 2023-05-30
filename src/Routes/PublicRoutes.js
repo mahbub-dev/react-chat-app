@@ -11,7 +11,7 @@ import {
 	Settings,
 } from "../Components";
 import { getMessage } from "../Api Request/messageRequest";
-import { AuthRoutes, HomeSecureRoutes } from "./PrivateRoutes";
+import {  HomeSecureRoutes } from "./PrivateRoutes";
 import { Login, Signup, VerifyEmail } from "../Components/Auth";
 import Reset from "../Pages/Auth/Reset/Reset";
 import { ResetReq, SetPassword } from "../Components/Auth/ResetPass";

@@ -43,14 +43,17 @@ const responSive = (direction) => {
 		right.style.position = "initial";
 		navButtons.style.opacity = "0";
 		navButtons.style.width = "0";
+		navButtons.style.zIndex = "-1";
+
 		right.style.transform = "translateX(0%)";
 	} else {
 		localStorage.setItem("isChatBoxOpened", "false");
 		navButtons.style.opacity = "1";
-		navButtons.style.width = "50px";
+		navButtons.style.width = "100%";
 		right.style.position = "absolute";
 		right.style.transform = "translateX(-100%)";
 		left.style.position = "initial";
+		navButtons.style.zIndex = "2";
 		left.style.transform = `translateX(0%)`;
 	}
 };
@@ -110,43 +113,7 @@ const handleUpload = async (event, cb) => {
 	});
 	return [audios, videos, pdf, images].filter((i) => i.links.length > 0);
 };
-// handle image upload
-// const handleImageUpload = async (event, cb) => {
-// 	try {
-// 		const files = event.target.files;
-// 		if (files.length > 2) {
-// 			alert("You can not upload more than 2 image at a time");
-// 			return {};
-// 		}
-// 		const formData = new FormData();
-// 		for (const file of files) {
-// 			if (
-// 				file.type === `image/jpg` ||
-// 				file.type === "image/png" ||
-// 				file.type === "image/jpeg"
-// 			) {
-// 				formData.append("files", file);
-// 			} else {
-// 				alert("You can upload only jpg,png,jpeg file");
-// 				return {};
-// 			}
-// 		}
-// 		formData.append("api_key", "832315918243728");
-// 		formData.append("upload_preset", "nvfrxqof");
-// 		const response = await ApiRequestFormData.post(formData, {
-// 			onUploadProgress: (progressEvent) => {
-// 				const progress = Math.round(
-// 					(progressEvent.loaded / progressEvent.total) * 100
-// 				);
-// 				cb(progress);
-// 			},
-// 		});
-// 		// return { fileType: "images", links: response.data };
-// 		console.log(response);
-// 	} catch (error) {
-// 		console.log(error?.response);
-// 	}
-// };
+
 
 // handle attachment upload
 const handleAttachMentUpload = async (event, cb) => {
@@ -235,6 +202,8 @@ const showNotification = (data) => {
 		elem.style.top = "-55px";
 	}, 4000);
 };
+
+
 export {
 	responSive,
 	getSendDate,
@@ -245,4 +214,5 @@ export {
 	focusInput,
 	getLastSeenMessag,
 	showNotification,
+
 };
