@@ -16,9 +16,9 @@ Welcome to the Chat Web App! This application allows users to engage in real-tim
 -   **Typing Indicators** : Show when someone is typing in an active conversation.
 -   **Search Functionality** : Easily find specific messages or information within chat history.
 -   **User Profiles** : Customize profiles with profile pictures
--   **Load Previous Messages on Top Scroll**: Automatically load previous messages when the user scrolls to the top of the chat.
+-   **Load Previous Messages**:  Load previous messages when the user clicks on load previous button to the top of the chat.
 
-## Screenshots
+## Screenshotss
 
 ![Screenshot 1](https://awesomescreenshot.s3.amazonaws.com/image/2935821/39903678-aeb9acb57919c2a6cd1fa0656195c331.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJSCJQ2NM3XLFPVKA%2F20230517%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20230517T040904Z&X-Amz-Expires=28800&X-Amz-SignedHeaders=host&X-Amz-Signature=37066eaba129366b8d45615d6271615f5b3c2359cf56d3c51610b00d1dc3cb2b)
 
